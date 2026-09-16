@@ -1,6 +1,7 @@
 import { FACTIONS } from '../data/factions'
 import { calculateArmyPoints, calculateEntryPoints, getUnitProfile } from '../data/units'
 import { formatUpgradeList } from './SquadUpgradeSelector'
+import { LlmSettingsPanel } from './LlmSettingsPanel'
 import { useGameStore } from '../store/gameStore'
 import type { AIDifficulty } from '../types/game'
 
@@ -107,6 +108,8 @@ export function BattleSetup() {
             </div>
           </div>
         </section>
+
+        <LlmSettingsPanel />
       </div>
     </div>
   )

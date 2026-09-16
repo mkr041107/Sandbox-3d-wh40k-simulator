@@ -991,7 +991,10 @@ h1, h2, h3, h4 {
 }
 
 .points-selector select,
-.form-group select {
+.form-group select,
+.form-group input[type="text"],
+.form-group input[type="password"],
+.form-group input[type="url"] {
   width: 100%;
   background: var(--bg-card);
   border: 1px solid var(--border);
@@ -999,6 +1002,7 @@ h1, h2, h3, h4 {
   padding: 8px 12px;
   color: var(--text-primary);
   font-family: var(--font-body);
+  box-sizing: border-box;
 }
 
 .points-total {
@@ -1369,6 +1373,80 @@ h1, h2, h3, h4 {
   justify-content: center;
   height: 100%;
   gap: 16px;
+}
+
+/* LLM opponent settings */
+.llm-settings-card {
+  grid-column: 1 / -1;
+}
+
+.llm-settings-intro {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+.llm-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.llm-settings-fields {
+  display: grid;
+  gap: 4px;
+}
+
+.field-hint {
+  display: block;
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.llm-settings-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.llm-test-message {
+  font-size: 13px;
+  margin-top: 8px;
+}
+
+.llm-test-message.ok {
+  color: var(--accent-green, #22cc44);
+}
+
+.llm-test-message.error {
+  color: var(--accent-red);
+}
+
+.llm-badge {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(155, 89, 182, 0.25);
+  color: #cc88ff;
+  border: 1px solid rgba(155, 89, 182, 0.4);
+}
+
+.llm-fallback-banner {
+  font-size: 12px;
+  color: var(--accent-red);
+  background: rgba(200, 50, 50, 0.12);
+  border: 1px solid rgba(200, 50, 50, 0.3);
+  border-radius: var(--radius);
+  padding: 8px 10px;
+  margin: 8px 12px 0;
 }
 
 @media (max-width: 1024px) {

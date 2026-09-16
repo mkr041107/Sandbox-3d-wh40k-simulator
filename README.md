@@ -1,8 +1,8 @@
 # WH40K Battle Sandbox
 
-A browser-based **Warhammer 40,000** army builder and tactical battle simulator with a 3D top-down battlefield and AI opponent.
+A browser-based **Warhammer 40,000** army builder and tactical battle simulator with a 3D top-down battlefield and AI opponent — including an optional **LLM-powered** opponent that uses a real language model via your own API key.
 
-> **This project was made with AI.** The codebase, unit data pipeline, UI, battle logic, 3D miniatures, and documentation were created and iterated on with the assistance of AI coding tools (including Cursor). Human direction shaped the goals and features; AI generated and refined most of the implementation.
+> **This project was made with AI.** The codebase, unit data pipeline, UI, battle logic, 3D miniatures, LLM integration, and documentation were created and iterated on with the assistance of AI coding tools (including Cursor). Human direction shaped the goals and features; AI generated and refined most of the implementation.
 
 ---
 
@@ -69,9 +69,11 @@ Simplified Warhammer 40k-style turn structure:
 - Battle log of actions
 - Unit health bars and model counts on tokens
 
-### AI Opponent
+### AI Opponent (two modes)
 
-Four difficulty levels:
+#### Classic AI (default)
+
+Built-in **video game-style heuristic AI** — not an LLM. It scores targets, samples move positions, and uses difficulty knobs (aggression, target priority, dice modifiers). No API key required. Runs entirely in the browser.
 
 | Difficulty | Behavior |
 | --- | --- |
@@ -80,13 +82,31 @@ Four difficulty levels:
 | **Veteran** | Strong tactics, punishes mistakes |
 | **Chapter Master** | Near-optimal target priority and aggression |
 
-The AI moves, shoots, charges, and fights through each phase with configurable hit modifiers and think delays.
+#### LLM Opponent (optional)
+
+Enable in **Battle Setup** to replace the classic AI with a **real language model** that reads the battlefield state and returns tactical actions each phase.
+
+- Supports **OpenAI-compatible** APIs: OpenAI, OpenRouter, Groq, LM Studio, Ollama (OpenAI shim), etc.
+- **API key stored in `localStorage` only** — never sent anywhere except your chosen provider
+- Battle snapshot (units, positions, legal moves/shots/charges) sent to the model each AI phase
+- Model returns structured JSON actions (move, shoot, charge, fight, next phase)
+- **Automatic fallback** to classic AI if the API fails or returns invalid JSON
+- HUD shows an **LLM** badge and "LLM is planning…" during opponent turns
+
+**Configure in Battle Setup → LLM Opponent:**
+
+1. Check **Use LLM opponent instead of classic AI**
+2. Select provider (or Custom for a local server)
+3. Enter API key, base URL, and model name
+4. Click **Test connection** before starting a battle
+
+Settings persist in the browser under the `wh40k-llm-settings` localStorage key.
 
 ### App Flow
 
 1. **Home** — Build Army or Quick Battle
 2. **Army Builder** — pick faction, add units, configure upgrades
-3. **Battle Setup** — points limit, AI faction, difficulty
+3. **Battle Setup** — points limit, AI faction, difficulty, optional LLM config
 4. **Battle** — 3D field + HUD
 
 ---
@@ -99,6 +119,8 @@ The AI moves, shoots, charges, and fights through each phase with configurable h
 | Build | Vite 8 |
 | State | Zustand |
 | 3D | Three.js, @react-three/fiber, @react-three/drei |
+| Classic AI | Heuristic scoring (`src/ai/opponent.ts`) |
+| LLM AI | OpenAI-compatible chat completions (`src/ai/llmClient.ts`) |
 | IDs | uuid |
 
 ---
@@ -109,6 +131,7 @@ The AI moves, shoots, charges, and fights through each phase with configurable h
 
 - [Node.js](https://nodejs.org/) 18+ (LTS recommended)
 - npm
+- (Optional) API key for LLM opponent — only if you enable that mode
 
 ### Install and run
 
@@ -136,25 +159,43 @@ npm run generate:units
 
 This reads `scripts/munitorum-source.txt` and writes `src/data/generated/units.json`.
 
+### Deploy to GitHub Pages
+
+GitHub Pages can host this as a static site. For a project site at `https://<user>.github.io/<repo>/`, set the Vite `base` path in `vite.config.ts`:
+
+```ts
+export default defineConfig({
+  base: '/your-repo-name/',
+  plugins: [react()],
+})
+```
+
+Then build and deploy the `dist/` folder (GitHub Actions or manual `gh-pages` branch).
+
 ---
 
 ## Project Structure
 
 ```text
-├── public/models/          # Optional GLB miniature models
+├── public/models/              # Optional GLB miniature models
 ├── scripts/
-│   ├── generate-units.mjs  # Munitorum Field Manual parser
+│   ├── generate-units.mjs      # Munitorum Field Manual parser
 │   └── munitorum-source.txt
 ├── src/
-│   ├── ai/                 # AI opponent logic
+│   ├── ai/
+│   │   ├── opponent.ts         # Classic heuristic AI
+│   │   ├── llmSettings.ts      # LLM config (localStorage)
+│   │   ├── llmClient.ts        # OpenAI-compatible API client
+│   │   └── llmOpponent.ts      # Battle snapshot + LLM prompt/parse
 │   ├── components/
-│   │   ├── battle/         # 3D battlefield, HUD, miniatures
+│   │   ├── battle/             # 3D battlefield, HUD, miniatures
 │   │   ├── ArmyBuilder.tsx
 │   │   ├── BattleSetup.tsx
+│   │   ├── LlmSettingsPanel.tsx
 │   │   ├── Home.tsx
 │   │   └── UnitDetailPanel.tsx
 │   ├── data/
-│   │   ├── generated/      # units.json (~1985 units)
+│   │   ├── generated/          # units.json (~1985 units)
 │   │   ├── factions.ts
 │   │   ├── units.ts
 │   │   ├── squadUpgrades.ts
@@ -162,9 +203,9 @@ This reads `scripts/munitorum-source.txt` and writes `src/data/generated/units.j
 │   │   ├── unitPlaystyles.ts
 │   │   ├── weaponDescriptions.ts
 │   │   └── glossary.ts
-│   ├── engine/             # Battle rules, dice
-│   ├── store/              # Zustand game state
-│   └── types/              # TypeScript types
+│   ├── engine/                 # Battle rules, dice
+│   ├── store/                  # Zustand game state
+│   └── types/                  # TypeScript types
 └── package.json
 ```
 
@@ -190,7 +231,9 @@ This is a **sandbox**, not a full competitive rules engine:
 
 - Single Army Faction per list (no multi-faction allies except Ynnari pooling)
 - Simplified phases and morale; not every 10th Edition rule is implemented
-- AI uses heuristics, not full game-tree search
+- Classic AI uses heuristics, not full game-tree search
+- LLM opponent quality depends on the model; responses may be slow or occasionally invalid (fallback AI handles failures)
+- API keys in localStorage are convenient but not as secure as a backend proxy — use a key with usage limits
 - Weapon data from the Munitorum parser may be incomplete for some units
 - Procedural miniatures are abstract placeholders, not licensed model representations
 

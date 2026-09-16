@@ -6,6 +6,9 @@ import { UnitDetailPanel } from '../UnitDetailPanel'
 interface BattleHUDProps {
   battleState: BattleState
   selectedUnit: BattleUnit | null
+  aiThinking?: boolean
+  llmActive?: boolean
+  llmFallbackMessage?: string | null
   onNextPhase: () => void
   onShoot: (targetId: string) => void
   onCharge: (targetId: string) => void
@@ -17,6 +20,9 @@ interface BattleHUDProps {
 export function BattleHUD({
   battleState,
   selectedUnit,
+  aiThinking = false,
+  llmActive = false,
+  llmFallbackMessage = null,
   onNextPhase,
   onShoot,
   onCharge,
@@ -42,8 +48,9 @@ export function BattleHUD({
         <div className="turn-info">
           <span className="turn-badge">Turn {battleState.turn}</span>
           <span className={`phase-badge ${isPlayerTurn ? 'player' : 'ai'}`}>
-            {isPlayerTurn ? 'Your Turn' : 'AI Turn'} — {battleState.phase}
+            {isPlayerTurn ? 'Your Turn' : llmActive ? 'LLM Turn' : 'AI Turn'} — {battleState.phase}
           </span>
+          {llmActive && <span className="llm-badge">LLM</span>}
         </div>
         <div className="vp-display">
           <span className="vp-player">You: {battleState.playerVp} VP</span>
@@ -137,10 +144,14 @@ export function BattleHUD({
         </div>
       )}
 
+      {llmFallbackMessage && (
+        <p className="llm-fallback-banner">{llmFallbackMessage}</p>
+      )}
+
       {!isPlayerTurn && !battleState.isOver && (
         <div className="ai-thinking">
           <div className="spinner" />
-          <span>AI is thinking...</span>
+          <span>{aiThinking && llmActive ? 'LLM is planning…' : 'AI is thinking…'}</span>
         </div>
       )}
 

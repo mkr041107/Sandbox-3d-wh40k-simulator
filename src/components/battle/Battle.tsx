@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useGameStore } from '../../store/gameStore'
 import {
   chargeUnit,
@@ -10,21 +10,47 @@ import {
   shootAtTarget,
 } from '../../engine/battle'
 import { AI_DIFFICULTY_CONFIG, executeAIAction, planAITurn } from '../../ai/opponent'
+import { isLlmConfigured, loadLlmSettings } from '../../ai/llmSettings'
+import { planAITurnWithLlm } from '../../ai/llmOpponent'
 import { Battlefield3D } from './Battlefield3D'
 import { BattleHUD } from './BattleHUD'
 
 export function Battle() {
   const { battleState, settings, setBattleState, setScreen, resetGame } = useGameStore()
   const aiProcessing = useRef(false)
+  const [aiThinking, setAiThinking] = useState(false)
+  const [llmFallbackMessage, setLlmFallbackMessage] = useState<string | null>(null)
 
   const runAITurn = useCallback(async (state: typeof battleState) => {
     if (!state || state.activePlayer !== 'ai' || state.isOver || aiProcessing.current) return
 
     aiProcessing.current = true
     const config = AI_DIFFICULTY_CONFIG[settings.aiDifficulty]
+    const llmSettings = loadLlmSettings()
+    const useLlm = isLlmConfigured(llmSettings)
     let currentState = state
 
-    const actions = planAITurn(currentState, config)
+    setAiThinking(useLlm)
+    setLlmFallbackMessage(null)
+
+    let actions
+    if (useLlm) {
+      const result = await planAITurnWithLlm(
+        currentState,
+        llmSettings,
+        settings.aiDifficulty,
+        settings.battlefieldWidth,
+        settings.battlefieldHeight,
+      )
+      actions = result.actions
+      if (result.usedFallback && result.error) {
+        setLlmFallbackMessage(`LLM unavailable — using classic AI: ${result.error}`)
+      }
+    } else {
+      actions = planAITurn(currentState, config)
+    }
+
+    setAiThinking(false)
 
     for (const action of actions) {
       await new Promise((r) => setTimeout(r, action.delay))
@@ -40,7 +66,7 @@ export function Battle() {
     }
 
     aiProcessing.current = false
-  }, [settings.aiDifficulty, setBattleState])
+  }, [settings.aiDifficulty, settings.battlefieldWidth, settings.battlefieldHeight, setBattleState])
 
   useEffect(() => {
     if (battleState?.activePlayer === 'ai' && !battleState.isOver) {
@@ -60,6 +86,8 @@ export function Battle() {
   const selectedUnit = battleState.selectedUnitId
     ? getUnit(battleState, battleState.selectedUnitId) ?? null
     : null
+
+  const llmActive = isLlmConfigured(loadLlmSettings())
 
   const handleSelectUnit = (unitId: string | null) => {
     if (battleState.activePlayer !== 'player') return
@@ -116,6 +144,9 @@ export function Battle() {
       <BattleHUD
         battleState={battleState}
         selectedUnit={selectedUnit}
+        aiThinking={aiThinking}
+        llmActive={llmActive}
+        llmFallbackMessage={llmFallbackMessage}
         onNextPhase={handleNextPhase}
         onShoot={handleShoot}
         onCharge={handleCharge}
