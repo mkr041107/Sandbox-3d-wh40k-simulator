@@ -29,3 +29,4 @@ dist-ssr
 *.sw?
 # My local-only file
 .mailmap
+sandbox-backup.git/*.*

@@ -25,6 +25,8 @@ interface BattleHUDProps {
   aiThinking?: boolean
   llmActive?: boolean
   llmFallbackMessage?: string | null
+  formationMove?: boolean
+  onToggleFormationMove?: () => void
   onSelectDeployUnit: (deployId: string | null) => void
   onSelectDeployMode: (mode: DeployMode) => void
   onDeployToReserves: () => void
@@ -48,6 +50,8 @@ export function BattleHUD({
   aiThinking = false,
   llmActive = false,
   llmFallbackMessage = null,
+  formationMove = false,
+  onToggleFormationMove,
   onSelectDeployUnit,
   onSelectDeployMode,
   onDeployToReserves,
@@ -213,7 +217,7 @@ export function BattleHUD({
 
           {battleState.playerUnits.filter((unit) => !unit.inReserves).length > 0 && (
             <p className="deploy-placed-count">
-              {battleState.playerUnits.filter((unit) => !unit.inReserves).length} on the battlefield — click a token to reposition
+              {battleState.playerUnits.filter((unit) => !unit.inReserves).length} on the battlefield — click a token to reposition within your deployment zone
             </p>
           )}
 
@@ -334,12 +338,26 @@ export function BattleHUD({
                   </button>
                 ))}
               </div>
+              <button
+                type="button"
+                className={`btn btn-sm ${formationMove ? 'btn-primary' : 'btn-secondary'}`}
+                disabled={selectedUnit.hasMoved || selectedUnit.models.every((model) => model.hasMoved)}
+                onClick={onToggleFormationMove}
+              >
+                {formationMove ? 'Cancel squad move' : 'Move squad together'}
+              </button>
             </div>
           )}
 
-          {battleState.phase === 'movement' && selectedModel && !selectedModel.hasMoved && !selectedUnit.inReserves && (
+          {battleState.phase === 'movement' && formationMove && selectedUnit && selectedUnit.models.length > 1 && (
             <p className="action-hint">
-              Move model {selectedModel.index} up to M{getBattleUnitProfile(selectedUnit).movement}" — stay within {COHERENCY_DISTANCE}" of another model in the squad.
+              Click the board to advance the whole squad in formation (up to M{getBattleUnitProfile(selectedUnit).movement}"). This is the easiest way to leave your deployment zone.
+            </p>
+          )}
+
+          {battleState.phase === 'movement' && selectedModel && !selectedModel.hasMoved && !selectedUnit.inReserves && !formationMove && (
+            <p className="action-hint">
+              Move model {selectedModel.index} up to M{getBattleUnitProfile(selectedUnit).movement}" — stay within {COHERENCY_DISTANCE}" of another model. Clicks snap to the farthest legal point toward your cursor.
             </p>
           )}
 
@@ -447,7 +465,7 @@ export function BattleHUD({
       <div className="battle-log">
         <h4>Battle Log</h4>
         <div className="log-entries">
-          {battleState.log.slice(-8).reverse().map((entry, i) => (
+          {battleState.log.slice(-12).reverse().map((entry, i) => (
             <div key={i} className={`log-entry ${entry.player}`}>
               <span className="log-turn">T{entry.turn}</span>
               {entry.message}

@@ -51,6 +51,15 @@ function boardBounds(battlefieldWidth: number, battlefieldHeight: number) {
   }
 }
 
+export function isOnBattlefield(
+  position: Position,
+  battlefieldWidth: number,
+  battlefieldHeight: number,
+): boolean {
+  const { minX, maxX, minY, maxY } = boardBounds(battlefieldWidth, battlefieldHeight)
+  return position.x >= minX && position.x <= maxX && position.y >= minY && position.y <= maxY
+}
+
 export function getNormalDeployBounds(
   owner: PlayerId,
   battlefieldWidth: number,

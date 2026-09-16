@@ -38,6 +38,11 @@ export function Battle() {
   const [aiThinking, setAiThinking] = useState(false)
   const [llmFallbackMessage, setLlmFallbackMessage] = useState<string | null>(null)
   const [shotVfx, setShotVfx] = useState<ActiveShotVfx[]>([])
+  const [formationMove, setFormationMove] = useState(false)
+
+  useEffect(() => {
+    setFormationMove(false)
+  }, [battleState?.phase, battleState?.selectedUnitId, battleState?.turn])
 
   const pushShotVfx = useCallback((shot: ShotVisualPayload) => {
     setShotVfx((prev) => [...prev, { ...shot, id: uuidv4() }])
@@ -218,10 +223,23 @@ export function Battle() {
       return
     }
     if (!battleState.selectedUnitId) return
+    const unit = getUnit(battleState, battleState.selectedUnitId)
+    if (!unit) return
+
+    if (formationMove && unit.models.length > 1) {
+      setBattleState(moveUnit(battleState, battleState.selectedUnitId, position))
+      setFormationMove(false)
+      return
+    }
+
     if (battleState.selectedModelId) {
       setBattleState(moveModel(battleState, battleState.selectedUnitId, battleState.selectedModelId, position))
       return
     }
+
+    // Multi-model squads must move one model at a time — never translate the whole formation from the UI.
+    if (unit.models.length > 1) return
+
     setBattleState(moveUnit(battleState, battleState.selectedUnitId, position))
   }
 
@@ -281,6 +299,7 @@ export function Battle() {
         onSelectUnit={handleSelectUnit}
         onSelectModel={handleSelectModel}
         onMoveUnit={handleBoardPosition}
+        formationMove={formationMove}
         battlefieldWidth={settings.battlefieldWidth}
         battlefieldHeight={settings.battlefieldHeight}
       />
@@ -290,6 +309,8 @@ export function Battle() {
         aiThinking={aiThinking}
         llmActive={llmActive}
         llmFallbackMessage={llmFallbackMessage}
+        formationMove={formationMove}
+        onToggleFormationMove={() => setFormationMove((active) => !active)}
         onSelectDeployUnit={handleSelectDeployUnit}
         onSelectDeployMode={handleSelectDeployMode}
         onDeployToReserves={handleDeployToReserves}

@@ -13,6 +13,7 @@ import { mergeCombatModifiers } from '../data/detachmentEffects'
 import { getCombatModifiers, getDetachmentState } from './detachmentBattle'
 import { closestModelDistance, distance, getProfile, getUnitsForPlayer } from './battleQueries'
 import { rollDice } from './dice'
+import { formatMortalSteps, resolveMortalWounds } from './combatRolls'
 import { getUnitCentroid, trimModelsToCount } from './modelSquad'
 
 export interface ShootLegality {
@@ -248,9 +249,8 @@ function getTargetDefenseModifiers(
   return mergeCombatModifiers(...mods)
 }
 
-function getAttackerUnitModifiers(profile: UnitProfile): CombatModifiers {
-  const fnp = getUnitFeelNoPain(profile)
-  return fnp ? { feelNoPain: fnp } : {}
+function getAttackerUnitModifiers(_profile: UnitProfile): CombatModifiers {
+  return {}
 }
 
 function getIndirectFireHitPenalty(
@@ -454,7 +454,11 @@ export function applyDeadlyDemise(
     if (dist > DEADLY_DEMISE_RADIUS) continue
 
     const unitProfile = getProfile(unit)
-    let remaining = unit.currentWounds - mortals
+    const fnp = getUnitFeelNoPain(unitProfile)
+    const { unsaved, steps } = resolveMortalWounds(mortals, fnp)
+    if (unsaved <= 0) continue
+
+    let remaining = unit.currentWounds - unsaved
     let modelsLost = 0
     while (remaining <= 0 && modelsLost < unit.modelsRemaining) {
       modelsLost++
@@ -465,7 +469,7 @@ export function applyDeadlyDemise(
     const newModels = Math.max(0, unit.modelsRemaining - modelsLost)
     const newWounds = newModels > 0 ? Math.max(1, remaining) : 0
     const trimmedModels = trimModelsToCount(unit.models, newModels)
-    victims.push(getProfile(unit).name)
+    victims.push(`${getProfile(unit).name} (${formatMortalSteps(steps)})`)
 
     const updateList = (units: BattleUnit[]) =>
       units.map((entry) => (entry.id === unit.id
@@ -488,13 +492,13 @@ export function applyDeadlyDemise(
   if (victims.length === 0) {
     return {
       state: newState,
-      message: `${profile.name} exploded (Deadly Demise) but nothing nearby was harmed.`,
+      message: `${profile.name} exploded (Deadly Demise D6=[${mortalRoll}] → D${mortals}) but nothing nearby was harmed.`,
     }
   }
 
   return {
     state: newState,
-    message: `${profile.name} exploded — Deadly Demise D${mortals} mortals hit ${victims.join(', ')}.`,
+    message: `${profile.name} exploded — Deadly Demise D6=[${mortalRoll}] → D${mortals} mortals: ${victims.join('; ')}.`,
   }
 }
 

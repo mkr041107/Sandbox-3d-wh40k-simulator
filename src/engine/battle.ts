@@ -5,7 +5,6 @@ import type {
   BattlePhase,
   BattleState,
   BattleUnit,
-  CombatModifiers,
   DeployMode,
   PendingDeployUnit,
   PlayerId,
@@ -20,6 +19,7 @@ import {
   getUnitDeployModes,
   isDeepStrikeArrivalPosition,
   isInNormalDeployZone,
+  isOnBattlefield,
   isValidDeployPosition,
   pickAiDeployMode,
   findDeployPosition,
@@ -36,7 +36,13 @@ import {
 import { getBuildableUnits, getUnitProfile } from '../data/units'
 import { getUpgradesForUnit } from '../data/squadUpgrades'
 import { v4 as uuidv4 } from 'uuid'
-import { countSuccesses, rollDice } from './dice'
+import { rollDice } from './dice'
+import {
+  formatCombatResolution,
+  pickAttackMods,
+  pickDefenseMods,
+  resolveCombatAttack,
+} from './combatRolls'
 import {
   distance,
   closestModelDistance,
@@ -44,6 +50,7 @@ import {
   getModel,
   getProfile,
   getUnit,
+  getUnitsForPlayer,
 } from './battleQueries'
 import {
   buildFormation,
@@ -494,6 +501,79 @@ export function canMove(unit: BattleUnit, state: BattleState): boolean {
   return unit.models.some((model) => !model.hasMoved)
 }
 
+function proposedModelsOnBoard(models: BattleModel[], state: BattleState): boolean {
+  return models.every((model) =>
+    isOnBattlefield(model.position, state.battlefieldWidth, state.battlefieldHeight),
+  )
+}
+
+function interpolatePosition(from: Position, to: Position, t: number): Position {
+  return {
+    x: from.x + (to.x - from.x) * t,
+    y: from.y + (to.y - from.y) * t,
+  }
+}
+
+function findFarthestValidPosition(
+  start: Position,
+  target: Position,
+  isValid: (position: Position) => boolean,
+): Position | null {
+  if (isValid(target)) return target
+
+  let low = 0
+  let high = 1
+  let best: Position | null = null
+
+  for (let i = 0; i < 24; i++) {
+    const mid = (low + high) / 2
+    const candidate = interpolatePosition(start, target, mid)
+    if (isValid(candidate)) {
+      best = candidate
+      low = mid
+    } else {
+      high = mid
+    }
+  }
+
+  if (!best || distance(start, best) < 0.05) return null
+  return best
+}
+
+export function canMoveUnitTo(
+  unit: BattleUnit,
+  newPosition: Position,
+  state: BattleState,
+): boolean {
+  if (!canMove(unit, state)) return false
+
+  const profile = getProfile(unit)
+  const delta = {
+    x: newPosition.x - unit.position.x,
+    y: newPosition.y - unit.position.y,
+  }
+  if (distance({ x: 0, y: 0 }, delta) > profile.movement) return false
+
+  const models = translateFormation(unit.models, delta)
+  if (!isUnitCoherent(models, profile.baseSize)) return false
+  if (!proposedModelsOnBoard(models, state)) return false
+
+  const others = getAllDeployedUnits(state).filter((entry) => entry.id !== unit.id)
+  return formationFitsSpacing(models, profile, others)
+}
+
+export function findValidUnitMovePosition(
+  unit: BattleUnit,
+  target: Position,
+  state: BattleState,
+): Position | null {
+  return findFarthestValidPosition(
+    unit.position,
+    target,
+    (position) => canMoveUnitTo(unit, position, state),
+  )
+}
+
 export function canMoveModelTo(
   unit: BattleUnit,
   model: BattleModel,
@@ -510,9 +590,23 @@ export function canMoveModelTo(
       : entry,
   )
   if (!isUnitCoherent(proposed, profile.baseSize)) return false
+  if (!proposedModelsOnBoard(proposed, state)) return false
 
   const others = getAllDeployedUnits(state).filter((entry) => entry.id !== unit.id)
   return formationFitsSpacing(proposed, profile, others)
+}
+
+export function findValidModelMovePosition(
+  unit: BattleUnit,
+  model: BattleModel,
+  target: Position,
+  state: BattleState,
+): Position | null {
+  return findFarthestValidPosition(
+    model.position,
+    target,
+    (position) => canMoveModelTo(unit, model, position, state),
+  )
 }
 
 export function moveModel(
@@ -524,15 +618,18 @@ export function moveModel(
   const unit = getUnit(state, unitId)
   if (!unit) return state
   const model = getModel(unit, modelId)
-  if (!model || !canMoveModelTo(unit, model, newPosition, state)) return state
+  if (!model) return state
+
+  const resolved = findValidModelMovePosition(unit, model, newPosition, state)
+  if (!resolved) return state
 
   const profile = getProfile(unit)
   const models = unit.models.map((entry) =>
     entry.id === modelId
-      ? { ...entry, position: newPosition, hasMoved: true }
+      ? { ...entry, position: resolved, hasMoved: true }
       : entry,
   )
-  const moved = distance(model.position, newPosition)
+  const moved = distance(model.position, resolved)
 
   let newState = updateUnit(state, unitId, {
     models,
@@ -603,18 +700,18 @@ export function moveUnit(
 
   if (!canMove(unit, state)) return state
 
+  const resolved = findValidUnitMovePosition(unit, newPosition, state)
+  if (!resolved) return state
+
   const profile = getProfile(unit)
   const delta = {
-    x: newPosition.x - unit.position.x,
-    y: newPosition.y - unit.position.y,
+    x: resolved.x - unit.position.x,
+    y: resolved.y - unit.position.y,
   }
   const models = translateFormation(unit.models, delta).map((model) => ({
     ...model,
     hasMoved: true,
   }))
-
-  if (distance({ x: 0, y: 0 }, delta) > profile.movement) return state
-  if (!isUnitCoherent(models, profile.baseSize)) return state
 
   const others = getAllDeployedUnits(state).filter((entry) => entry.id !== unit.id)
   if (!formationFitsSpacing(models, profile, others)) return state
@@ -660,68 +757,83 @@ export function getValidShootTargets(
   })
 }
 
+function applyDamageToTarget(
+  target: BattleUnit,
+  targetProfile: UnitProfile,
+  unsavedWounds: number,
+  damagePerWound: number,
+): {
+  currentWounds: number
+  modelsRemaining: number
+  models: BattleModel[]
+  modelsLost: number
+  damageDealt: number
+} {
+  const damageDealt = unsavedWounds * damagePerWound
+  let modelsLost = 0
+  let remainingWounds = target.currentWounds - damageDealt
+  while (remainingWounds <= 0 && modelsLost < target.modelsRemaining) {
+    modelsLost++
+    remainingWounds += targetProfile.wounds
+  }
+
+  const modelsRemaining = Math.max(0, target.modelsRemaining - modelsLost)
+  const currentWounds = modelsRemaining > 0 ? Math.max(1, remainingWounds) : 0
+  const models = trimModelsToCount(target.models, modelsRemaining)
+
+  return { currentWounds, modelsRemaining, models, modelsLost, damageDealt }
+}
+
+function resolveMoralePhase(state: BattleState): BattleState {
+  let newState = state
+  const units = getUnitsForPlayer(state, state.activePlayer)
+    .filter((unit) => unit.modelsRemaining > 0 && !unit.inReserves)
+
+  for (const unit of units) {
+    const profile = getProfile(unit)
+    if (unit.modelsRemaining >= profile.models) continue
+    if (unit.modelsRemaining > Math.ceil(profile.models / 2)) continue
+
+    const rolls = rollDice(2)
+    const total = rolls[0] + rolls[1]
+    const passed = total <= profile.leadership
+    const rollLine = `Morale ${profile.name}: 2D6 [${rolls.join(', ')}]=${total} vs Ld ${profile.leadership}+ → ${passed ? 'PASSED' : 'FAILED'}`
+
+    if (passed) {
+      newState = {
+        ...newState,
+        log: [...newState.log, addLog(newState, rollLine, unit.owner)],
+      }
+      continue
+    }
+
+    const modelsRemaining = Math.max(0, unit.modelsRemaining - 1)
+    const trimmedModels = trimModelsToCount(unit.models, modelsRemaining)
+    const currentWounds = modelsRemaining > 0
+      ? Math.min(profile.wounds, unit.currentWounds)
+      : 0
+
+    newState = updateUnit(newState, unit.id, {
+      modelsRemaining,
+      currentWounds,
+      models: trimmedModels,
+      position: getUnitCentroid(trimmedModels),
+    })
+
+    newState = {
+      ...newState,
+      log: [...newState.log, addLog(
+        newState,
+        `${rollLine} — 1 model flees`,
+        unit.owner,
+      )],
+    }
+  }
+
+  return removeDeadUnits(newState)
+}
+
 export { describeShootLegality }
-
-function resolveHits(
-  attacks: number,
-  skill: number,
-  mods: CombatModifiers,
-  attackType: 'ranged' | 'melee',
-): number {
-  if (mods.autoHit) return attacks
-
-  const bonus = attackType === 'ranged'
-    ? (mods.rangedHitBonus ?? 0) - (mods.rangedHitPenalty ?? 0)
-    : (mods.meleeHitBonus ?? 0)
-  const target = Math.max(2, skill - bonus)
-  let rolls = rollDice(attacks)
-  if (mods.rerollHits) {
-    rolls = rolls.map((roll) => (roll >= target ? roll : rollDice(1)[0]))
-  }
-  return countSuccesses(rolls, target)
-}
-
-function resolveWounds(
-  hits: number,
-  strength: number,
-  toughness: number,
-  mods: CombatModifiers,
-): number {
-  let woundTarget = 4
-  if (strength >= toughness * 2) woundTarget = 2
-  else if (strength > toughness) woundTarget = 3
-  else if (strength === toughness) woundTarget = 4
-  else if (strength * 2 <= toughness) woundTarget = 6
-  else woundTarget = 5
-
-  woundTarget = Math.max(2, woundTarget - (mods.woundBonus ?? 0))
-  let rolls = rollDice(hits)
-  if (mods.rerollWounds) {
-    rolls = rolls.map((roll) => (roll >= woundTarget ? roll : rollDice(1)[0]))
-  }
-  return countSuccesses(rolls, woundTarget)
-}
-
-function resolveSaves(
-  wounds: number,
-  ap: number,
-  save: number,
-  mods: CombatModifiers,
-): number {
-  let saveTarget = Math.min(6, save - ap - (mods.saveBonus ?? 0))
-  if (mods.cover) saveTarget = Math.max(2, saveTarget - 1)
-  if (mods.invulnerableSave) saveTarget = Math.min(saveTarget, mods.invulnerableSave)
-
-  const rolls = rollDice(wounds)
-  let failed = wounds - countSuccesses(rolls, saveTarget)
-
-  if (mods.feelNoPain && failed > 0) {
-    const fnpRolls = rollDice(failed)
-    failed -= countSuccesses(fnpRolls, mods.feelNoPain)
-  }
-
-  return Math.max(0, failed)
-}
 
 export function shootAtTarget(
   state: BattleState,
@@ -768,42 +880,38 @@ export function shootAtTarget(
     spotter,
   )
   const totalAttacks = getWeaponAttackCount(weapon, attacker, target, dist)
-  const hits = resolveHits(totalAttacks, weapon.skill, mods, 'ranged')
-  const wounds = resolveWounds(hits, weapon.strength, targetProfile.toughness, mods)
-  const failedSaves = resolveSaves(wounds, weapon.ap, targetProfile.save, mods)
-  const damageDealt = failedSaves * weapon.damage
-
-  let modelsLost = 0
-  let remainingWounds = target.currentWounds - damageDealt
-  while (remainingWounds <= 0 && modelsLost < target.modelsRemaining) {
-    modelsLost++
-    remainingWounds += targetProfile.wounds
-  }
-
-  const newModels = Math.max(0, target.modelsRemaining - modelsLost)
-  const newWounds = newModels > 0
-    ? Math.max(1, remainingWounds)
-    : 0
-  const trimmedModels = trimModelsToCount(target.models, newModels)
+  const resolution = resolveCombatAttack({
+    attacks: totalAttacks,
+    skill: weapon.skill,
+    strength: weapon.strength,
+    toughness: targetProfile.toughness,
+    ap: weapon.ap,
+    armorSave: targetProfile.save,
+    attackMods: pickAttackMods(mods),
+    defenseMods: pickDefenseMods(mods),
+    attackType: 'ranged',
+  })
+  const damage = applyDamageToTarget(target, targetProfile, resolution.unsavedWounds, weapon.damage)
 
   let newState = updateUnit(state, attackerId, { hasShot: true })
   newState = updateUnit(newState, targetId, {
-    currentWounds: newWounds,
-    modelsRemaining: newModels,
-    models: trimmedModels,
-    position: getUnitCentroid(trimmedModels),
+    currentWounds: damage.currentWounds,
+    modelsRemaining: damage.modelsRemaining,
+    models: damage.models,
+    position: getUnitCentroid(damage.models),
   })
 
   const indirectNote = legality.usesIndirectFire ? ' (indirect fire)' : ''
   const coverNote = mods.cover ? ' [cover]' : ''
+  const logMessage = formatCombatResolution(
+    `${attackerProfile.name} fired ${weapon.name} at ${targetProfile.name}${indirectNote}${coverNote}`,
+    resolution,
+    { damage: damage.damageDealt, modelsLost: damage.modelsLost },
+  )
 
   newState = {
     ...newState,
-    log: [...newState.log, addLog(
-      newState,
-      `${attackerProfile.name} fired ${weapon.name} at ${targetProfile.name}${indirectNote}${coverNote}: ${failedSaves} wounds (${modelsLost} models lost)`,
-      attacker.owner,
-    )],
+    log: [...newState.log, addLog(newState, logMessage, attacker.owner)],
   }
 
   newState = removeDeadUnits(newState)
@@ -814,8 +922,8 @@ export function shootAtTarget(
       to: shotTo,
       weaponName: weapon.name,
       kind: inferShotVfxKind(weapon, legality.usesIndirectFire),
-      wounds: failedSaves,
-      modelsLost,
+      wounds: resolution.unsavedWounds,
+      modelsLost: damage.modelsLost,
       indirect: legality.usesIndirectFire,
     },
   }
@@ -850,11 +958,19 @@ export function chargeUnit(
   const dist = closestModelDistance(charger, target)
   const chargeMods = getCombatModifiers(state, charger, 'charge', 'melee', target)
 
-  const chargeRoll = rollDice(2).reduce((a, b) => a + b, 0) + (chargeMods.chargeBonus ?? 0)
-  if (chargeRoll < dist - 1) {
+  const chargeDice = rollDice(2)
+  const chargeBonus = chargeMods.chargeBonus ?? 0
+  const chargeRoll = chargeDice[0] + chargeDice[1] + chargeBonus
+  const chargeNeeded = Math.max(0, dist - 1)
+  if (chargeRoll < chargeNeeded) {
+    const bonusNote = chargeBonus > 0 ? ` + ${chargeBonus} bonus` : ''
     return {
       ...state,
-      log: [...state.log, addLog(state, `${chargerProfile.name} failed charge (${chargeRoll}" vs ${dist.toFixed(1)}")`, charger.owner)],
+      log: [...state.log, addLog(
+        state,
+        `${chargerProfile.name} failed charge: 2D6 [${chargeDice.join(', ')}]${bonusNote} = ${chargeRoll}" vs ${chargeNeeded.toFixed(1)}" needed`,
+        charger.owner,
+      )],
     }
   }
 
@@ -901,7 +1017,11 @@ export function chargeUnit(
 
   newState = {
     ...newState,
-    log: [...newState.log, addLog(newState, `${chargerProfile.name} charged ${getProfile(target).name}! (${chargeRoll}")`, charger.owner)],
+    log: [...newState.log, addLog(
+      newState,
+      `${chargerProfile.name} charged ${getProfile(target).name}! 2D6 [${chargeDice.join(', ')}]${chargeBonus > 0 ? ` + ${chargeBonus}` : ''} = ${chargeRoll}" vs ${chargeNeeded.toFixed(1)}" needed`,
+      charger.owner,
+    )],
   }
 
   return newState
@@ -922,10 +1042,22 @@ export function fightCombat(
   const rounds = unitHasFightsTwice(state, attacker, 'fight') ? 2 : 1
 
   for (let round = 0; round < rounds; round++) {
-    newState = resolveFightAttack(newState, attackerId, targetId, round > 0)
+    newState = resolveFightAttack(newState, attackerId, targetId, round > 0, false)
     if (newState.isOver) break
     const refreshedTarget = getUnit(newState, targetId)
     if (!refreshedTarget || refreshedTarget.modelsRemaining <= 0) break
+  }
+
+  const counterAttacker = getUnit(newState, targetId)
+  const counterTarget = getUnit(newState, attackerId)
+  if (
+    counterAttacker
+    && counterTarget
+    && counterAttacker.modelsRemaining > 0
+    && counterTarget.modelsRemaining > 0
+    && counterAttacker.isEngaged
+  ) {
+    newState = resolveFightAttack(newState, targetId, attackerId, false, true)
   }
 
   return updateUnit(newState, attackerId, { hasFought: true })
@@ -936,6 +1068,7 @@ function resolveFightAttack(
   attackerId: string,
   targetId: string,
   isExtraFight: boolean,
+  isCounterAttack: boolean,
 ): BattleState {
   const attacker = getUnit(state, attackerId)
   const target = getUnit(state, targetId)
@@ -949,37 +1082,40 @@ function resolveFightAttack(
 
   const mods = buildMeleeModifiers(state, attacker, target)
   const totalAttacks = weapon.attacks * attacker.modelsRemaining
-  const hits = resolveHits(totalAttacks, weapon.skill, mods, 'melee')
-  const wounds = resolveWounds(hits, weapon.strength, targetProfile.toughness, mods)
-  const failedSaves = resolveSaves(wounds, weapon.ap, targetProfile.save, mods)
-  const damageDealt = failedSaves * weapon.damage
-
-  let modelsLost = 0
-  let remainingWounds = target.currentWounds - damageDealt
-  while (remainingWounds <= 0 && modelsLost < target.modelsRemaining) {
-    modelsLost++
-    remainingWounds += targetProfile.wounds
-  }
-
-  const newModels = Math.max(0, target.modelsRemaining - modelsLost)
-  const newWounds = newModels > 0 ? Math.max(1, remainingWounds) : 0
-  const trimmedModels = trimModelsToCount(target.models, newModels)
+  const resolution = resolveCombatAttack({
+    attacks: totalAttacks,
+    skill: weapon.skill,
+    strength: weapon.strength,
+    toughness: targetProfile.toughness,
+    ap: weapon.ap,
+    armorSave: targetProfile.save,
+    attackMods: pickAttackMods(mods),
+    defenseMods: pickDefenseMods(mods),
+    attackType: 'melee',
+  })
+  const damage = applyDamageToTarget(target, targetProfile, resolution.unsavedWounds, weapon.damage)
 
   let newState = updateUnit(state, targetId, {
-    currentWounds: newWounds,
-    modelsRemaining: newModels,
-    models: trimmedModels,
-    position: getUnitCentroid(trimmedModels),
+    currentWounds: damage.currentWounds,
+    modelsRemaining: damage.modelsRemaining,
+    models: damage.models,
+    position: getUnitCentroid(damage.models),
   })
 
-  const suffix = isExtraFight ? ' (fight again)' : ''
+  const suffix = isCounterAttack
+    ? ' (fight back)'
+    : isExtraFight
+      ? ' (fight again)'
+      : ''
+  const logMessage = formatCombatResolution(
+    `${attackerProfile.name} fought ${targetProfile.name} with ${weapon.name}${suffix}`,
+    resolution,
+    { damage: damage.damageDealt, modelsLost: damage.modelsLost },
+  )
+
   newState = {
     ...newState,
-    log: [...newState.log, addLog(
-      newState,
-      `${attackerProfile.name} fought ${targetProfile.name}: ${failedSaves} wounds (${modelsLost} models lost)${suffix}`,
-      attacker.owner,
-    )],
+    log: [...newState.log, addLog(newState, logMessage, attacker.owner)],
   }
 
   newState = removeDeadUnits(newState)
@@ -1009,6 +1145,9 @@ export function nextPhase(state: BattleState): BattleState {
     }
     if (nextPhaseName === 'command') {
       newState = beginCommandPhase(newState)
+    }
+    if (nextPhaseName === 'morale') {
+      newState = resolveMoralePhase(newState)
     }
     return newState
   }
@@ -1050,12 +1189,36 @@ export {
   isDeepStrikeArrivalPosition,
 } from './deploymentRules'
 
+function defaultMovementModelId(unit: BattleUnit): string | null {
+  if (unit.models.length <= 1) return null
+  return unit.models.find((model) => !model.hasMoved)?.id ?? unit.models[0]?.id ?? null
+}
+
 export function selectUnit(state: BattleState, unitId: string | null): BattleState {
+  if (!unitId) {
+    return {
+      ...state,
+      selectedUnitId: null,
+      selectedModelId: null,
+      selectedDeployId: state.selectedDeployId,
+    }
+  }
+
+  const unit = getUnit(state, unitId)
+  const sameUnit = state.selectedUnitId === unitId
+  let selectedModelId: string | null = null
+
+  if (sameUnit && state.selectedModelId && unit?.models.some((model) => model.id === state.selectedModelId)) {
+    selectedModelId = state.selectedModelId
+  } else if (unit && state.phase === 'movement' && unit.models.length > 1) {
+    selectedModelId = defaultMovementModelId(unit)
+  }
+
   return {
     ...state,
     selectedUnitId: unitId,
-    selectedModelId: null,
-    selectedDeployId: unitId ? null : state.selectedDeployId,
+    selectedModelId,
+    selectedDeployId: null,
   }
 }
 

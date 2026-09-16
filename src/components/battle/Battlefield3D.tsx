@@ -6,6 +6,7 @@ import type { BattleState, Position } from '../../types/game'
 import {
   canArriveFromReserves,
   canMoveModelTo,
+  canMoveUnitTo,
   canPlaceUnitAt,
   getModel,
   getUnit,
@@ -27,6 +28,7 @@ interface Battlefield3DProps {
   onSelectUnit: (unitId: string | null) => void
   onSelectModel: (unitId: string, modelId: string) => void
   onMoveUnit: (position: Position) => void
+  formationMove?: boolean
   battlefieldWidth: number
   battlefieldHeight: number
 }
@@ -38,6 +40,7 @@ function BattlefieldScene({
   onSelectUnit,
   onSelectModel,
   onMoveUnit,
+  formationMove = false,
   battlefieldWidth,
   battlefieldHeight,
   cameraPreset,
@@ -80,9 +83,13 @@ function BattlefieldScene({
   const canDeepStrikeNow = selectedReserve ? canArriveFromReserves(selectedReserve, battleState) : false
   const selectedModel = selectedUnit && battleState.selectedModelId
     ? getModel(selectedUnit, battleState.selectedModelId) ?? null
-    : selectedUnit?.models.find((model) => !model.hasMoved) ?? selectedUnit?.models[0] ?? null
+    : selectedUnit?.models.length === 1
+      ? selectedUnit.models[0]
+      : null
 
-  const movementAnchor = selectedModel?.position ?? selectedUnit?.position
+  const movementAnchor = formationMove && selectedUnit && selectedUnit.models.length > 1
+    ? selectedUnit.position
+    : selectedModel?.position ?? selectedUnit?.position
 
   const deployPreview = useMemo(() => {
     if (!isDeployment || placingReserves) return null
@@ -109,11 +116,13 @@ function BattlefieldScene({
       deployPreview.excludeUnitId,
       deployPreview.mode,
     )
-    : hoverPos && selectedUnit && selectedModel && battleState.phase === 'movement'
-      ? canMoveModelTo(selectedUnit, selectedModel, hoverPos, battleState)
-      : hoverPos && canDeepStrikeNow
-        ? isDeepStrikeArrivalPosition(battleState, hoverPos, 'player')
-        : false
+    : hoverPos && selectedUnit && formationMove && selectedUnit.models.length > 1 && battleState.phase === 'movement'
+      ? canMoveUnitTo(selectedUnit, hoverPos, battleState)
+      : hoverPos && selectedUnit && selectedModel && battleState.phase === 'movement'
+        ? canMoveModelTo(selectedUnit, selectedModel, hoverPos, battleState)
+        : hoverPos && canDeepStrikeNow
+          ? isDeepStrikeArrivalPosition(battleState, hoverPos, 'player')
+          : false
 
   const handleGroundClick = (e: ThreeEvent<MouseEvent>) => {
     if (rulerActive) {
@@ -265,17 +274,10 @@ function BattlefieldScene({
         />
       )}
 
-      {hoverPos && ((isDeployment && canPlaceOnBoard) || canDeepStrikeNow || (battleState.phase === 'movement' && selectedModel)) && (
+      {hoverPos && ((isDeployment && canPlaceOnBoard) || canDeepStrikeNow || (battleState.phase === 'movement' && (formationMove ? selectedUnit : selectedModel))) && (
         <mesh position={[hoverPos.x, 0.05, hoverPos.y]} rotation={[-Math.PI / 2, 0, 0]}>
           <ringGeometry args={[0.4, 0.55, 32]} />
           <meshBasicMaterial color={hoverValid ? '#00ffaa' : '#ff4444'} transparent opacity={0.75} />
-        </mesh>
-      )}
-
-      {hoverPos && selectedUnit && battleState.phase === 'movement' && (
-        <mesh position={[hoverPos.x, 0.05, hoverPos.y]} rotation={[-Math.PI / 2, 0, 0]}>
-          <ringGeometry args={[0.4, 0.55, 32]} />
-          <meshBasicMaterial color="#00ffaa" transparent opacity={0.75} />
         </mesh>
       )}
 
@@ -288,6 +290,11 @@ function BattlefieldScene({
           showCoherency={unit.id === battleState.selectedUnitId && unit.models.length > 1}
           isShootTarget={shootTargetIds.has(unit.id)}
           disableInteraction={rulerActive}
+          requireModelClick={
+            battleState.phase === 'movement'
+            && battleState.activePlayer === 'player'
+            && unit.models.length > 1
+          }
           onClick={() => onSelectUnit(unit.id)}
           onModelClick={(modelId) => onSelectModel(unit.id, modelId)}
         />

@@ -19,6 +19,7 @@ interface UnitTokenProps {
   isShootTarget?: boolean
   disableInteraction?: boolean
   showCoherency?: boolean
+  requireModelClick?: boolean
   onClick: () => void
   onModelClick?: (modelId: string) => void
 }
@@ -134,6 +135,7 @@ export function UnitToken({
   isShootTarget = false,
   disableInteraction = false,
   showCoherency = false,
+  requireModelClick = false,
   onClick,
   onModelClick,
 }: UnitTokenProps) {
@@ -174,6 +176,7 @@ export function UnitToken({
     <group
       onClick={(e) => {
         if (disableInteraction) return
+        if (requireModelClick) return
         e.stopPropagation()
         onClick()
       }}
