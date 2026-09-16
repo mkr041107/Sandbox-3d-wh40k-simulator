@@ -1,3 +1,8 @@
+# NOTICE
+The github contributors listed are bugged and a problem with git, it should be fixed when github updates the cache!
+
+---
+
 # WH40K Battle Sandbox
 
 [![⚔️ Deploy to the Front — Play Live](https://img.shields.io/badge/⚔️_DEPLOY_TO_THE_FRONT-PLAY_LIVE-8b0000?style=for-the-badge&labelColor=1a1a2e)](https://mkr041107.github.io/Sandbox-3d-wh40k-simulator/)
