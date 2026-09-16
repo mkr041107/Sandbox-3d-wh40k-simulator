@@ -351,6 +351,12 @@ This is a **sandbox**, not a full competitive rules engine:
 
 ---
 
+## Support
+
+This project was built with AI coding tools, which aren't free to run. If you enjoy the sandbox and feel like chipping in toward those costs, you can optionally leave a tip on [Ko-fi](https://ko-fi.com/mkr041107) — totally voluntary, no perks or pressure.
+
+---
+
 ## License
 
 This repository is provided as-is for personal and educational use. Games Workshop intellectual property remains with Games Workshop. Do not use this project commercially or imply official affiliation with GW.
