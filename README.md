@@ -88,42 +88,129 @@ Built-in **video game-style heuristic AI** — not an LLM. It scores targets, sa
 
 Enable in **Battle Setup** to replace the classic AI with a **real language model** that reads the battlefield state and returns tactical actions each phase.
 
-- Supports **OpenAI-compatible** APIs: OpenAI, OpenRouter, Groq, LM Studio, Ollama (OpenAI shim), etc.
-- **API key stored in `localStorage` only** — never sent anywhere except your chosen provider
+- Supports **OpenAI-compatible** APIs: OpenAI, OpenRouter, Groq, nano-gpt, LM Studio, Ollama (OpenAI shim), etc.
 - Battle snapshot (units, positions, legal moves/shots/charges) sent to the model each AI phase
 - Model returns structured JSON actions (move, shoot, charge, fight, next phase)
 - **Automatic fallback** to classic AI if the API fails or returns invalid JSON
 - HUD shows an **LLM** badge and "LLM is planning…" during opponent turns
 
-**Configure in Battle Setup → LLM Opponent:**
+Two ways to configure credentials:
 
-1. Check **Use LLM opponent instead of classic AI**
-2. Select provider (or Custom for a local server)
-3. Enter API key, base URL, and model name
-4. Click **Test connection** before starting a battle
+| Mode | Label in UI | Where settings live |
+| --- | --- | --- |
+| **Manual** | Manual | Enter provider, API key, URL, and model in the browser (saved to `localStorage`) |
+| **Custom** | Custom | Load API key, URL, and model from your local `.env` file (not stored in `localStorage`) |
 
-Settings persist in the browser under the `wh40k-llm-settings` localStorage key.
+---
 
-#### Self-hosted `.env` (optional)
+## LLM setup guide
 
-For private self-hosting, copy `.env.example` to `.env` and fill in your values. The real `.env` is **gitignored** and never uploaded to GitHub.
+### Quick start (browser only — no `.env`)
+
+1. Run the app (`npm run dev`) and go to **Battle Setup**
+2. Under **LLM Opponent**, check **Use LLM opponent instead of classic AI**
+3. Leave **Configuration** on **Manual**
+4. Pick a provider (OpenAI, OpenRouter, Groq, or Local server)
+5. Paste your API key, base URL, and model
+6. Click **Test connection**, then **Start Battle**
+
+Your key is saved in this browser's `localStorage` under `wh40k-llm-settings`.
+
+### Self-hosted setup (`.env` file)
+
+Use this when you host the app yourself and don't want to re-enter your API key every session or browser.
+
+#### Step 1 — Create your `.env` file
 
 ```bash
 cp .env.example .env
-# edit .env, then:
-npm run dev          # local
-npm run build        # bake into dist for your server
 ```
 
-| Variable | Description |
-| --- | --- |
-| `VITE_LLM_ENABLED` | `true` to enable LLM opponent by default |
-| `VITE_LLM_PROVIDER` | `openai`, `openrouter`, `groq`, or `custom` |
-| `VITE_LLM_API_KEY` | Your API key |
-| `VITE_LLM_BASE_URL` | Optional API base URL override |
-| `VITE_LLM_MODEL` | Optional model name override |
+Edit `.env` with your values. **Never commit `.env`** — it is gitignored. Only `.env.example` goes to GitHub.
 
-**Note:** `VITE_` variables are embedded in the client bundle at build time. Use this only on servers you control — do not add secrets to the public GitHub Pages workflow.
+#### Step 2 — Fill in the variables
+
+| Variable | Required? | Description |
+| --- | --- | --- |
+| `VITE_LLM_API_KEY` | **Yes** (for Custom profile) | Your API key |
+| `VITE_LLM_ENABLED` | Optional | `true` to check "Use LLM opponent" by default |
+| `VITE_LLM_PROVIDER` | Optional | `openai`, `openrouter`, `groq`, or `custom`. Any other value is treated as `custom` |
+| `VITE_LLM_BASE_URL` | Recommended | API base URL (e.g. `https://api.openai.com/v1`) |
+| `VITE_LLM_MODEL` | Recommended | Model name (e.g. `gpt-4o-mini`) |
+
+If `VITE_LLM_BASE_URL` or `VITE_LLM_MODEL` are omitted, built-in defaults for the provider are used. For third-party APIs (nano-gpt, etc.), set all three: key, URL, and model.
+
+#### Step 3 — Example configs
+
+**OpenAI:**
+
+```env
+VITE_LLM_ENABLED=true
+VITE_LLM_PROVIDER=openai
+VITE_LLM_API_KEY=sk-your-key-here
+VITE_LLM_BASE_URL=https://api.openai.com/v1
+VITE_LLM_MODEL=gpt-4o-mini
+```
+
+**nano-gpt (or any custom OpenAI-compatible API):**
+
+```env
+VITE_LLM_ENABLED=true
+VITE_LLM_PROVIDER=custom
+VITE_LLM_API_KEY=sk-your-nano-gpt-key
+VITE_LLM_BASE_URL=https://nano-gpt.com/api/v1
+VITE_LLM_MODEL=deepseek/deepseek-v4-flash
+```
+
+**Groq:**
+
+```env
+VITE_LLM_ENABLED=true
+VITE_LLM_PROVIDER=groq
+VITE_LLM_API_KEY=gsk_your-key-here
+VITE_LLM_BASE_URL=https://api.groq.com/openai/v1
+VITE_LLM_MODEL=llama-3.3-70b-versatile
+```
+
+#### Step 4 — Restart the dev server
+
+Vite only reads `.env` at startup:
+
+```bash
+npm run dev
+```
+
+#### Step 5 — Select Custom in the UI
+
+1. Go to **Battle Setup → LLM Opponent**
+2. Check **Use LLM opponent instead of classic AI**
+3. Under **Configuration**, click **Custom**
+4. Confirm the read-only profile shows your masked API key, base URL, and model
+5. Click **Test connection**, then **Start Battle**
+
+Only your **enabled/disabled toggle** and **Manual vs Custom choice** are saved in `localStorage`. Secrets stay in `.env`.
+
+#### Production / private server build
+
+```bash
+npm run build
+npm run preview   # or serve dist/ on your own server
+```
+
+`VITE_` variables are **baked into the JS bundle at build time**. Run `npm run build` on a machine that has your `.env` file present.
+
+> **Do not** add API keys to the public GitHub Pages workflow. The live demo at the badge link above uses Manual mode only (no baked-in secrets).
+
+### LLM troubleshooting
+
+| Problem | Fix |
+| --- | --- |
+| **Custom is greyed out** | Set `VITE_LLM_API_KEY` in `.env` and restart `npm run dev` |
+| **Custom shows wrong URL/model** | Uncomment `VITE_LLM_BASE_URL` and `VITE_LLM_MODEL` in `.env` |
+| **Changes to `.env` not applied** | Stop and restart the dev server — Vite does not hot-reload env files |
+| **Test connection fails** | Check provider URL, model name, and that your key is valid for that API |
+| **LLM fails mid-battle** | Classic AI takes over automatically for that phase; check the HUD warning banner |
+| **Keys on GitHub Pages** | Not supported — use Manual mode in the browser, or self-host with `.env` |
 
 ### App Flow
 
@@ -208,7 +295,7 @@ Then build and deploy the `dist/` folder (GitHub Actions or manual `gh-pages` br
 ├── src/
 │   ├── ai/
 │   │   ├── opponent.ts         # Classic heuristic AI
-│   │   ├── llmSettings.ts      # LLM config (localStorage)
+│   │   ├── llmSettings.ts      # LLM config (.env + localStorage)
 │   │   ├── llmClient.ts        # OpenAI-compatible API client
 │   │   └── llmOpponent.ts      # Battle snapshot + LLM prompt/parse
 │   ├── components/
@@ -257,7 +344,8 @@ This is a **sandbox**, not a full competitive rules engine:
 - Simplified phases and morale; not every 10th Edition rule is implemented
 - Classic AI uses heuristics, not full game-tree search
 - LLM opponent quality depends on the model; responses may be slow or occasionally invalid (fallback AI handles failures)
-- API keys in localStorage are convenient but not as secure as a backend proxy — use a key with usage limits
+- **Manual** mode stores API keys in `localStorage`; **Custom** mode bakes them into the build via `.env` — neither is as secure as a backend proxy; use keys with usage limits
+- The public GitHub Pages deploy does not include your `.env` — LLM via Custom profile requires self-hosting
 - Weapon data from the Munitorum parser may be incomplete for some units
 - Procedural miniatures are abstract placeholders, not licensed model representations
 
