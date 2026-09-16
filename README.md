@@ -1,5 +1,7 @@
 # WH40K Battle Sandbox
 
+[![⚔️ Deploy to the Front — Play Live](https://img.shields.io/badge/⚔️_DEPLOY_TO_THE_FRONT-PLAY_LIVE-8b0000?style=for-the-badge&labelColor=1a1a2e)](https://mkr041107.github.io/Sandbox-3d-wh40k-simulator/)
+
 A browser-based **Warhammer 40,000** army builder and tactical battle simulator with a 3D top-down battlefield and AI opponent — including an optional **LLM-powered** opponent that uses a real language model via your own API key.
 
 > **This project was made with AI.** The codebase, unit data pipeline, UI, battle logic, 3D miniatures, LLM integration, and documentation were created and iterated on with the assistance of AI coding tools (including Cursor). Human direction shaped the goals and features; AI generated and refined most of the implementation.
