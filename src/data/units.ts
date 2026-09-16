@@ -1,16 +1,16 @@
 import type { ArmyListEntry, FactionId, UnitProfile } from '../types/game'
+import {
+  getAllowedFactionIds,
+  getAllyFactionIds,
+  isMarineChapter,
+  usesCodexMarines,
+} from './factionAllies'
 import { inferUnitAbilities } from './unitAbilities'
 import { inferPlaystyle, lookupLegacyDescription } from './unitPlaystyles'
 import { UNIT_DESCRIPTIONS } from './unitDescriptions'
 import { describeWeapon } from './weaponDescriptions'
 import { calculateUpgradePoints } from './squadUpgrades'
 import generatedUnits from './generated/units.json'
-
-const MARINE_CHAPTER_FACTIONS: FactionId[] = [
-  'space-marines', 'ultramarines', 'blood-angels', 'dark-angels', 'space-wolves',
-  'black-templars', 'deathwatch', 'grey-knights', 'raven-guard', 'salamanders',
-  'imperial-fists', 'iron-hands', 'white-scars',
-]
 
 export const UNIT_PROFILES: UnitProfile[] = generatedUnits as UnitProfile[]
 
@@ -31,6 +31,53 @@ function enrichProfile(profile: UnitProfile): UnitProfile {
   return enriched
 }
 
+function dedupeUnitsByName(units: UnitProfile[]): UnitProfile[] {
+  const seen = new Set<string>()
+  const merged: UnitProfile[] = []
+  for (const unit of units) {
+    if (seen.has(unit.name)) continue
+    seen.add(unit.name)
+    merged.push(unit)
+  }
+  return merged
+}
+
+function collectFactionUnits(factionId: FactionId): UnitProfile[] {
+  return UNIT_PROFILES.filter((u) => u.factionId === factionId)
+}
+
+/** Units legal in the army builder for a locked detachment faction (+ codex / allies). */
+export function getBuildableUnits(primaryFactionId: FactionId): UnitProfile[] {
+  const primaryUnits = collectFactionUnits(primaryFactionId)
+  const merged: UnitProfile[] = [...primaryUnits]
+
+  if (primaryFactionId === 'ynnari') {
+    const ynnariNames = new Set(primaryUnits.map((u) => u.name))
+    for (const allyId of getAllyFactionIds(primaryFactionId)) {
+      const allyUnits = collectFactionUnits(allyId).filter(
+        (u) => !u.name.startsWith('Ynnari ') && !ynnariNames.has(u.name),
+      )
+      merged.push(...allyUnits)
+    }
+    return dedupeUnitsByName(merged).map(enrichProfile)
+  }
+
+  if (usesCodexMarines(primaryFactionId)) {
+    const chapterNames = new Set(primaryUnits.map((u) => u.name))
+    const codexUnits = collectFactionUnits('space-marines').filter(
+      (u) => !chapterNames.has(u.name),
+    )
+    merged.push(...codexUnits)
+  }
+
+  for (const allyId of getAllyFactionIds(primaryFactionId)) {
+    if (allyId === 'space-marines' && usesCodexMarines(primaryFactionId)) continue
+    merged.push(...collectFactionUnits(allyId))
+  }
+
+  return dedupeUnitsByName(merged).map(enrichProfile)
+}
+
 export function getUnitProfile(id: string): UnitProfile {
   const profile = UNIT_PROFILES.find((u) => u.id === id)
   if (!profile) throw new Error(`Unknown unit: ${id}`)
@@ -41,32 +88,21 @@ export function getEnrichedUnitProfile(id: string): UnitProfile {
   return getUnitProfile(id)
 }
 
+/** Prefer getBuildableUnits when building from a detachment-locked list. */
 export function getUnitsForFaction(factionId: FactionId): UnitProfile[] {
-  const units = UNIT_PROFILES.filter((u) => u.factionId === factionId)
+  return getBuildableUnits(factionId)
+}
 
-  if (factionId === 'harlequins') {
-    return units.map(enrichProfile)
-  }
+export function isUnitLegalForArmy(primaryFactionId: FactionId, profileId: string): boolean {
+  return getBuildableUnits(primaryFactionId).some((u) => u.id === profileId)
+}
 
-  if (factionId === 'ynnari') {
-    const ynnariNames = new Set(units.map((u) => u.name))
-    const allies = UNIT_PROFILES.filter((u) =>
-      (u.factionId === 'aeldari' || u.factionId === 'drukhari' || u.factionId === 'harlequins')
-      && !u.name.startsWith('Ynnari ')
-      && !ynnariNames.has(u.name),
-    )
-    return [...units, ...allies].map(enrichProfile)
-  }
+export function getAllowedFactionIdsForArmy(primaryFactionId: FactionId): FactionId[] {
+  return getAllowedFactionIds(primaryFactionId)
+}
 
-  if (MARINE_CHAPTER_FACTIONS.includes(factionId) && factionId !== 'space-marines') {
-    const chapterUnits = new Set(units.map((u) => u.name))
-    const generic = UNIT_PROFILES.filter((u) =>
-      u.factionId === 'space-marines' && !chapterUnits.has(u.name),
-    )
-    return [...units, ...generic].map(enrichProfile)
-  }
-
-  return units.map(enrichProfile)
+export function isMarineChapterFaction(factionId: FactionId): boolean {
+  return isMarineChapter(factionId)
 }
 
 export function calculateEntryPoints(entry: ArmyListEntry): number {

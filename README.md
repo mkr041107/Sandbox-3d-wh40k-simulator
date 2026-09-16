@@ -2,7 +2,7 @@
 
 [![⚔️ Deploy to the Front — Play Live](https://img.shields.io/badge/⚔️_DEPLOY_TO_THE_FRONT-PLAY_LIVE-8b0000?style=for-the-badge&labelColor=1a1a2e)](https://mkr041107.github.io/Sandbox-3d-wh40k-simulator/)
 
-A browser-based **Warhammer 40,000** army builder and tactical battle simulator with a 3D top-down battlefield and AI opponent — including an optional **LLM-powered** opponent that uses a real language model via your own API key.
+A browser-based **Warhammer 40,000** army builder and tactical battle simulator with a 3D top-down battlefield, detachment rules, terrain-aware shooting, combat VFX, and AI opponent — including an optional **LLM-powered** opponent that uses a real language model via your own API key.
 
 > **This project was made with AI.** The codebase, unit data pipeline, UI, battle logic, 3D miniatures, LLM integration, and documentation were created and iterated on with the assistance of AI coding tools (including Cursor). Human direction shaped the goals and features; AI generated and refined most of the implementation.
 
@@ -16,30 +16,67 @@ This is an **unofficial fan project**. Warhammer 40,000, faction names, unit nam
 
 ## Features
 
-### Army Builder
+### Detachments & Army Building
 
+- **Detachment setup flow** — pick faction → choose detachment → build list (Home → **Build Army**)
+- **Faction-specific detachments** — each army has multiple detachments with an army rule, focus, and stratagems (Space Marines, Astra Militarum, Necrons, Orks, T'au, Chaos, Tyranids, and more)
+- **Army rules in battle** — detachment rules apply during combat (e.g. Gladius doctrines, Waaagh!, Oath of Moment, Mont'ka/Kauyon, Born Soldiers, Artillery Support)
+- **Command Points & stratagems** — spend CP in battle for phase-specific buffs parsed from detachment data
+- **Faction allies** — Codex Space Marines merge for most chapters; Ynnari access Aeldari/Drukhari/Harlequins; Genestealer Cults can take Guard; Chaos legions can ally Daemons
 - **36 official factions** — Imperium, Chaos, and Xenos armies from Adepta Sororitas to Tyranids, including Space Marine chapters, Chaos legions, and Emperor's Children
 - **~1,985 units** parsed from the Munitorum Field Manual (v2.3) with points, stats, weapons, and keywords
 - **Search and filter** by unit name and datasheet category (HQ, Troops, Elites, Fast Attack, Heavy Support, Lord of War)
 - **Squad upgrades** — wargear and loadout options for many core units (weapons, sergeant gear, squad size, etc.)
 - **Points tracking** — army list totals with configurable limits (500 / 1000 / 1500 / 2000 pts)
 - **Beginner-friendly unit info** — role labels, tactical descriptions, inferred abilities, and weapon explanations
+- **Unit data quality tools** — `scripts/generate-units.mjs` builds `units.json`; `scripts/audit-units.mjs` scans for coherency and misclassification issues
 
 ### Unit Detail Panel
 
 - Full datasheet stats (M, T, Sv, W, Ld, OC)
-- **Abilities & rules** inferred from keywords and unit type (e.g. Deep Strike, Deadly Demise, Armoured Hull)
+- **Abilities & rules** inferred from keywords and unit type (e.g. Deep Strike, Stealth, Deadly Demise, Ion Shield)
+- **Weapon keyword glossary** — Blast, Indirect Fire, Twin-linked, Torrent, Melta, Rapid Fire, Pistol, Ignores Cover, Anti-armour
 - **Playstyle blurbs** — how each unit is meant to be used on the table
 - **Weapon descriptions** — what each gun does in plain language
+
+### Deployment
+
+Interactive deployment phase before turn 1:
+
+- **Deployment zone** — place units in your blue deployment band
+- **Infiltrators** — deploy anywhere more than 9" from the enemy deployment zone
+- **Scouts** — deploy up to 12" beyond your normal zone (still on your half)
+- **Deep Strike reserves** — hold units off-board; arrive turn 2+ during Movement (>9" from enemies)
+- **Coherency & spacing** — multi-model squads must stay coherent and avoid overlapping bases
+- **Reposition** — adjust placed units before finishing deployment
 
 ### 3D Battlefield
 
 - **React Three Fiber** top-down tactical view with orbit camera
 - **Camera presets** — Table, Top Down, Cinematic
-- Sky, stars, fog, contact shadows, terrain features, deployment zones, and objective marker
+- Sky, stars, fog, contact shadows, **gameplay terrain** (ruins, barricades, rock, scatter), deployment zones, and objective marker
+- **Line of sight** — ruins and terrain block shooting unless indirect fire / spotters apply
+- **Cover** — units in or near terrain (or with Stealth) gain +1 save vs ranged; Ignores Cover and stratagems can negate it
 - **Movement range ring** when moving units in the movement phase
-- **Shoot target highlights** on valid enemy units during shooting
+- **Per-model movement** — multi-model squads can move individual models while staying in coherency
+- **Shoot target highlights** — valid enemies show a red ring during shooting
+- **Click-to-shoot** — select your shooter, then click a highlighted enemy on the board (or use HUD buttons)
+- **Combat VFX** — tracers, beams, missiles, artillery arcs, flamer cones, impact bursts, and floating wound/kill labels
 - Click the battlefield to move units; select units to shoot, charge, or fight via the HUD
+
+### Combat Visual Effects
+
+When a shot resolves (player or AI), the board shows weapon-appropriate feedback:
+
+| Style | Weapons |
+| --- | --- |
+| **Bolt tracers** | Boltguns, lasguns, stubbers |
+| **Energy beams** | Plasma, lascannon, melta, fusion |
+| **Missiles** | Krak, frag, rocket launchers |
+| **Artillery** | Basilisks, mortars, indirect fire (with **INCOMING** warning) |
+| **Flamer cones** | Flamers, torrent/incendiary weapons |
+
+Impacts show an explosion burst plus text such as `3 wounds`, `2W · 1 killed`, or `MISS`.
 
 ### Procedural Miniatures
 
@@ -59,17 +96,57 @@ Optional GLB models can be dropped in `public/models/` (`infantry.glb`, `tank.gl
 
 Simplified Warhammer 40k-style turn structure:
 
-1. **Command**
-2. **Movement** — click to move within unit Movement characteristic
-3. **Shooting** — ranged attacks with BS and save rolls
-4. **Charge**
-5. **Fight** — melee with WS and save rolls
-6. **Morale**
+1. **Deployment** — place army (or Deep Strike to reserves)
+2. **Command** — gain CP; set doctrines / Oath targets where supported
+3. **Movement** — move units or individual models within Movement; Deep Strike arrivals turn 2+
+4. **Shooting** — ranged attacks with BS, saves, terrain, and weapon rules
+5. **Charge**
+6. **Fight** — melee with WS and saves
+7. **Morale**
 
-- Dice-based hit/wound/save resolution
+**Shooting & battlefield rules (implemented):**
+
+- **Line of sight** — blocked by ruins/terrain unless shooting indirectly
+- **Indirect Fire** — fire without LoS if the weapon has the keyword and a friendly **spotter** sees the target (−1 to hit; waived for Guard *Artillery Support* with a spotter)
+- **Benefit of Cover / Stealth** — +1 save vs ranged
+- **Pistol** — can shoot while engaged (within 1")
+- **Blast** — bonus attacks vs units with 6+ models
+- **Rapid Fire** — double attacks at half range
+- **Melta** — +1 to wound at half range
+- **Torrent** — auto-hits
+- **Twin-linked** — re-roll wounds
+- **Ignores Cover** — flamers and some weapons bypass cover
+
+**Unit abilities in combat:**
+
+- **Feel No Pain** (e.g. Plague Marines)
+- **Ion Shield** — 4+ invulnerable vs ranged (Knights)
+- **Deadly Demise** — mortals to nearby units when a vehicle is destroyed
+- **Fights First** — AI resolves these units earlier in the Fight phase
+
+**Detachment modifiers:**
+
+- Combat doctrines (Devastator / Tactical / Assault)
+- Army focus bonuses (Aggressive, Shooting, Artillery, Defensive, etc.)
+- Stratagem effects (+hit, +wound, cover, Feel No Pain, fight again, etc.)
+- Faction rules (Waaagh!, Oath of Moment, Mont'ka, Kauyon, Born Soldiers, …)
+
+**Core systems:**
+
+- Dice-based hit / wound / save resolution with re-rolls where rules allow
 - Victory points tracking
 - Battle log of actions
 - Unit health bars and model counts on tokens
+- Squad coherency and base spacing for movement, charges, and deployment
+
+### How to shoot
+
+1. Advance to the **Shooting** phase (**End Movement** in the HUD).
+2. **Click your unit** on the 3D board.
+3. Valid targets are highlighted with a **red ring** (crosshair cursor on hover).
+4. **Click the enemy** on the board or use the **Shoot at** buttons in the sidebar.
+5. Watch the **combat VFX** and check the battle log for wound results.
+6. Repeat for other units, then **End Shooting**.
 
 ### AI Opponent (two modes)
 
@@ -215,9 +292,10 @@ npm run preview   # or serve dist/ on your own server
 ### App Flow
 
 1. **Home** — Build Army or Quick Battle
-2. **Army Builder** — pick faction, add units, configure upgrades
-3. **Battle Setup** — points limit, AI faction, difficulty, optional LLM config
-4. **Battle** — 3D field + HUD
+2. **Detachment Setup** — pick faction and detachment (army rule + stratagems)
+3. **Army Builder** — add units, configure upgrades, track points
+4. **Battle Setup** — points limit, AI faction, difficulty, optional LLM config
+5. **Battle** — deploy on the 3D field, then play through phases with HUD + VFX
 
 ---
 
@@ -270,6 +348,14 @@ npm run generate:units
 
 This reads `scripts/munitorum-source.txt` and writes `src/data/generated/units.json`.
 
+### Audit unit data
+
+Scan generated units for deployment coherency failures and likely misclassifications (e.g. infantry matched to vehicle stats):
+
+```bash
+node scripts/audit-units.mjs
+```
+
 ### Deploy to GitHub Pages
 
 GitHub Pages can host this as a static site. For a project site at `https://<user>.github.io/<repo>/`, set the Vite `base` path in `vite.config.ts`:
@@ -291,6 +377,7 @@ Then build and deploy the `dist/` folder (GitHub Actions or manual `gh-pages` br
 ├── public/models/              # Optional GLB miniature models
 ├── scripts/
 │   ├── generate-units.mjs      # Munitorum Field Manual parser
+│   ├── audit-units.mjs         # Coherency / misclassification scanner
 │   └── munitorum-source.txt
 ├── src/
 │   ├── ai/
@@ -299,14 +386,21 @@ Then build and deploy the `dist/` folder (GitHub Actions or manual `gh-pages` br
 │   │   ├── llmClient.ts        # OpenAI-compatible API client
 │   │   └── llmOpponent.ts      # Battle snapshot + LLM prompt/parse
 │   ├── components/
-│   │   ├── battle/             # 3D battlefield, HUD, miniatures
+│   │   ├── battle/             # 3D battlefield, HUD, VFX, miniatures
+│   │   │   └── vfx/            # Shot tracers, impacts, combat VFX layer
 │   │   ├── ArmyBuilder.tsx
+│   │   ├── DetachmentSetup.tsx
 │   │   ├── BattleSetup.tsx
 │   │   ├── LlmSettingsPanel.tsx
 │   │   ├── Home.tsx
 │   │   └── UnitDetailPanel.tsx
 │   ├── data/
 │   │   ├── generated/          # units.json (~1985 units)
+│   │   ├── detachments.ts      # Detachment rules & stratagems
+│   │   ├── detachmentEffects.ts
+│   │   ├── battlefieldTerrain.ts
+│   │   ├── factionAllies.ts
+│   │   ├── abilityRules.ts     # Weapon keyword glossary
 │   │   ├── factions.ts
 │   │   ├── units.ts
 │   │   ├── squadUpgrades.ts
@@ -314,7 +408,14 @@ Then build and deploy the `dist/` folder (GitHub Actions or manual `gh-pages` br
 │   │   ├── unitPlaystyles.ts
 │   │   ├── weaponDescriptions.ts
 │   │   └── glossary.ts
-│   ├── engine/                 # Battle rules, dice
+│   ├── engine/
+│   │   ├── battle.ts           # Turn flow, shoot/charge/fight
+│   │   ├── battlefieldRules.ts # LoS, cover, indirect fire, weapon rules
+│   │   ├── combatVfx.ts        # VFX kind inference from weapons
+│   │   ├── deploymentRules.ts  # Infiltrate, Scouts, Deep Strike
+│   │   ├── detachmentBattle.ts # CP, stratagems, army rules
+│   │   ├── modelSquad.ts       # Formations, coherency, per-model moves
+│   │   └── dice.ts
 │   ├── store/                  # Zustand game state
 │   └── types/                  # TypeScript types
 └── package.json
@@ -340,14 +441,18 @@ Space Marine **chapters** share the generic Space Marines unit pool plus chapter
 
 This is a **sandbox**, not a full competitive rules engine:
 
-- Single Army Faction per list (no multi-faction allies except Ynnari pooling)
+- Single Army Faction per list (limited ally pooling — see Faction allies above)
 - Simplified phases and morale; not every 10th Edition rule is implemented
+- **Squad formation spacing** — default grid spacing can fail coherency checks for some multi-model squads on small bases (known engine/data tension)
+- Terrain is simplified 2D footprints aligned to 3D visuals; LoS/cover are approximations
+- Weapon keywords are inferred from weapon names/stats when not explicitly tagged
 - Classic AI uses heuristics, not full game-tree search
 - LLM opponent quality depends on the model; responses may be slow or occasionally invalid (fallback AI handles failures)
 - **Manual** mode stores API keys in `localStorage`; **Custom** mode bakes them into the build via `.env` — neither is as secure as a backend proxy; use keys with usage limits
 - The public GitHub Pages deploy does not include your `.env` — LLM via Custom profile requires self-hosting
 - Weapon data from the Munitorum parser may be incomplete for some units
 - Procedural miniatures are abstract placeholders, not licensed model representations
+- Combat VFX are cosmetic feedback; damage is resolved by the engine before the animation plays
 
 ---
 

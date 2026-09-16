@@ -1,21 +1,25 @@
 import { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { Text } from '@react-three/drei'
+import { Line, Text } from '@react-three/drei'
 import { Group } from 'three'
-import type { BattleUnit } from '../../types/game'
+import type { BattleModel, BattleUnit } from '../../types/game'
 import { getBattleUnitProfile } from '../../data/battleProfile'
 import { getFaction } from '../../data/factions'
 import { getGreaterDaemonVariant, isGreaterDaemon } from './miniatures/greaterDaemon'
 import { getMiniatureArchetype } from './miniatures/miniatureArchetype'
 import { getMiniatureSilhouette, isMechanicalArchetype } from './miniatures/miniatureSilhouette'
 import { getMiniatureScale } from '../../data/battlefield'
+import { getCoherencyPairs, shiftColorHue } from '../../engine/modelSquad'
 import { getMiniatureTypeLabel, ProceduralMiniature } from './miniatures/ProceduralMiniature'
 
 interface UnitTokenProps {
   unit: BattleUnit
   selected: boolean
+  selectedModelId?: string | null
   isShootTarget?: boolean
+  showCoherency?: boolean
   onClick: () => void
+  onModelClick?: (modelId: string) => void
 }
 
 const TYPE_BADGE_COLORS: Record<string, string> = {
@@ -32,8 +36,102 @@ const TYPE_BADGE_COLORS: Record<string, string> = {
   Infantry: '#cccccc',
 }
 
-export function UnitToken({ unit, selected, isShootTarget = false, onClick }: UnitTokenProps) {
+function ModelMiniature({
+  unit,
+  model,
+  selected,
+  isModelSelected,
+  isShootTarget,
+  primaryColor,
+  accentColor,
+  scale,
+  archetype,
+  silhouette,
+  greaterDaemonVariant,
+  mechanical,
+  onModelClick,
+}: {
+  unit: BattleUnit
+  model: BattleModel
+  selected: boolean
+  isModelSelected: boolean
+  isShootTarget: boolean
+  primaryColor: string
+  accentColor: string
+  scale: number
+  archetype: ReturnType<typeof getMiniatureArchetype>
+  silhouette: ReturnType<typeof getMiniatureSilhouette>
+  greaterDaemonVariant: ReturnType<typeof getGreaterDaemonVariant> | undefined
+  mechanical: boolean
+  onModelClick?: (modelId: string) => void
+}) {
   const groupRef = useRef<Group>(null)
+  const groundOffset = archetype === 'flyer' ? 0.2 : 0
+  const highlight = isModelSelected || (selected && unit.models.length === 1)
+
+  useFrame((state) => {
+    if (!groupRef.current || !highlight) return
+    groupRef.current.position.y = groundOffset + Math.sin(state.clock.elapsedTime * 3) * 0.04
+  })
+
+  return (
+    <group
+      ref={groupRef}
+      position={[model.position.x, groundOffset, model.position.y]}
+      rotation={[0, unit.rotation, 0]}
+      onClick={(e) => {
+        if (!onModelClick) return
+        e.stopPropagation()
+        onModelClick(model.id)
+      }}
+    >
+      {(isShootTarget || isModelSelected) && (
+        <mesh position={[0, 0.03, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+          <ringGeometry args={[scale * (mechanical ? 1.4 : 0.9), scale * (mechanical ? 1.7 : 1.15), 32]} />
+          <meshBasicMaterial
+            color={isModelSelected ? '#44ffaa' : '#ff4444'}
+            transparent
+            opacity={0.7}
+          />
+        </mesh>
+      )}
+
+      <ProceduralMiniature
+        archetype={archetype}
+        silhouette={silhouette}
+        greaterDaemonVariant={greaterDaemonVariant}
+        primaryColor={primaryColor}
+        accentColor={accentColor}
+        scale={scale}
+        selected={highlight}
+      />
+
+      {unit.models.length > 1 && !mechanical && (
+        <Text
+          position={[0, 0.08, scale * 0.55]}
+          fontSize={0.18}
+          color="#ffffff"
+          anchorX="center"
+          anchorY="middle"
+          outlineWidth={0.015}
+          outlineColor="#000000"
+        >
+          {model.index}
+        </Text>
+      )}
+    </group>
+  )
+}
+
+export function UnitToken({
+  unit,
+  selected,
+  selectedModelId = null,
+  isShootTarget = false,
+  showCoherency = false,
+  onClick,
+  onModelClick,
+}: UnitTokenProps) {
   const profile = getBattleUnitProfile(unit)
   const faction = getFaction(profile.factionId)
   const archetype = getMiniatureArchetype(profile)
@@ -45,15 +143,10 @@ export function UnitToken({ unit, selected, isShootTarget = false, onClick }: Un
   const healthPercent = unit.currentWounds / (profile.wounds * profile.models)
   const typeLabel = getMiniatureTypeLabel(archetype, silhouette, greaterDaemonVariant)
 
-  const primaryColor = unit.owner === 'player' ? faction.primaryColor : '#6b2020'
-  const accentColor = unit.owner === 'player' ? faction.secondaryColor : '#3a1010'
-
-  const groundOffset = archetype === 'flyer' ? 0.2 : 0
-
-  useFrame((state) => {
-    if (!groupRef.current || !selected) return
-    groupRef.current.position.y = groundOffset + Math.sin(state.clock.elapsedTime * 3) * 0.04
-  })
+  const basePrimary = unit.owner === 'player' ? faction.primaryColor : '#6b2020'
+  const baseAccent = unit.owner === 'player' ? faction.secondaryColor : '#3a1010'
+  const primaryColor = shiftColorHue(basePrimary, unit.squadTint)
+  const accentColor = shiftColorHue(baseAccent, unit.squadTint * 0.6)
 
   const labelHeight = greaterDaemon ? 3.4
     : archetype === 'titanic' || silhouette === 'knight' ? 3.2
@@ -67,41 +160,67 @@ export function UnitToken({ unit, selected, isShootTarget = false, onClick }: Un
     ?? TYPE_BADGE_COLORS[typeLabel]
     ?? '#aaaaaa'
 
+  const coherencyPairs = showCoherency ? getCoherencyPairs(unit.models, profile.baseSize) : []
+  const displayName = `${profile.name} · #${unit.squadMarker}`
+
+  const showShootHint = isShootTarget && unit.owner === 'ai'
+
   return (
     <group
-      ref={groupRef}
-      position={[unit.position.x, groundOffset, unit.position.y]}
-      rotation={[0, unit.rotation, 0]}
       onClick={(e) => {
         e.stopPropagation()
         onClick()
       }}
+      onPointerOver={(e) => {
+        if (!showShootHint) return
+        e.stopPropagation()
+        document.body.style.cursor = 'crosshair'
+      }}
+      onPointerOut={() => {
+        if (!showShootHint) return
+        document.body.style.cursor = ''
+      }}
     >
-      {isShootTarget && (
-        <mesh position={[0, 0.03, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-          <ringGeometry args={[scale * (mechanical ? 1.4 : 0.9), scale * (mechanical ? 1.7 : 1.15), 32]} />
-          <meshBasicMaterial color="#ff4444" transparent opacity={0.7} />
-        </mesh>
-      )}
+      {coherencyPairs.map(([left, right]) => (
+        <Line
+          key={`${left.id}-${right.id}`}
+          points={[
+            [left.position.x, 0.08, left.position.y],
+            [right.position.x, 0.08, right.position.y],
+          ]}
+          color="#66ccff"
+          lineWidth={1.5}
+          transparent
+          opacity={0.55}
+        />
+      ))}
 
-      <ProceduralMiniature
-        archetype={archetype}
-        silhouette={silhouette}
-        greaterDaemonVariant={greaterDaemonVariant}
-        primaryColor={primaryColor}
-        accentColor={accentColor}
-        scale={scale}
-        selected={selected}
-      />
+      {unit.models.map((model) => (
+        <ModelMiniature
+          key={model.id}
+          unit={unit}
+          model={model}
+          selected={selected}
+          isModelSelected={selectedModelId === model.id}
+          isShootTarget={isShootTarget}
+          primaryColor={primaryColor}
+          accentColor={accentColor}
+          scale={scale}
+          archetype={archetype}
+          silhouette={silhouette}
+          greaterDaemonVariant={greaterDaemonVariant}
+          mechanical={mechanical}
+          onModelClick={onModelClick}
+        />
+      ))}
 
-      {/* Type badge — helps tell tank vs infantry vs daemon at a glance */}
-      <group position={[0, 0.12, scale * (mechanical ? 1.1 : 0.65)]}>
-        <mesh>
+      <group position={[unit.position.x, 0.12, unit.position.y]}>
+        <mesh position={[0, 0, scale * (mechanical ? 1.1 : 0.65)]}>
           <boxGeometry args={[0.55, 0.14, 0.02]} />
           <meshBasicMaterial color="#0a0a12" transparent opacity={0.75} />
         </mesh>
         <Text
-          position={[0, 0, 0.02]}
+          position={[0, 0, scale * (mechanical ? 1.1 : 0.65) + 0.02]}
           fontSize={0.12}
           color={badgeColor}
           anchorX="center"
@@ -111,18 +230,7 @@ export function UnitToken({ unit, selected, isShootTarget = false, onClick }: Un
         </Text>
       </group>
 
-      {profile.models > 1 && !mechanical && (
-        <group position={[0, 0.08, scale * 0.55]}>
-          {Array.from({ length: Math.min(unit.modelsRemaining, 5) }).map((_, i) => (
-            <mesh key={i} position={[(i - 2) * 0.12, 0, 0]}>
-              <sphereGeometry args={[0.05, 6, 6]} />
-              <meshStandardMaterial color={primaryColor} emissive={primaryColor} emissiveIntensity={0.3} />
-            </mesh>
-          ))}
-        </group>
-      )}
-
-      <group position={[0, labelHeight, 0]}>
+      <group position={[unit.position.x, labelHeight, unit.position.y]}>
         <mesh position={[0, 0, 0]}>
           <boxGeometry args={[scale * (mechanical ? 2 : 1.4), 0.06, 0.12]} />
           <meshBasicMaterial color="#111" transparent opacity={0.7} />
@@ -137,7 +245,7 @@ export function UnitToken({ unit, selected, isShootTarget = false, onClick }: Un
 
       {(selected || isShootTarget) && (
         <Text
-          position={[0, labelHeight + 0.35, 0]}
+          position={[unit.position.x, labelHeight + 0.35, unit.position.y]}
           fontSize={0.35}
           color="#ffffff"
           anchorX="center"
@@ -145,7 +253,7 @@ export function UnitToken({ unit, selected, isShootTarget = false, onClick }: Un
           outlineWidth={0.02}
           outlineColor="#000000"
         >
-          {profile.name}
+          {displayName}
         </Text>
       )}
     </group>

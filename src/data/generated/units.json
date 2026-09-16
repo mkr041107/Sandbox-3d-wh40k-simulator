@@ -1065,53 +1065,44 @@
     "id": "adeptus-custodes-knight-centura",
     "name": "Knight-Centura",
     "factionId": "adeptus-custodes",
-    "category": "heavy-support",
+    "category": "hq",
     "points": 55,
     "models": 1,
-    "movement": 10,
-    "toughness": 11,
-    "save": 3,
-    "wounds": 24,
+    "movement": 6,
+    "toughness": 3,
+    "save": 4,
+    "wounds": 4,
     "leadership": 6,
-    "objectiveControl": 5,
+    "objectiveControl": 1,
     "weapons": [
       {
-        "name": "Main cannon",
-        "range": 48,
-        "attacks": 2,
-        "skill": 4,
-        "strength": 10,
+        "name": "Executioner Greatblade",
+        "range": 0,
+        "attacks": 3,
+        "skill": 3,
+        "strength": 6,
         "ap": -2,
-        "damage": 3,
-        "type": "ranged"
+        "damage": 2,
+        "type": "melee"
       },
       {
-        "name": "Heavy bolter",
-        "range": 36,
-        "attacks": 3,
-        "skill": 4,
+        "name": "Pyrithite Pistol",
+        "range": 12,
+        "attacks": 1,
+        "skill": 3,
         "strength": 5,
         "ap": -1,
-        "damage": 2,
-        "type": "ranged"
-      },
-      {
-        "name": "Hunter-killer missile",
-        "range": 48,
-        "attacks": 1,
-        "skill": 4,
-        "strength": 14,
-        "ap": -3,
-        "damage": 3,
+        "damage": 1,
         "type": "ranged"
       }
     ],
     "keywords": [
+      "Character",
       "Titanic"
     ],
-    "baseSize": 120,
-    "description": "Official Heavy Support unit for the Adeptus Custodes. Knight-Centura is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Heavy Support"
+    "baseSize": 32,
+    "description": "Official Leader unit for the Adeptus Custodes. Knight-Centura is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Hq"
   },
   {
     "id": "adeptus-custodes-aleya",
@@ -1386,12 +1377,12 @@
     "category": "hq",
     "points": 140,
     "models": 1,
-    "movement": 6,
-    "toughness": 4,
-    "save": 3,
-    "wounds": 4,
+    "movement": 8,
+    "toughness": 8,
+    "save": 2,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 1,
+    "objectiveControl": 4,
     "weapons": [
       {
         "name": "Bolt Pistol",
@@ -1417,7 +1408,7 @@
     "keywords": [
       "Character"
     ],
-    "baseSize": 32,
+    "baseSize": 60,
     "description": "Official Leader unit for the Adeptus Custodes. Trajann Valoris is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Hq"
   },
@@ -2446,7 +2437,7 @@
       }
     ],
     "keywords": [
-      "Infantry"
+      "Fly"
     ],
     "baseSize": 100,
     "description": "Official Flyer unit for the Adeptus Mechanicus. Archaeopter Transvector is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
@@ -2540,7 +2531,7 @@
       }
     ],
     "keywords": [
-      "Infantry"
+      "Fly"
     ],
     "baseSize": 100,
     "description": "Official Flyer unit for the Adeptus Mechanicus. Archaeopter Fusilave is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
@@ -2585,12 +2576,12 @@
     "category": "heavy-support",
     "points": 180,
     "models": 2,
-    "movement": 10,
-    "toughness": 10,
+    "movement": 6,
+    "toughness": 9,
     "save": 3,
-    "wounds": 12,
+    "wounds": 7,
     "leadership": 6,
-    "objectiveControl": 3,
+    "objectiveControl": 2,
     "weapons": [
       {
         "name": "Heavy bolter",
@@ -2616,7 +2607,7 @@
     "keywords": [
       "Walker"
     ],
-    "baseSize": 80,
+    "baseSize": 60,
     "description": "Official Heavy Support unit for the Adeptus Mechanicus. Kastelan Robots is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Heavy Support"
   },
@@ -2666,7 +2657,7 @@
       }
     ],
     "keywords": [
-      "Infantry"
+      "Fly"
     ],
     "baseSize": 100,
     "description": "Official Flyer unit for the Adeptus Mechanicus. Archaeopter Stratoraptor is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
@@ -3466,13 +3457,33 @@
     "objectiveControl": 3,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
+        "name": "Main cannon",
+        "range": 48,
         "attacks": 2,
-        "skill": 3,
-        "strength": 4,
-        "ap": 0,
-        "damage": 1,
+        "skill": 4,
+        "strength": 10,
+        "ap": -2,
+        "damage": 3,
+        "type": "ranged"
+      },
+      {
+        "name": "Heavy bolter",
+        "range": 36,
+        "attacks": 3,
+        "skill": 4,
+        "strength": 5,
+        "ap": -1,
+        "damage": 2,
+        "type": "ranged"
+      },
+      {
+        "name": "Hunter-killer missile",
+        "range": 48,
+        "attacks": 1,
+        "skill": 4,
+        "strength": 14,
+        "ap": -3,
+        "damage": 3,
         "type": "ranged"
       }
     ],
@@ -4029,7 +4040,7 @@
       }
     ],
     "keywords": [
-      "Infantry"
+      "Fly"
     ],
     "baseSize": 100,
     "description": "Official Flyer unit for the Aeldari craftworlds. Hemlock Wraithfighter is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
@@ -4071,7 +4082,7 @@
       }
     ],
     "keywords": [
-      "Infantry"
+      "Fly"
     ],
     "baseSize": 100,
     "description": "Official Flyer unit for the Aeldari craftworlds. Crimson Hunter is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
@@ -4540,12 +4551,12 @@
     "category": "hq",
     "points": 65,
     "models": 1,
-    "movement": 6,
-    "toughness": 4,
-    "save": 3,
-    "wounds": 4,
+    "movement": 8,
+    "toughness": 8,
+    "save": 2,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 1,
+    "objectiveControl": 4,
     "weapons": [
       {
         "name": "Bolt Pistol",
@@ -4571,7 +4582,7 @@
     "keywords": [
       "Character"
     ],
-    "baseSize": 32,
+    "baseSize": 60,
     "description": "Official Leader unit for the Imperium's covert agents. Inquisitor Greyfax is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Hq"
   },
@@ -4720,12 +4731,12 @@
     "category": "hq",
     "points": 75,
     "models": 1,
-    "movement": 6,
-    "toughness": 4,
-    "save": 3,
-    "wounds": 4,
+    "movement": 8,
+    "toughness": 8,
+    "save": 2,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 1,
+    "objectiveControl": 4,
     "weapons": [
       {
         "name": "Bolt Pistol",
@@ -4751,7 +4762,7 @@
     "keywords": [
       "Character"
     ],
-    "baseSize": 32,
+    "baseSize": 60,
     "description": "Official Leader unit for the Imperium's covert agents. Inquisitor Coteaz is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Hq"
   },
@@ -4762,12 +4773,12 @@
     "category": "hq",
     "points": 75,
     "models": 1,
-    "movement": 6,
-    "toughness": 4,
-    "save": 3,
-    "wounds": 4,
+    "movement": 8,
+    "toughness": 8,
+    "save": 2,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 1,
+    "objectiveControl": 4,
     "weapons": [
       {
         "name": "Bolt Pistol",
@@ -4793,7 +4804,7 @@
     "keywords": [
       "Character"
     ],
-    "baseSize": 32,
+    "baseSize": 60,
     "description": "Official Leader unit for the Imperium's covert agents. Inquisitor Draxus is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Hq"
   },
@@ -5485,54 +5496,43 @@
     "id": "astra-militarum-cadian-castellan",
     "name": "Cadian Castellan",
     "factionId": "astra-militarum",
-    "category": "troops",
+    "category": "hq",
     "points": 55,
-    "models": 5,
-    "movement": 10,
-    "toughness": 11,
+    "models": 1,
+    "movement": 6,
+    "toughness": 4,
     "save": 3,
-    "wounds": 24,
+    "wounds": 4,
     "leadership": 6,
-    "objectiveControl": 5,
+    "objectiveControl": 1,
     "weapons": [
       {
-        "name": "Main cannon",
-        "range": 48,
-        "attacks": 2,
-        "skill": 4,
-        "strength": 10,
-        "ap": -2,
-        "damage": 3,
-        "type": "ranged"
-      },
-      {
-        "name": "Heavy bolter",
-        "range": 36,
-        "attacks": 3,
-        "skill": 4,
-        "strength": 5,
-        "ap": -1,
-        "damage": 2,
-        "type": "ranged"
-      },
-      {
-        "name": "Hunter-killer missile",
-        "range": 48,
+        "name": "Bolt Pistol",
+        "range": 12,
         "attacks": 1,
-        "skill": 4,
-        "strength": 14,
-        "ap": -3,
-        "damage": 3,
+        "skill": 3,
+        "strength": 4,
+        "ap": 0,
+        "damage": 1,
         "type": "ranged"
+      },
+      {
+        "name": "Power Weapon",
+        "range": 0,
+        "attacks": 3,
+        "skill": 3,
+        "strength": 5,
+        "ap": -2,
+        "damage": 1,
+        "type": "melee"
       }
     ],
     "keywords": [
-      "Infantry",
-      "Battleline"
+      "Character"
     ],
-    "baseSize": 120,
-    "description": "Official Battleline unit for the Astra Militarum. Cadian Castellan is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Troops"
+    "baseSize": 32,
+    "description": "Official Leader unit for the Astra Militarum. Cadian Castellan is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Hq"
   },
   {
     "id": "astra-militarum-scout-sentinels",
@@ -6058,33 +6058,43 @@
     "id": "astra-militarum-taurox",
     "name": "Taurox",
     "factionId": "astra-militarum",
-    "category": "elites",
+    "category": "fast-attack",
     "points": 65,
     "models": 1,
-    "movement": 6,
-    "toughness": 4,
+    "movement": 12,
+    "toughness": 8,
     "save": 3,
-    "wounds": 2,
+    "wounds": 10,
     "leadership": 6,
     "objectiveControl": 2,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
+        "name": "Taurox battle cannon",
+        "range": 48,
         "attacks": 2,
-        "skill": 3,
-        "strength": 4,
-        "ap": 0,
-        "damage": 1,
+        "skill": 4,
+        "strength": 8,
+        "ap": -1,
+        "damage": 2,
+        "type": "ranged"
+      },
+      {
+        "name": "Twin autocannon",
+        "range": 48,
+        "attacks": 2,
+        "skill": 4,
+        "strength": 9,
+        "ap": -1,
+        "damage": 2,
         "type": "ranged"
       }
     ],
     "keywords": [
       "Infantry"
     ],
-    "baseSize": 32,
-    "description": "Official Elite unit for the Astra Militarum. Taurox is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Elites"
+    "baseSize": 80,
+    "description": "Official Fast Attack unit for the Astra Militarum. Taurox is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Fast Attack"
   },
   {
     "id": "astra-militarum-ursula-creed",
@@ -6337,24 +6347,34 @@
     "id": "astra-militarum-taurox-prime",
     "name": "Taurox Prime",
     "factionId": "astra-militarum",
-    "category": "elites",
+    "category": "fast-attack",
     "points": 90,
     "models": 1,
-    "movement": 8,
+    "movement": 12,
     "toughness": 8,
     "save": 3,
-    "wounds": 8,
+    "wounds": 10,
     "leadership": 6,
     "objectiveControl": 2,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
+        "name": "Taurox battle cannon",
+        "range": 48,
         "attacks": 2,
-        "skill": 3,
-        "strength": 4,
-        "ap": 0,
-        "damage": 1,
+        "skill": 4,
+        "strength": 8,
+        "ap": -1,
+        "damage": 2,
+        "type": "ranged"
+      },
+      {
+        "name": "Twin autocannon",
+        "range": 48,
+        "attacks": 2,
+        "skill": 4,
+        "strength": 9,
+        "ap": -1,
+        "damage": 2,
         "type": "ranged"
       }
     ],
@@ -6362,8 +6382,8 @@
       "Infantry"
     ],
     "baseSize": 80,
-    "description": "Official Elite unit for the Astra Militarum. Taurox Prime is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Elites"
+    "description": "Official Fast Attack unit for the Astra Militarum. Taurox Prime is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Fast Attack"
   },
   {
     "id": "astra-militarum-artillery-team",
@@ -6811,33 +6831,43 @@
     "id": "astra-militarum-aegis-defence-line",
     "name": "Aegis Defence Line",
     "factionId": "astra-militarum",
-    "category": "elites",
+    "category": "heavy-support",
     "points": 145,
     "models": 1,
-    "movement": 6,
-    "toughness": 4,
+    "movement": 0,
+    "toughness": 10,
     "save": 3,
-    "wounds": 2,
+    "wounds": 14,
     "leadership": 6,
-    "objectiveControl": 2,
+    "objectiveControl": 0,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
+        "name": "Hammerfall missile",
+        "range": 48,
         "attacks": 2,
-        "skill": 3,
-        "strength": 4,
-        "ap": 0,
-        "damage": 1,
+        "skill": 4,
+        "strength": 8,
+        "ap": -2,
+        "damage": 2,
+        "type": "ranged"
+      },
+      {
+        "name": "Heavy bolter",
+        "range": 36,
+        "attacks": 3,
+        "skill": 4,
+        "strength": 5,
+        "ap": -1,
+        "damage": 2,
         "type": "ranged"
       }
     ],
     "keywords": [
       "Infantry"
     ],
-    "baseSize": 32,
-    "description": "Official Elite unit for the Astra Militarum. Aegis Defence Line is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Elites"
+    "baseSize": 80,
+    "description": "Official Heavy Support unit for the Astra Militarum. Aegis Defence Line is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Heavy Support"
   },
   {
     "id": "astra-militarum-deathstrike",
@@ -8393,53 +8423,33 @@
     "id": "black-templars-castellan",
     "name": "Castellan",
     "factionId": "black-templars",
-    "category": "heavy-support",
+    "category": "elites",
     "points": 60,
     "models": 1,
-    "movement": 10,
-    "toughness": 11,
+    "movement": 6,
+    "toughness": 4,
     "save": 3,
-    "wounds": 24,
+    "wounds": 2,
     "leadership": 6,
-    "objectiveControl": 5,
+    "objectiveControl": 2,
     "weapons": [
       {
-        "name": "Main cannon",
-        "range": 48,
+        "name": "Boltgun",
+        "range": 24,
         "attacks": 2,
-        "skill": 4,
-        "strength": 10,
-        "ap": -2,
-        "damage": 3,
-        "type": "ranged"
-      },
-      {
-        "name": "Heavy bolter",
-        "range": 36,
-        "attacks": 3,
-        "skill": 4,
-        "strength": 5,
-        "ap": -1,
-        "damage": 2,
-        "type": "ranged"
-      },
-      {
-        "name": "Hunter-killer missile",
-        "range": 48,
-        "attacks": 1,
-        "skill": 4,
-        "strength": 14,
-        "ap": -3,
-        "damage": 3,
+        "skill": 3,
+        "strength": 4,
+        "ap": 0,
+        "damage": 1,
         "type": "ranged"
       }
     ],
     "keywords": [
       "Infantry"
     ],
-    "baseSize": 120,
-    "description": "Official Heavy Support unit for the Black Templars. Castellan is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Heavy Support"
+    "baseSize": 32,
+    "description": "Official Elite unit for the Black Templars. Castellan is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Elites"
   },
   {
     "id": "black-templars-chaplain",
@@ -9993,33 +10003,43 @@
     "id": "black-templars-pedro-kantor",
     "name": "Pedro Kantor",
     "factionId": "black-templars",
-    "category": "elites",
+    "category": "hq",
     "points": 90,
     "models": 1,
-    "movement": 6,
-    "toughness": 4,
-    "save": 3,
-    "wounds": 2,
+    "movement": 8,
+    "toughness": 8,
+    "save": 2,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 2,
+    "objectiveControl": 4,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
-        "attacks": 2,
+        "name": "Bolt Pistol",
+        "range": 12,
+        "attacks": 1,
         "skill": 3,
         "strength": 4,
         "ap": 0,
         "damage": 1,
         "type": "ranged"
+      },
+      {
+        "name": "Power Weapon",
+        "range": 0,
+        "attacks": 3,
+        "skill": 3,
+        "strength": 5,
+        "ap": -2,
+        "damage": 1,
+        "type": "melee"
       }
     ],
     "keywords": [
-      "Infantry"
+      "Character"
     ],
-    "baseSize": 32,
-    "description": "Official Elite unit for the Black Templars. Pedro Kantor is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Elites"
+    "baseSize": 60,
+    "description": "Official Leader unit for the Black Templars. Pedro Kantor is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Hq"
   },
   {
     "id": "black-templars-tor-garadon",
@@ -11349,11 +11369,11 @@
     "points": 160,
     "models": 1,
     "movement": 10,
-    "toughness": 11,
+    "toughness": 10,
     "save": 3,
-    "wounds": 24,
+    "wounds": 12,
     "leadership": 6,
-    "objectiveControl": 5,
+    "objectiveControl": 3,
     "weapons": [
       {
         "name": "Multi-melta",
@@ -11389,7 +11409,7 @@
     "keywords": [
       "Infantry"
     ],
-    "baseSize": 120,
+    "baseSize": 80,
     "description": "Official Heavy Support unit for the Black Templars. Gladiator Valiant is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Heavy Support"
   },
@@ -11579,11 +11599,11 @@
     "points": 170,
     "models": 1,
     "movement": 10,
-    "toughness": 11,
+    "toughness": 10,
     "save": 3,
-    "wounds": 24,
+    "wounds": 12,
     "leadership": 6,
-    "objectiveControl": 5,
+    "objectiveControl": 3,
     "weapons": [
       {
         "name": "Multi-melta",
@@ -11619,7 +11639,7 @@
     "keywords": [
       "Infantry"
     ],
-    "baseSize": 120,
+    "baseSize": 80,
     "description": "Official Heavy Support unit for the Black Templars. Black Templars Gladiator Valiant is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Heavy Support"
   },
@@ -11670,24 +11690,34 @@
     "id": "black-templars-hammerfall-bunker",
     "name": "Hammerfall Bunker",
     "factionId": "black-templars",
-    "category": "elites",
+    "category": "heavy-support",
     "points": 175,
     "models": 1,
-    "movement": 10,
+    "movement": 0,
     "toughness": 10,
     "save": 3,
-    "wounds": 12,
+    "wounds": 14,
     "leadership": 6,
-    "objectiveControl": 3,
+    "objectiveControl": 0,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
+        "name": "Hammerfall missile",
+        "range": 48,
         "attacks": 2,
-        "skill": 3,
-        "strength": 4,
-        "ap": 0,
-        "damage": 1,
+        "skill": 4,
+        "strength": 8,
+        "ap": -2,
+        "damage": 2,
+        "type": "ranged"
+      },
+      {
+        "name": "Heavy bolter",
+        "range": 36,
+        "attacks": 3,
+        "skill": 4,
+        "strength": 5,
+        "ap": -1,
+        "damage": 2,
         "type": "ranged"
       }
     ],
@@ -11695,8 +11725,8 @@
       "Infantry"
     ],
     "baseSize": 80,
-    "description": "Official Elite unit for the Black Templars. Hammerfall Bunker is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Elites"
+    "description": "Official Heavy Support unit for the Black Templars. Hammerfall Bunker is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Heavy Support"
   },
   {
     "id": "black-templars-repulsor",
@@ -11971,10 +12001,10 @@
     "category": "hq",
     "points": 210,
     "models": 3,
-    "movement": 8,
-    "toughness": 8,
-    "save": 3,
-    "wounds": 8,
+    "movement": 6,
+    "toughness": 6,
+    "save": 2,
+    "wounds": 5,
     "leadership": 6,
     "objectiveControl": 1,
     "weapons": [
@@ -12002,7 +12032,7 @@
     "keywords": [
       "Character"
     ],
-    "baseSize": 80,
+    "baseSize": 40,
     "description": "Official Leader unit for the Black Templars. Marneus Calgar is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Hq"
   },
@@ -12055,12 +12085,12 @@
     "category": "dedicated-transport",
     "points": 220,
     "models": 1,
-    "movement": 10,
-    "toughness": 11,
+    "movement": 12,
+    "toughness": 6,
     "save": 3,
-    "wounds": 24,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 5,
+    "objectiveControl": 3,
     "weapons": [
       {
         "name": "Twin heavy bolter",
@@ -12088,7 +12118,7 @@
       "Vehicle",
       "Transport"
     ],
-    "baseSize": 120,
+    "baseSize": 80,
     "description": "Official Transport unit for the Black Templars. Land Raider Crusader is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Dedicated Transport"
   },
@@ -12332,33 +12362,43 @@
     "id": "black-templars-roboute-guilliman",
     "name": "Roboute Guilliman",
     "factionId": "black-templars",
-    "category": "elites",
+    "category": "hq",
     "points": 345,
     "models": 1,
     "movement": 8,
     "toughness": 8,
-    "save": 3,
-    "wounds": 8,
+    "save": 2,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 2,
+    "objectiveControl": 4,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
-        "attacks": 2,
+        "name": "Bolt Pistol",
+        "range": 12,
+        "attacks": 1,
         "skill": 3,
         "strength": 4,
         "ap": 0,
         "damage": 1,
         "type": "ranged"
+      },
+      {
+        "name": "Power Weapon",
+        "range": 0,
+        "attacks": 3,
+        "skill": 3,
+        "strength": 5,
+        "ap": -2,
+        "damage": 1,
+        "type": "melee"
       }
     ],
     "keywords": [
-      "Infantry"
+      "Character"
     ],
-    "baseSize": 80,
-    "description": "Official Elite unit for the Black Templars. Roboute Guilliman is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Elites"
+    "baseSize": 60,
+    "description": "Official Leader unit for the Black Templars. Roboute Guilliman is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Hq"
   },
   {
     "id": "blood-angels-bladeguard-ancient",
@@ -14260,33 +14300,43 @@
     "id": "blood-angels-pedro-kantor",
     "name": "Pedro Kantor",
     "factionId": "blood-angels",
-    "category": "elites",
+    "category": "hq",
     "points": 90,
     "models": 1,
-    "movement": 6,
-    "toughness": 4,
-    "save": 3,
-    "wounds": 2,
+    "movement": 8,
+    "toughness": 8,
+    "save": 2,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 2,
+    "objectiveControl": 4,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
-        "attacks": 2,
+        "name": "Bolt Pistol",
+        "range": 12,
+        "attacks": 1,
         "skill": 3,
         "strength": 4,
         "ap": 0,
         "damage": 1,
         "type": "ranged"
+      },
+      {
+        "name": "Power Weapon",
+        "range": 0,
+        "attacks": 3,
+        "skill": 3,
+        "strength": 5,
+        "ap": -2,
+        "damage": 1,
+        "type": "melee"
       }
     ],
     "keywords": [
-      "Infantry"
+      "Character"
     ],
-    "baseSize": 32,
-    "description": "Official Elite unit for the Blood Angels. Pedro Kantor is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Elites"
+    "baseSize": 60,
+    "description": "Official Leader unit for the Blood Angels. Pedro Kantor is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Hq"
   },
   {
     "id": "blood-angels-tor-garadon",
@@ -15068,12 +15118,12 @@
     "category": "hq",
     "points": 130,
     "models": 1,
-    "movement": 10,
-    "toughness": 5,
-    "save": 3,
-    "wounds": 4,
+    "movement": 8,
+    "toughness": 8,
+    "save": 2,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 1,
+    "objectiveControl": 4,
     "weapons": [
       {
         "name": "Bolt Pistol",
@@ -15100,7 +15150,7 @@
       "Character",
       "Battlesuit"
     ],
-    "baseSize": 50,
+    "baseSize": 60,
     "description": "Official Leader unit for the Blood Angels. Commander Dante is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Hq"
   },
@@ -15228,12 +15278,12 @@
     "category": "hq",
     "points": 135,
     "models": 1,
-    "movement": 6,
-    "toughness": 4,
-    "save": 3,
-    "wounds": 4,
+    "movement": 8,
+    "toughness": 8,
+    "save": 2,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 1,
+    "objectiveControl": 4,
     "weapons": [
       {
         "name": "Bolt Pistol",
@@ -15260,7 +15310,7 @@
       "Character",
       "Psyker"
     ],
-    "baseSize": 32,
+    "baseSize": 60,
     "description": "Official Leader unit for the Blood Angels. Chief Librarian Mephiston is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Hq"
   },
@@ -15799,11 +15849,11 @@
     "points": 160,
     "models": 1,
     "movement": 10,
-    "toughness": 11,
+    "toughness": 10,
     "save": 3,
-    "wounds": 24,
+    "wounds": 12,
     "leadership": 6,
-    "objectiveControl": 5,
+    "objectiveControl": 3,
     "weapons": [
       {
         "name": "Multi-melta",
@@ -15839,7 +15889,7 @@
     "keywords": [
       "Infantry"
     ],
-    "baseSize": 120,
+    "baseSize": 80,
     "description": "Official Heavy Support unit for the Blood Angels. Gladiator Valiant is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Heavy Support"
   },
@@ -15964,24 +16014,34 @@
     "id": "blood-angels-hammerfall-bunker",
     "name": "Hammerfall Bunker",
     "factionId": "blood-angels",
-    "category": "elites",
+    "category": "heavy-support",
     "points": 175,
     "models": 1,
-    "movement": 10,
+    "movement": 0,
     "toughness": 10,
     "save": 3,
-    "wounds": 12,
+    "wounds": 14,
     "leadership": 6,
-    "objectiveControl": 3,
+    "objectiveControl": 0,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
+        "name": "Hammerfall missile",
+        "range": 48,
         "attacks": 2,
-        "skill": 3,
-        "strength": 4,
-        "ap": 0,
-        "damage": 1,
+        "skill": 4,
+        "strength": 8,
+        "ap": -2,
+        "damage": 2,
+        "type": "ranged"
+      },
+      {
+        "name": "Heavy bolter",
+        "range": 36,
+        "attacks": 3,
+        "skill": 4,
+        "strength": 5,
+        "ap": -1,
+        "damage": 2,
         "type": "ranged"
       }
     ],
@@ -15989,22 +16049,22 @@
       "Infantry"
     ],
     "baseSize": 80,
-    "description": "Official Elite unit for the Blood Angels. Hammerfall Bunker is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Elites"
+    "description": "Official Heavy Support unit for the Blood Angels. Hammerfall Bunker is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Heavy Support"
   },
   {
     "id": "blood-angels-death-company-dreadnought",
     "name": "Death Company Dreadnought",
     "factionId": "blood-angels",
-    "category": "heavy-support",
+    "category": "elites",
     "points": 180,
     "models": 1,
     "movement": 6,
-    "toughness": 9,
+    "toughness": 4,
     "save": 3,
-    "wounds": 8,
+    "wounds": 2,
     "leadership": 6,
-    "objectiveControl": 3,
+    "objectiveControl": 2,
     "weapons": [
       {
         "name": "Heavy bolter",
@@ -16030,9 +16090,9 @@
     "keywords": [
       "Walker"
     ],
-    "baseSize": 60,
-    "description": "Official Heavy Support unit for the Blood Angels. Death Company Dreadnought is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Heavy Support"
+    "baseSize": 32,
+    "description": "Official Elite unit for the Blood Angels. Death Company Dreadnought is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Elites"
   },
   {
     "id": "blood-angels-repulsor",
@@ -16254,10 +16314,10 @@
     "category": "hq",
     "points": 210,
     "models": 3,
-    "movement": 8,
-    "toughness": 8,
-    "save": 3,
-    "wounds": 8,
+    "movement": 6,
+    "toughness": 6,
+    "save": 2,
+    "wounds": 5,
     "leadership": 6,
     "objectiveControl": 1,
     "weapons": [
@@ -16285,7 +16345,7 @@
     "keywords": [
       "Character"
     ],
-    "baseSize": 80,
+    "baseSize": 40,
     "description": "Official Leader unit for the Blood Angels. Marneus Calgar is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Hq"
   },
@@ -16338,12 +16398,12 @@
     "category": "dedicated-transport",
     "points": 220,
     "models": 1,
-    "movement": 10,
-    "toughness": 11,
+    "movement": 12,
+    "toughness": 6,
     "save": 3,
-    "wounds": 24,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 5,
+    "objectiveControl": 3,
     "weapons": [
       {
         "name": "Twin heavy bolter",
@@ -16371,7 +16431,7 @@
       "Vehicle",
       "Transport"
     ],
-    "baseSize": 120,
+    "baseSize": 80,
     "description": "Official Transport unit for the Blood Angels. Land Raider Crusader is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Dedicated Transport"
   },
@@ -16562,33 +16622,43 @@
     "id": "blood-angels-roboute-guilliman",
     "name": "Roboute Guilliman",
     "factionId": "blood-angels",
-    "category": "elites",
+    "category": "hq",
     "points": 345,
     "models": 1,
     "movement": 8,
     "toughness": 8,
-    "save": 3,
-    "wounds": 8,
+    "save": 2,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 2,
+    "objectiveControl": 4,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
-        "attacks": 2,
+        "name": "Bolt Pistol",
+        "range": 12,
+        "attacks": 1,
         "skill": 3,
         "strength": 4,
         "ap": 0,
         "damage": 1,
         "type": "ranged"
+      },
+      {
+        "name": "Power Weapon",
+        "range": 0,
+        "attacks": 3,
+        "skill": 3,
+        "strength": 5,
+        "ap": -2,
+        "damage": 1,
+        "type": "melee"
       }
     ],
     "keywords": [
-      "Infantry"
+      "Character"
     ],
-    "baseSize": 80,
-    "description": "Official Elite unit for the Blood Angels. Roboute Guilliman is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Elites"
+    "baseSize": 60,
+    "description": "Official Leader unit for the Blood Angels. Roboute Guilliman is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Hq"
   },
   {
     "id": "chaos-daemons-nurglings",
@@ -18231,12 +18301,12 @@
     "category": "fast-attack",
     "points": 130,
     "models": 1,
-    "movement": 12,
-    "toughness": 8,
+    "movement": 10,
+    "toughness": 11,
     "save": 3,
-    "wounds": 12,
+    "wounds": 24,
     "leadership": 6,
-    "objectiveControl": 3,
+    "objectiveControl": 5,
     "weapons": [
       {
         "name": "Knight main weapon",
@@ -18272,7 +18342,7 @@
     "keywords": [
       "Walker"
     ],
-    "baseSize": 80,
+    "baseSize": 120,
     "description": "Official Fast Attack unit for Chaos Knights. War Dog Executioner is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Fast Attack"
   },
@@ -18283,12 +18353,12 @@
     "category": "fast-attack",
     "points": 140,
     "models": 1,
-    "movement": 12,
-    "toughness": 8,
+    "movement": 10,
+    "toughness": 11,
     "save": 3,
-    "wounds": 12,
+    "wounds": 24,
     "leadership": 6,
-    "objectiveControl": 3,
+    "objectiveControl": 5,
     "weapons": [
       {
         "name": "Knight main weapon",
@@ -18324,7 +18394,7 @@
     "keywords": [
       "Walker"
     ],
-    "baseSize": 80,
+    "baseSize": 120,
     "description": "Official Fast Attack unit for Chaos Knights. War Dog Huntsman is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Fast Attack"
   },
@@ -18335,12 +18405,12 @@
     "category": "fast-attack",
     "points": 140,
     "models": 1,
-    "movement": 12,
-    "toughness": 8,
+    "movement": 10,
+    "toughness": 11,
     "save": 3,
-    "wounds": 12,
+    "wounds": 24,
     "leadership": 6,
-    "objectiveControl": 3,
+    "objectiveControl": 5,
     "weapons": [
       {
         "name": "Knight main weapon",
@@ -18376,7 +18446,7 @@
     "keywords": [
       "Walker"
     ],
-    "baseSize": 80,
+    "baseSize": 120,
     "description": "Official Fast Attack unit for Chaos Knights. War Dog Karnivore is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Fast Attack"
   },
@@ -18387,12 +18457,12 @@
     "category": "fast-attack",
     "points": 140,
     "models": 1,
-    "movement": 12,
-    "toughness": 8,
+    "movement": 10,
+    "toughness": 11,
     "save": 3,
-    "wounds": 12,
+    "wounds": 24,
     "leadership": 6,
-    "objectiveControl": 3,
+    "objectiveControl": 5,
     "weapons": [
       {
         "name": "Knight main weapon",
@@ -18428,7 +18498,7 @@
     "keywords": [
       "Walker"
     ],
-    "baseSize": 80,
+    "baseSize": 120,
     "description": "Official Fast Attack unit for Chaos Knights. War Dog Stalker is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Fast Attack"
   },
@@ -18439,12 +18509,12 @@
     "category": "fast-attack",
     "points": 165,
     "models": 1,
-    "movement": 12,
-    "toughness": 8,
+    "movement": 10,
+    "toughness": 11,
     "save": 3,
-    "wounds": 12,
+    "wounds": 24,
     "leadership": 6,
-    "objectiveControl": 3,
+    "objectiveControl": 5,
     "weapons": [
       {
         "name": "Knight main weapon",
@@ -18480,7 +18550,7 @@
     "keywords": [
       "Walker"
     ],
-    "baseSize": 80,
+    "baseSize": 120,
     "description": "Official Fast Attack unit for Chaos Knights. War Dog Brigand is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Fast Attack"
   },
@@ -18488,7 +18558,7 @@
     "id": "chaos-knights-knight-abominant",
     "name": "Knight Abominant",
     "factionId": "chaos-knights",
-    "category": "heavy-support",
+    "category": "elites",
     "points": 365,
     "models": 1,
     "movement": 10,
@@ -18533,14 +18603,14 @@
       "Titanic"
     ],
     "baseSize": 120,
-    "description": "Official Heavy Support unit for Chaos Knights. Knight Abominant is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Heavy Support"
+    "description": "Official Elite unit for Chaos Knights. Knight Abominant is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Elites"
   },
   {
     "id": "chaos-knights-knight-rampager",
     "name": "Knight Rampager",
     "factionId": "chaos-knights",
-    "category": "heavy-support",
+    "category": "elites",
     "points": 380,
     "models": 1,
     "movement": 10,
@@ -18585,14 +18655,14 @@
       "Titanic"
     ],
     "baseSize": 120,
-    "description": "Official Heavy Support unit for Chaos Knights. Knight Rampager is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Heavy Support"
+    "description": "Official Elite unit for Chaos Knights. Knight Rampager is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Elites"
   },
   {
     "id": "chaos-knights-knight-desecrator",
     "name": "Knight Desecrator",
     "factionId": "chaos-knights",
-    "category": "heavy-support",
+    "category": "elites",
     "points": 400,
     "models": 1,
     "movement": 10,
@@ -18637,60 +18707,40 @@
       "Titanic"
     ],
     "baseSize": 120,
-    "description": "Official Heavy Support unit for Chaos Knights. Knight Desecrator is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Heavy Support"
+    "description": "Official Elite unit for Chaos Knights. Knight Desecrator is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Elites"
   },
   {
     "id": "chaos-knights-knight-despoiler",
     "name": "Knight Despoiler",
     "factionId": "chaos-knights",
-    "category": "heavy-support",
+    "category": "elites",
     "points": 400,
     "models": 1,
-    "movement": 10,
-    "toughness": 11,
+    "movement": 6,
+    "toughness": 4,
     "save": 3,
-    "wounds": 24,
+    "wounds": 2,
     "leadership": 6,
-    "objectiveControl": 5,
+    "objectiveControl": 2,
     "weapons": [
       {
-        "name": "Main cannon",
-        "range": 48,
+        "name": "Boltgun",
+        "range": 24,
         "attacks": 2,
-        "skill": 4,
-        "strength": 10,
-        "ap": -2,
-        "damage": 3,
-        "type": "ranged"
-      },
-      {
-        "name": "Heavy bolter",
-        "range": 36,
-        "attacks": 3,
-        "skill": 4,
-        "strength": 5,
-        "ap": -1,
-        "damage": 2,
-        "type": "ranged"
-      },
-      {
-        "name": "Hunter-killer missile",
-        "range": 48,
-        "attacks": 1,
-        "skill": 4,
-        "strength": 14,
-        "ap": -3,
-        "damage": 3,
+        "skill": 3,
+        "strength": 4,
+        "ap": 0,
+        "damage": 1,
         "type": "ranged"
       }
     ],
     "keywords": [
       "Titanic"
     ],
-    "baseSize": 120,
-    "description": "Official Heavy Support unit for Chaos Knights. Knight Despoiler is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Heavy Support"
+    "baseSize": 32,
+    "description": "Official Elite unit for Chaos Knights. Knight Despoiler is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Elites"
   },
   {
     "id": "chaos-knights-knight-tyrant",
@@ -18702,7 +18752,7 @@
     "movement": 10,
     "toughness": 11,
     "save": 3,
-    "wounds": 18,
+    "wounds": 24,
     "leadership": 6,
     "objectiveControl": 5,
     "weapons": [
@@ -20507,33 +20557,43 @@
     "id": "chaos-space-marines-abaddon-the-despoiler",
     "name": "Abaddon the Despoiler",
     "factionId": "chaos-space-marines",
-    "category": "heavy-support",
+    "category": "hq",
     "points": 280,
     "models": 1,
-    "movement": 6,
-    "toughness": 4,
-    "save": 3,
-    "wounds": 2,
+    "movement": 8,
+    "toughness": 8,
+    "save": 2,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 2,
+    "objectiveControl": 4,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
-        "attacks": 2,
+        "name": "Bolt Pistol",
+        "range": 12,
+        "attacks": 1,
         "skill": 3,
         "strength": 4,
         "ap": 0,
         "damage": 1,
         "type": "ranged"
+      },
+      {
+        "name": "Power Weapon",
+        "range": 0,
+        "attacks": 3,
+        "skill": 3,
+        "strength": 5,
+        "ap": -2,
+        "damage": 1,
+        "type": "melee"
       }
     ],
     "keywords": [
-      "Infantry"
+      "Character"
     ],
-    "baseSize": 32,
-    "description": "Official Heavy Support unit for the Chaos Space Marines. Abaddon the Despoiler is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Heavy Support"
+    "baseSize": 60,
+    "description": "Official Leader unit for the Chaos Space Marines. Abaddon the Despoiler is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Hq"
   },
   {
     "id": "chaos-space-marines-khorne-lord-of-skulls",
@@ -22416,33 +22476,43 @@
     "id": "dark-angels-pedro-kantor",
     "name": "Pedro Kantor",
     "factionId": "dark-angels",
-    "category": "elites",
+    "category": "hq",
     "points": 90,
     "models": 1,
-    "movement": 6,
-    "toughness": 4,
-    "save": 3,
-    "wounds": 2,
+    "movement": 8,
+    "toughness": 8,
+    "save": 2,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 2,
+    "objectiveControl": 4,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
-        "attacks": 2,
+        "name": "Bolt Pistol",
+        "range": 12,
+        "attacks": 1,
         "skill": 3,
         "strength": 4,
         "ap": 0,
         "damage": 1,
         "type": "ranged"
+      },
+      {
+        "name": "Power Weapon",
+        "range": 0,
+        "attacks": 3,
+        "skill": 3,
+        "strength": 5,
+        "ap": -2,
+        "damage": 1,
+        "type": "melee"
       }
     ],
     "keywords": [
-      "Infantry"
+      "Character"
     ],
-    "baseSize": 32,
-    "description": "Official Elite unit for the Dark Angels. Pedro Kantor is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Elites"
+    "baseSize": 60,
+    "description": "Official Leader unit for the Dark Angels. Pedro Kantor is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Hq"
   },
   {
     "id": "dark-angels-tor-garadon",
@@ -22922,12 +22992,12 @@
     "category": "hq",
     "points": 115,
     "models": 1,
-    "movement": 6,
-    "toughness": 4,
-    "save": 3,
-    "wounds": 4,
+    "movement": 8,
+    "toughness": 8,
+    "save": 2,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 1,
+    "objectiveControl": 4,
     "weapons": [
       {
         "name": "Bolt Pistol",
@@ -22953,7 +23023,7 @@
     "keywords": [
       "Character"
     ],
-    "baseSize": 32,
+    "baseSize": 60,
     "description": "Official Leader unit for the Dark Angels. Azrael is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Hq"
   },
@@ -23826,11 +23896,11 @@
     "points": 160,
     "models": 1,
     "movement": 10,
-    "toughness": 11,
+    "toughness": 10,
     "save": 3,
-    "wounds": 24,
+    "wounds": 12,
     "leadership": 6,
-    "objectiveControl": 5,
+    "objectiveControl": 3,
     "weapons": [
       {
         "name": "Multi-melta",
@@ -23866,7 +23936,7 @@
     "keywords": [
       "Infantry"
     ],
-    "baseSize": 120,
+    "baseSize": 80,
     "description": "Official Heavy Support unit for the Dark Angels. Gladiator Valiant is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Heavy Support"
   },
@@ -23991,24 +24061,34 @@
     "id": "dark-angels-hammerfall-bunker",
     "name": "Hammerfall Bunker",
     "factionId": "dark-angels",
-    "category": "elites",
+    "category": "heavy-support",
     "points": 175,
     "models": 1,
-    "movement": 10,
+    "movement": 0,
     "toughness": 10,
     "save": 3,
-    "wounds": 12,
+    "wounds": 14,
     "leadership": 6,
-    "objectiveControl": 3,
+    "objectiveControl": 0,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
+        "name": "Hammerfall missile",
+        "range": 48,
         "attacks": 2,
-        "skill": 3,
-        "strength": 4,
-        "ap": 0,
-        "damage": 1,
+        "skill": 4,
+        "strength": 8,
+        "ap": -2,
+        "damage": 2,
+        "type": "ranged"
+      },
+      {
+        "name": "Heavy bolter",
+        "range": 36,
+        "attacks": 3,
+        "skill": 4,
+        "strength": 5,
+        "ap": -1,
+        "damage": 2,
         "type": "ranged"
       }
     ],
@@ -24016,8 +24096,8 @@
       "Infantry"
     ],
     "baseSize": 80,
-    "description": "Official Elite unit for the Dark Angels. Hammerfall Bunker is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Elites"
+    "description": "Official Heavy Support unit for the Dark Angels. Hammerfall Bunker is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Heavy Support"
   },
   {
     "id": "dark-angels-deathwing-terminator-squad",
@@ -24246,33 +24326,53 @@
     "id": "dark-angels-nephilim-jetfighter",
     "name": "Nephilim Jetfighter",
     "factionId": "dark-angels",
-    "category": "elites",
+    "category": "flyer",
     "points": 195,
     "models": 1,
-    "movement": 6,
-    "toughness": 4,
+    "movement": 20,
+    "toughness": 9,
     "save": 3,
-    "wounds": 2,
+    "wounds": 12,
     "leadership": 6,
     "objectiveControl": 2,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
+        "name": "Main cannon",
+        "range": 48,
         "attacks": 2,
-        "skill": 3,
-        "strength": 4,
-        "ap": 0,
-        "damage": 1,
+        "skill": 4,
+        "strength": 10,
+        "ap": -2,
+        "damage": 3,
+        "type": "ranged"
+      },
+      {
+        "name": "Heavy bolter",
+        "range": 36,
+        "attacks": 3,
+        "skill": 4,
+        "strength": 5,
+        "ap": -1,
+        "damage": 2,
+        "type": "ranged"
+      },
+      {
+        "name": "Hunter-killer missile",
+        "range": 48,
+        "attacks": 1,
+        "skill": 4,
+        "strength": 14,
+        "ap": -3,
+        "damage": 3,
         "type": "ranged"
       }
     ],
     "keywords": [
-      "Infantry"
+      "Fly"
     ],
-    "baseSize": 32,
-    "description": "Official Elite unit for the Dark Angels. Nephilim Jetfighter is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Elites"
+    "baseSize": 100,
+    "description": "Official Flyer unit for the Dark Angels. Nephilim Jetfighter is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Flyer"
   },
   {
     "id": "dark-angels-desolation-squad",
@@ -24346,10 +24446,10 @@
     "category": "hq",
     "points": 210,
     "models": 3,
-    "movement": 8,
-    "toughness": 8,
-    "save": 3,
-    "wounds": 8,
+    "movement": 6,
+    "toughness": 6,
+    "save": 2,
+    "wounds": 5,
     "leadership": 6,
     "objectiveControl": 1,
     "weapons": [
@@ -24377,7 +24477,7 @@
     "keywords": [
       "Character"
     ],
-    "baseSize": 80,
+    "baseSize": 40,
     "description": "Official Leader unit for the Dark Angels. Marneus Calgar is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Hq"
   },
@@ -24430,12 +24530,12 @@
     "category": "dedicated-transport",
     "points": 220,
     "models": 1,
-    "movement": 10,
-    "toughness": 11,
+    "movement": 12,
+    "toughness": 6,
     "save": 3,
-    "wounds": 24,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 5,
+    "objectiveControl": 3,
     "weapons": [
       {
         "name": "Twin heavy bolter",
@@ -24463,7 +24563,7 @@
       "Vehicle",
       "Transport"
     ],
-    "baseSize": 120,
+    "baseSize": 80,
     "description": "Official Transport unit for the Dark Angels. Land Raider Crusader is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Dedicated Transport"
   },
@@ -24686,33 +24786,43 @@
     "id": "dark-angels-roboute-guilliman",
     "name": "Roboute Guilliman",
     "factionId": "dark-angels",
-    "category": "elites",
+    "category": "hq",
     "points": 345,
     "models": 1,
     "movement": 8,
     "toughness": 8,
-    "save": 3,
-    "wounds": 8,
+    "save": 2,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 2,
+    "objectiveControl": 4,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
-        "attacks": 2,
+        "name": "Bolt Pistol",
+        "range": 12,
+        "attacks": 1,
         "skill": 3,
         "strength": 4,
         "ap": 0,
         "damage": 1,
         "type": "ranged"
+      },
+      {
+        "name": "Power Weapon",
+        "range": 0,
+        "attacks": 3,
+        "skill": 3,
+        "strength": 5,
+        "ap": -2,
+        "damage": 1,
+        "type": "melee"
       }
     ],
     "keywords": [
-      "Infantry"
+      "Character"
     ],
-    "baseSize": 80,
-    "description": "Official Elite unit for the Dark Angels. Roboute Guilliman is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Elites"
+    "baseSize": 60,
+    "description": "Official Leader unit for the Dark Angels. Roboute Guilliman is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Hq"
   },
   {
     "id": "death-guard-death-guard-icon-bearer",
@@ -25860,33 +25970,43 @@
     "id": "death-guard-mortarion",
     "name": "Mortarion",
     "factionId": "death-guard",
-    "category": "elites",
+    "category": "hq",
     "points": 300,
     "models": 1,
     "movement": 8,
     "toughness": 8,
-    "save": 3,
-    "wounds": 8,
+    "save": 2,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 2,
+    "objectiveControl": 4,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
-        "attacks": 2,
+        "name": "Bolt Pistol",
+        "range": 12,
+        "attacks": 1,
         "skill": 3,
         "strength": 4,
         "ap": 0,
         "damage": 1,
         "type": "ranged"
+      },
+      {
+        "name": "Power Weapon",
+        "range": 0,
+        "attacks": 3,
+        "skill": 3,
+        "strength": 5,
+        "ap": -2,
+        "damage": 1,
+        "type": "melee"
       }
     ],
     "keywords": [
-      "Infantry"
+      "Character"
     ],
-    "baseSize": 80,
-    "description": "Official Elite unit for the Death Guard. Mortarion is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Elites"
+    "baseSize": 60,
+    "description": "Official Leader unit for the Death Guard. Mortarion is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Hq"
   },
   {
     "id": "deathwatch-bladeguard-ancient",
@@ -27608,33 +27728,43 @@
     "id": "deathwatch-pedro-kantor",
     "name": "Pedro Kantor",
     "factionId": "deathwatch",
-    "category": "elites",
+    "category": "hq",
     "points": 90,
     "models": 1,
-    "movement": 6,
-    "toughness": 4,
-    "save": 3,
-    "wounds": 2,
+    "movement": 8,
+    "toughness": 8,
+    "save": 2,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 2,
+    "objectiveControl": 4,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
-        "attacks": 2,
+        "name": "Bolt Pistol",
+        "range": 12,
+        "attacks": 1,
         "skill": 3,
         "strength": 4,
         "ap": 0,
         "damage": 1,
         "type": "ranged"
+      },
+      {
+        "name": "Power Weapon",
+        "range": 0,
+        "attacks": 3,
+        "skill": 3,
+        "strength": 5,
+        "ap": -2,
+        "damage": 1,
+        "type": "melee"
       }
     ],
     "keywords": [
-      "Infantry"
+      "Character"
     ],
-    "baseSize": 32,
-    "description": "Official Elite unit for the Deathwatch. Pedro Kantor is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Elites"
+    "baseSize": 60,
+    "description": "Official Leader unit for the Deathwatch. Pedro Kantor is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Hq"
   },
   {
     "id": "deathwatch-tor-garadon",
@@ -28912,11 +29042,11 @@
     "points": 160,
     "models": 1,
     "movement": 10,
-    "toughness": 11,
+    "toughness": 10,
     "save": 3,
-    "wounds": 24,
+    "wounds": 12,
     "leadership": 6,
-    "objectiveControl": 5,
+    "objectiveControl": 3,
     "weapons": [
       {
         "name": "Multi-melta",
@@ -28952,7 +29082,7 @@
     "keywords": [
       "Infantry"
     ],
-    "baseSize": 120,
+    "baseSize": 80,
     "description": "Official Heavy Support unit for the Deathwatch. Gladiator Valiant is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Heavy Support"
   },
@@ -29077,24 +29207,34 @@
     "id": "deathwatch-hammerfall-bunker",
     "name": "Hammerfall Bunker",
     "factionId": "deathwatch",
-    "category": "elites",
+    "category": "heavy-support",
     "points": 175,
     "models": 1,
-    "movement": 10,
+    "movement": 0,
     "toughness": 10,
     "save": 3,
-    "wounds": 12,
+    "wounds": 14,
     "leadership": 6,
-    "objectiveControl": 3,
+    "objectiveControl": 0,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
+        "name": "Hammerfall missile",
+        "range": 48,
         "attacks": 2,
-        "skill": 3,
-        "strength": 4,
-        "ap": 0,
-        "damage": 1,
+        "skill": 4,
+        "strength": 8,
+        "ap": -2,
+        "damage": 2,
+        "type": "ranged"
+      },
+      {
+        "name": "Heavy bolter",
+        "range": 36,
+        "attacks": 3,
+        "skill": 4,
+        "strength": 5,
+        "ap": -1,
+        "damage": 2,
         "type": "ranged"
       }
     ],
@@ -29102,8 +29242,8 @@
       "Infantry"
     ],
     "baseSize": 80,
-    "description": "Official Elite unit for the Deathwatch. Hammerfall Bunker is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Elites"
+    "description": "Official Heavy Support unit for the Deathwatch. Hammerfall Bunker is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Heavy Support"
   },
   {
     "id": "deathwatch-corvus-blackstar",
@@ -29466,10 +29606,10 @@
     "category": "hq",
     "points": 210,
     "models": 3,
-    "movement": 8,
-    "toughness": 8,
-    "save": 3,
-    "wounds": 8,
+    "movement": 6,
+    "toughness": 6,
+    "save": 2,
+    "wounds": 5,
     "leadership": 6,
     "objectiveControl": 1,
     "weapons": [
@@ -29497,7 +29637,7 @@
     "keywords": [
       "Character"
     ],
-    "baseSize": 80,
+    "baseSize": 40,
     "description": "Official Leader unit for the Deathwatch. Marneus Calgar is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Hq"
   },
@@ -29550,12 +29690,12 @@
     "category": "dedicated-transport",
     "points": 220,
     "models": 1,
-    "movement": 10,
-    "toughness": 11,
+    "movement": 12,
+    "toughness": 6,
     "save": 3,
-    "wounds": 24,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 5,
+    "objectiveControl": 3,
     "weapons": [
       {
         "name": "Twin heavy bolter",
@@ -29583,7 +29723,7 @@
       "Vehicle",
       "Transport"
     ],
-    "baseSize": 120,
+    "baseSize": 80,
     "description": "Official Transport unit for the Deathwatch. Land Raider Crusader is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Dedicated Transport"
   },
@@ -29807,33 +29947,43 @@
     "id": "deathwatch-roboute-guilliman",
     "name": "Roboute Guilliman",
     "factionId": "deathwatch",
-    "category": "elites",
+    "category": "hq",
     "points": 345,
     "models": 1,
     "movement": 8,
     "toughness": 8,
-    "save": 3,
-    "wounds": 8,
+    "save": 2,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 2,
+    "objectiveControl": 4,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
-        "attacks": 2,
+        "name": "Bolt Pistol",
+        "range": 12,
+        "attacks": 1,
         "skill": 3,
         "strength": 4,
         "ap": 0,
         "damage": 1,
         "type": "ranged"
+      },
+      {
+        "name": "Power Weapon",
+        "range": 0,
+        "attacks": 3,
+        "skill": 3,
+        "strength": 5,
+        "ap": -2,
+        "damage": 1,
+        "type": "melee"
       }
     ],
     "keywords": [
-      "Infantry"
+      "Character"
     ],
-    "baseSize": 80,
-    "description": "Official Elite unit for the Deathwatch. Roboute Guilliman is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Elites"
+    "baseSize": 60,
+    "description": "Official Leader unit for the Deathwatch. Roboute Guilliman is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Hq"
   },
   {
     "id": "drukhari-succubus",
@@ -30638,7 +30788,7 @@
       }
     ],
     "keywords": [
-      "Infantry"
+      "Fly"
     ],
     "baseSize": 100,
     "description": "Official Flyer unit for the Drukhari. Razorwing Jetfighter is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
@@ -31299,33 +31449,43 @@
     "id": "emperors-children-fulgrim",
     "name": "Fulgrim",
     "factionId": "emperors-children",
-    "category": "lord-of-war",
+    "category": "hq",
     "points": 385,
     "models": 1,
-    "movement": 10,
-    "toughness": 11,
-    "save": 3,
-    "wounds": 18,
+    "movement": 8,
+    "toughness": 8,
+    "save": 2,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 5,
+    "objectiveControl": 4,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
-        "attacks": 2,
+        "name": "Bolt Pistol",
+        "range": 12,
+        "attacks": 1,
         "skill": 3,
         "strength": 4,
         "ap": 0,
         "damage": 1,
         "type": "ranged"
+      },
+      {
+        "name": "Power Weapon",
+        "range": 0,
+        "attacks": 3,
+        "skill": 3,
+        "strength": 5,
+        "ap": -2,
+        "damage": 1,
+        "type": "melee"
       }
     ],
     "keywords": [
-      "Titanic"
+      "Character"
     ],
-    "baseSize": 120,
-    "description": "Official Lord of War unit for the Emperor's Children. Fulgrim is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Lord Of War"
+    "baseSize": 60,
+    "description": "Official Leader unit for the Emperor's Children. Fulgrim is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Hq"
   },
   {
     "id": "genestealer-cults-locus",
@@ -32046,7 +32206,7 @@
     "id": "genestealer-cults-abominant",
     "name": "Abominant",
     "factionId": "genestealer-cults",
-    "category": "heavy-support",
+    "category": "elites",
     "points": 95,
     "models": 1,
     "movement": 6,
@@ -32071,8 +32231,8 @@
       "Infantry"
     ],
     "baseSize": 32,
-    "description": "Official Heavy Support unit for the Genestealer Cults. Abominant is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Heavy Support"
+    "description": "Official Elite unit for the Genestealer Cults. Abominant is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Elites"
   },
   {
     "id": "genestealer-cults-goliath-rockgrinder",
@@ -32554,9 +32714,9 @@
     "objectiveControl": 1,
     "weapons": [
       {
-        "name": "Bolt Pistol",
-        "range": 12,
-        "attacks": 1,
+        "name": "Storm Bolter",
+        "range": 24,
+        "attacks": 2,
         "skill": 3,
         "strength": 4,
         "ap": 0,
@@ -32564,13 +32724,13 @@
         "type": "ranged"
       },
       {
-        "name": "Power Weapon",
+        "name": "Nemesis Force Weapon",
         "range": 0,
         "attacks": 3,
         "skill": 3,
-        "strength": 5,
+        "strength": 6,
         "ap": -2,
-        "damage": 1,
+        "damage": 2,
         "type": "melee"
       }
     ],
@@ -32947,9 +33107,9 @@
     "objectiveControl": 1,
     "weapons": [
       {
-        "name": "Bolt Pistol",
-        "range": 12,
-        "attacks": 1,
+        "name": "Storm Bolter",
+        "range": 24,
+        "attacks": 2,
         "skill": 3,
         "strength": 4,
         "ap": 0,
@@ -32957,13 +33117,13 @@
         "type": "ranged"
       },
       {
-        "name": "Power Weapon",
+        "name": "Nemesis Force Weapon",
         "range": 0,
         "attacks": 3,
         "skill": 3,
-        "strength": 5,
+        "strength": 6,
         "ap": -2,
-        "damage": 1,
+        "damage": 2,
         "type": "melee"
       }
     ],
@@ -33442,7 +33602,7 @@
     "objectiveControl": 2,
     "weapons": [
       {
-        "name": "Boltgun",
+        "name": "Storm Bolter",
         "range": 24,
         "attacks": 2,
         "skill": 3,
@@ -33450,6 +33610,16 @@
         "ap": 0,
         "damage": 1,
         "type": "ranged"
+      },
+      {
+        "name": "Nemesis Force Weapon",
+        "range": 0,
+        "attacks": 3,
+        "skill": 3,
+        "strength": 6,
+        "ap": -2,
+        "damage": 2,
+        "type": "melee"
       }
     ],
     "keywords": [
@@ -34018,53 +34188,43 @@
     "id": "grey-knights-castellan-crowe",
     "name": "Castellan Crowe",
     "factionId": "grey-knights",
-    "category": "heavy-support",
+    "category": "hq",
     "points": 90,
     "models": 1,
-    "movement": 10,
-    "toughness": 11,
+    "movement": 6,
+    "toughness": 4,
     "save": 3,
-    "wounds": 24,
+    "wounds": 4,
     "leadership": 6,
-    "objectiveControl": 5,
+    "objectiveControl": 1,
     "weapons": [
       {
-        "name": "Main cannon",
-        "range": 48,
-        "attacks": 2,
-        "skill": 4,
-        "strength": 10,
-        "ap": -2,
-        "damage": 3,
-        "type": "ranged"
-      },
-      {
-        "name": "Heavy bolter",
-        "range": 36,
-        "attacks": 3,
-        "skill": 4,
-        "strength": 5,
-        "ap": -1,
-        "damage": 2,
-        "type": "ranged"
-      },
-      {
-        "name": "Hunter-killer missile",
-        "range": 48,
+        "name": "Bolt Pistol",
+        "range": 12,
         "attacks": 1,
-        "skill": 4,
-        "strength": 14,
-        "ap": -3,
-        "damage": 3,
+        "skill": 3,
+        "strength": 4,
+        "ap": 0,
+        "damage": 1,
         "type": "ranged"
+      },
+      {
+        "name": "Power Weapon",
+        "range": 0,
+        "attacks": 3,
+        "skill": 3,
+        "strength": 5,
+        "ap": -2,
+        "damage": 1,
+        "type": "melee"
       }
     ],
     "keywords": [
-      "Infantry"
+      "Character"
     ],
-    "baseSize": 120,
-    "description": "Official Heavy Support unit for the Grey Knights. Castellan Crowe is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Heavy Support"
+    "baseSize": 32,
+    "description": "Official Leader unit for the Grey Knights. Castellan Crowe is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Hq"
   },
   {
     "id": "grey-knights-assault-intercessors-with-jump-packs",
@@ -34145,33 +34305,43 @@
     "id": "grey-knights-pedro-kantor",
     "name": "Pedro Kantor",
     "factionId": "grey-knights",
-    "category": "elites",
+    "category": "hq",
     "points": 90,
     "models": 1,
-    "movement": 6,
-    "toughness": 4,
-    "save": 3,
-    "wounds": 2,
+    "movement": 8,
+    "toughness": 8,
+    "save": 2,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 2,
+    "objectiveControl": 4,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
-        "attacks": 2,
+        "name": "Bolt Pistol",
+        "range": 12,
+        "attacks": 1,
         "skill": 3,
         "strength": 4,
         "ap": 0,
         "damage": 1,
         "type": "ranged"
+      },
+      {
+        "name": "Power Weapon",
+        "range": 0,
+        "attacks": 3,
+        "skill": 3,
+        "strength": 5,
+        "ap": -2,
+        "damage": 1,
+        "type": "melee"
       }
     ],
     "keywords": [
-      "Infantry"
+      "Character"
     ],
-    "baseSize": 32,
-    "description": "Official Elite unit for the Grey Knights. Pedro Kantor is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Elites"
+    "baseSize": 60,
+    "description": "Official Leader unit for the Grey Knights. Pedro Kantor is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Hq"
   },
   {
     "id": "grey-knights-tor-garadon",
@@ -34787,9 +34957,9 @@
     "objectiveControl": 1,
     "weapons": [
       {
-        "name": "Bolt Pistol",
-        "range": 12,
-        "attacks": 1,
+        "name": "Storm Bolter",
+        "range": 24,
+        "attacks": 2,
         "skill": 3,
         "strength": 4,
         "ap": 0,
@@ -34797,13 +34967,13 @@
         "type": "ranged"
       },
       {
-        "name": "Power Weapon",
+        "name": "Nemesis Force Weapon",
         "range": 0,
         "attacks": 3,
         "skill": 3,
-        "strength": 5,
+        "strength": 6,
         "ap": -2,
-        "damage": 1,
+        "damage": 2,
         "type": "melee"
       }
     ],
@@ -34983,54 +35153,43 @@
     "id": "grey-knights-interceptor-squad",
     "name": "Interceptor Squad",
     "factionId": "grey-knights",
-    "category": "flyer",
+    "category": "elites",
     "points": 125,
     "models": 5,
-    "movement": 20,
-    "toughness": 9,
+    "movement": 12,
+    "toughness": 4,
     "save": 3,
-    "wounds": 12,
+    "wounds": 2,
     "leadership": 6,
     "objectiveControl": 2,
     "weapons": [
       {
-        "name": "Main cannon",
-        "range": 48,
+        "name": "Storm Bolter",
+        "range": 24,
         "attacks": 2,
-        "skill": 4,
-        "strength": 10,
-        "ap": -2,
-        "damage": 3,
+        "skill": 3,
+        "strength": 4,
+        "ap": 0,
+        "damage": 1,
         "type": "ranged"
       },
       {
-        "name": "Heavy bolter",
-        "range": 36,
+        "name": "Nemesis Force Weapon",
+        "range": 0,
         "attacks": 3,
-        "skill": 4,
-        "strength": 5,
-        "ap": -1,
+        "skill": 3,
+        "strength": 6,
+        "ap": -2,
         "damage": 2,
-        "type": "ranged"
-      },
-      {
-        "name": "Hunter-killer missile",
-        "range": 48,
-        "attacks": 1,
-        "skill": 4,
-        "strength": 14,
-        "ap": -3,
-        "damage": 3,
-        "type": "ranged"
+        "type": "melee"
       }
     ],
     "keywords": [
-      "Infantry",
-      "Fly"
+      "Infantry"
     ],
-    "baseSize": 100,
-    "description": "Official Flyer unit for the Grey Knights. Interceptor Squad is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Flyer"
+    "baseSize": 32,
+    "description": "Official Elite unit for the Grey Knights. Interceptor Squad is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Elites"
   },
   {
     "id": "grey-knights-kaldor-draigo",
@@ -35770,11 +35929,11 @@
     "points": 160,
     "models": 1,
     "movement": 10,
-    "toughness": 11,
+    "toughness": 10,
     "save": 3,
-    "wounds": 24,
+    "wounds": 12,
     "leadership": 6,
-    "objectiveControl": 5,
+    "objectiveControl": 3,
     "weapons": [
       {
         "name": "Multi-melta",
@@ -35810,7 +35969,7 @@
     "keywords": [
       "Infantry"
     ],
-    "baseSize": 120,
+    "baseSize": 80,
     "description": "Official Heavy Support unit for the Grey Knights. Gladiator Valiant is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Heavy Support"
   },
@@ -35977,24 +36136,34 @@
     "id": "grey-knights-hammerfall-bunker",
     "name": "Hammerfall Bunker",
     "factionId": "grey-knights",
-    "category": "elites",
+    "category": "heavy-support",
     "points": 175,
     "models": 1,
-    "movement": 10,
+    "movement": 0,
     "toughness": 10,
     "save": 3,
-    "wounds": 12,
+    "wounds": 14,
     "leadership": 6,
-    "objectiveControl": 3,
+    "objectiveControl": 0,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
+        "name": "Hammerfall missile",
+        "range": 48,
         "attacks": 2,
-        "skill": 3,
-        "strength": 4,
-        "ap": 0,
-        "damage": 1,
+        "skill": 4,
+        "strength": 8,
+        "ap": -2,
+        "damage": 2,
+        "type": "ranged"
+      },
+      {
+        "name": "Heavy bolter",
+        "range": 36,
+        "attacks": 3,
+        "skill": 4,
+        "strength": 5,
+        "ap": -1,
+        "damage": 2,
         "type": "ranged"
       }
     ],
@@ -36002,8 +36171,8 @@
       "Infantry"
     ],
     "baseSize": 80,
-    "description": "Official Elite unit for the Grey Knights. Hammerfall Bunker is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Elites"
+    "description": "Official Heavy Support unit for the Grey Knights. Hammerfall Bunker is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Heavy Support"
   },
   {
     "id": "grey-knights-repulsor",
@@ -36210,11 +36379,11 @@
         "type": "ranged"
       },
       {
-        "name": "Power Fist",
+        "name": "Nemesis Force Weapon",
         "range": 0,
-        "attacks": 2,
-        "skill": 4,
-        "strength": 8,
+        "attacks": 3,
+        "skill": 3,
+        "strength": 6,
         "ap": -2,
         "damage": 2,
         "type": "melee"
@@ -36333,10 +36502,10 @@
     "category": "hq",
     "points": 210,
     "models": 3,
-    "movement": 8,
-    "toughness": 8,
-    "save": 3,
-    "wounds": 8,
+    "movement": 6,
+    "toughness": 6,
+    "save": 2,
+    "wounds": 5,
     "leadership": 6,
     "objectiveControl": 1,
     "weapons": [
@@ -36364,7 +36533,7 @@
     "keywords": [
       "Character"
     ],
-    "baseSize": 80,
+    "baseSize": 40,
     "description": "Official Leader unit for the Grey Knights. Marneus Calgar is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Hq"
   },
@@ -36414,18 +36583,18 @@
     "id": "grey-knights-paladin-squad",
     "name": "Paladin Squad",
     "factionId": "grey-knights",
-    "category": "heavy-support",
+    "category": "elites",
     "points": 215,
     "models": 5,
-    "movement": 6,
-    "toughness": 4,
-    "save": 3,
-    "wounds": 2,
+    "movement": 5,
+    "toughness": 5,
+    "save": 2,
+    "wounds": 3,
     "leadership": 6,
     "objectiveControl": 2,
     "weapons": [
       {
-        "name": "Boltgun",
+        "name": "Storm Bolter",
         "range": 24,
         "attacks": 2,
         "skill": 3,
@@ -36433,14 +36602,24 @@
         "ap": 0,
         "damage": 1,
         "type": "ranged"
+      },
+      {
+        "name": "Nemesis Force Weapon",
+        "range": 0,
+        "attacks": 3,
+        "skill": 3,
+        "strength": 6,
+        "ap": -2,
+        "damage": 2,
+        "type": "melee"
       }
     ],
     "keywords": [
       "Infantry"
     ],
-    "baseSize": 32,
-    "description": "Official Heavy Support unit for the Grey Knights. Paladin Squad is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Heavy Support"
+    "baseSize": 40,
+    "description": "Official Elite unit for the Grey Knights. Paladin Squad is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Elites"
   },
   {
     "id": "grey-knights-grey-knights-land-raider-crusader",
@@ -36449,12 +36628,12 @@
     "category": "dedicated-transport",
     "points": 220,
     "models": 1,
-    "movement": 10,
-    "toughness": 11,
+    "movement": 12,
+    "toughness": 6,
     "save": 3,
-    "wounds": 24,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 5,
+    "objectiveControl": 3,
     "weapons": [
       {
         "name": "Twin heavy bolter",
@@ -36482,7 +36661,7 @@
       "Vehicle",
       "Transport"
     ],
-    "baseSize": 120,
+    "baseSize": 80,
     "description": "Official Transport unit for the Grey Knights. Grey Knights Land Raider Crusader is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Dedicated Transport"
   },
@@ -36493,12 +36672,12 @@
     "category": "dedicated-transport",
     "points": 220,
     "models": 1,
-    "movement": 10,
-    "toughness": 11,
+    "movement": 12,
+    "toughness": 6,
     "save": 3,
-    "wounds": 24,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 5,
+    "objectiveControl": 3,
     "weapons": [
       {
         "name": "Twin heavy bolter",
@@ -36526,7 +36705,7 @@
       "Vehicle",
       "Transport"
     ],
-    "baseSize": 120,
+    "baseSize": 80,
     "description": "Official Transport unit for the Grey Knights. Land Raider Crusader is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Dedicated Transport"
   },
@@ -36847,33 +37026,43 @@
     "id": "grey-knights-roboute-guilliman",
     "name": "Roboute Guilliman",
     "factionId": "grey-knights",
-    "category": "elites",
+    "category": "hq",
     "points": 345,
     "models": 1,
     "movement": 8,
     "toughness": 8,
-    "save": 3,
-    "wounds": 8,
+    "save": 2,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 2,
+    "objectiveControl": 4,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
-        "attacks": 2,
+        "name": "Bolt Pistol",
+        "range": 12,
+        "attacks": 1,
         "skill": 3,
         "strength": 4,
         "ap": 0,
         "damage": 1,
         "type": "ranged"
+      },
+      {
+        "name": "Power Weapon",
+        "range": 0,
+        "attacks": 3,
+        "skill": 3,
+        "strength": 5,
+        "ap": -2,
+        "damage": 1,
+        "type": "melee"
       }
     ],
     "keywords": [
-      "Infantry"
+      "Character"
     ],
-    "baseSize": 80,
-    "description": "Official Elite unit for the Grey Knights. Roboute Guilliman is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Elites"
+    "baseSize": 60,
+    "description": "Official Leader unit for the Grey Knights. Roboute Guilliman is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Hq"
   },
   {
     "id": "harlequins-troupe-master",
@@ -38713,33 +38902,43 @@
     "id": "imperial-fists-pedro-kantor",
     "name": "Pedro Kantor",
     "factionId": "imperial-fists",
-    "category": "elites",
+    "category": "hq",
     "points": 90,
     "models": 1,
-    "movement": 6,
-    "toughness": 4,
-    "save": 3,
-    "wounds": 2,
+    "movement": 8,
+    "toughness": 8,
+    "save": 2,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 2,
+    "objectiveControl": 4,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
-        "attacks": 2,
+        "name": "Bolt Pistol",
+        "range": 12,
+        "attacks": 1,
         "skill": 3,
         "strength": 4,
         "ap": 0,
         "damage": 1,
         "type": "ranged"
+      },
+      {
+        "name": "Power Weapon",
+        "range": 0,
+        "attacks": 3,
+        "skill": 3,
+        "strength": 5,
+        "ap": -2,
+        "damage": 1,
+        "type": "melee"
       }
     ],
     "keywords": [
-      "Infantry"
+      "Character"
     ],
-    "baseSize": 32,
-    "description": "Official Elite unit for the Imperial Fists. Pedro Kantor is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Elites"
+    "baseSize": 60,
+    "description": "Official Leader unit for the Imperial Fists. Pedro Kantor is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Hq"
   },
   {
     "id": "imperial-fists-tor-garadon",
@@ -39953,11 +40152,11 @@
     "points": 160,
     "models": 1,
     "movement": 10,
-    "toughness": 11,
+    "toughness": 10,
     "save": 3,
-    "wounds": 24,
+    "wounds": 12,
     "leadership": 6,
-    "objectiveControl": 5,
+    "objectiveControl": 3,
     "weapons": [
       {
         "name": "Multi-melta",
@@ -39993,7 +40192,7 @@
     "keywords": [
       "Infantry"
     ],
-    "baseSize": 120,
+    "baseSize": 80,
     "description": "Official Heavy Support unit for the Imperial Fists. Gladiator Valiant is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Heavy Support"
   },
@@ -40118,24 +40317,34 @@
     "id": "imperial-fists-hammerfall-bunker",
     "name": "Hammerfall Bunker",
     "factionId": "imperial-fists",
-    "category": "elites",
+    "category": "heavy-support",
     "points": 175,
     "models": 1,
-    "movement": 10,
+    "movement": 0,
     "toughness": 10,
     "save": 3,
-    "wounds": 12,
+    "wounds": 14,
     "leadership": 6,
-    "objectiveControl": 3,
+    "objectiveControl": 0,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
+        "name": "Hammerfall missile",
+        "range": 48,
         "attacks": 2,
-        "skill": 3,
-        "strength": 4,
-        "ap": 0,
-        "damage": 1,
+        "skill": 4,
+        "strength": 8,
+        "ap": -2,
+        "damage": 2,
+        "type": "ranged"
+      },
+      {
+        "name": "Heavy bolter",
+        "range": 36,
+        "attacks": 3,
+        "skill": 4,
+        "strength": 5,
+        "ap": -1,
+        "damage": 2,
         "type": "ranged"
       }
     ],
@@ -40143,8 +40352,8 @@
       "Infantry"
     ],
     "baseSize": 80,
-    "description": "Official Elite unit for the Imperial Fists. Hammerfall Bunker is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Elites"
+    "description": "Official Heavy Support unit for the Imperial Fists. Hammerfall Bunker is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Heavy Support"
   },
   {
     "id": "imperial-fists-repulsor",
@@ -40366,10 +40575,10 @@
     "category": "hq",
     "points": 210,
     "models": 3,
-    "movement": 8,
-    "toughness": 8,
-    "save": 3,
-    "wounds": 8,
+    "movement": 6,
+    "toughness": 6,
+    "save": 2,
+    "wounds": 5,
     "leadership": 6,
     "objectiveControl": 1,
     "weapons": [
@@ -40397,7 +40606,7 @@
     "keywords": [
       "Character"
     ],
-    "baseSize": 80,
+    "baseSize": 40,
     "description": "Official Leader unit for the Imperial Fists. Marneus Calgar is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Hq"
   },
@@ -40450,12 +40659,12 @@
     "category": "dedicated-transport",
     "points": 220,
     "models": 1,
-    "movement": 10,
-    "toughness": 11,
+    "movement": 12,
+    "toughness": 6,
     "save": 3,
-    "wounds": 24,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 5,
+    "objectiveControl": 3,
     "weapons": [
       {
         "name": "Twin heavy bolter",
@@ -40483,7 +40692,7 @@
       "Vehicle",
       "Transport"
     ],
-    "baseSize": 120,
+    "baseSize": 80,
     "description": "Official Transport unit for the Imperial Fists. Land Raider Crusader is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Dedicated Transport"
   },
@@ -40674,33 +40883,43 @@
     "id": "imperial-fists-roboute-guilliman",
     "name": "Roboute Guilliman",
     "factionId": "imperial-fists",
-    "category": "elites",
+    "category": "hq",
     "points": 345,
     "models": 1,
     "movement": 8,
     "toughness": 8,
-    "save": 3,
-    "wounds": 8,
+    "save": 2,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 2,
+    "objectiveControl": 4,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
-        "attacks": 2,
+        "name": "Bolt Pistol",
+        "range": 12,
+        "attacks": 1,
         "skill": 3,
         "strength": 4,
         "ap": 0,
         "damage": 1,
         "type": "ranged"
+      },
+      {
+        "name": "Power Weapon",
+        "range": 0,
+        "attacks": 3,
+        "skill": 3,
+        "strength": 5,
+        "ap": -2,
+        "damage": 1,
+        "type": "melee"
       }
     ],
     "keywords": [
-      "Infantry"
+      "Character"
     ],
-    "baseSize": 80,
-    "description": "Official Elite unit for the Imperial Fists. Roboute Guilliman is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Elites"
+    "baseSize": 60,
+    "description": "Official Leader unit for the Imperial Fists. Roboute Guilliman is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Hq"
   },
   {
     "id": "imperial-knights-armiger-helverin",
@@ -40709,12 +40928,12 @@
     "category": "fast-attack",
     "points": 130,
     "models": 1,
-    "movement": 12,
-    "toughness": 8,
+    "movement": 10,
+    "toughness": 11,
     "save": 3,
-    "wounds": 12,
+    "wounds": 24,
     "leadership": 6,
-    "objectiveControl": 3,
+    "objectiveControl": 5,
     "weapons": [
       {
         "name": "Knight main weapon",
@@ -40750,7 +40969,7 @@
     "keywords": [
       "Walker"
     ],
-    "baseSize": 80,
+    "baseSize": 120,
     "description": "Official Fast Attack unit for Imperial Knights. Armiger Helverin is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Fast Attack"
   },
@@ -40761,12 +40980,12 @@
     "category": "fast-attack",
     "points": 140,
     "models": 1,
-    "movement": 12,
-    "toughness": 8,
+    "movement": 10,
+    "toughness": 11,
     "save": 3,
-    "wounds": 12,
+    "wounds": 24,
     "leadership": 6,
-    "objectiveControl": 3,
+    "objectiveControl": 5,
     "weapons": [
       {
         "name": "Knight main weapon",
@@ -40802,7 +41021,7 @@
     "keywords": [
       "Walker"
     ],
-    "baseSize": 80,
+    "baseSize": 120,
     "description": "Official Fast Attack unit for Imperial Knights. Armiger Warglaive is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Fast Attack"
   },
@@ -41102,7 +41321,7 @@
     "id": "imperial-knights-knight-warden",
     "name": "Knight Warden",
     "factionId": "imperial-knights",
-    "category": "heavy-support",
+    "category": "elites",
     "points": 450,
     "models": 1,
     "movement": 10,
@@ -41147,8 +41366,8 @@
       "Titanic"
     ],
     "baseSize": 120,
-    "description": "Official Heavy Support unit for Imperial Knights. Knight Warden is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Heavy Support"
+    "description": "Official Elite unit for Imperial Knights. Knight Warden is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Elites"
   },
   {
     "id": "imperial-knights-knight-castellan",
@@ -42932,33 +43151,43 @@
     "id": "iron-hands-pedro-kantor",
     "name": "Pedro Kantor",
     "factionId": "iron-hands",
-    "category": "elites",
+    "category": "hq",
     "points": 90,
     "models": 1,
-    "movement": 6,
-    "toughness": 4,
-    "save": 3,
-    "wounds": 2,
+    "movement": 8,
+    "toughness": 8,
+    "save": 2,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 2,
+    "objectiveControl": 4,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
-        "attacks": 2,
+        "name": "Bolt Pistol",
+        "range": 12,
+        "attacks": 1,
         "skill": 3,
         "strength": 4,
         "ap": 0,
         "damage": 1,
         "type": "ranged"
+      },
+      {
+        "name": "Power Weapon",
+        "range": 0,
+        "attacks": 3,
+        "skill": 3,
+        "strength": 5,
+        "ap": -2,
+        "damage": 1,
+        "type": "melee"
       }
     ],
     "keywords": [
-      "Infantry"
+      "Character"
     ],
-    "baseSize": 32,
-    "description": "Official Elite unit for the Iron Hands. Pedro Kantor is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Elites"
+    "baseSize": 60,
+    "description": "Official Leader unit for the Iron Hands. Pedro Kantor is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Hq"
   },
   {
     "id": "iron-hands-tor-garadon",
@@ -44172,11 +44401,11 @@
     "points": 160,
     "models": 1,
     "movement": 10,
-    "toughness": 11,
+    "toughness": 10,
     "save": 3,
-    "wounds": 24,
+    "wounds": 12,
     "leadership": 6,
-    "objectiveControl": 5,
+    "objectiveControl": 3,
     "weapons": [
       {
         "name": "Multi-melta",
@@ -44212,7 +44441,7 @@
     "keywords": [
       "Infantry"
     ],
-    "baseSize": 120,
+    "baseSize": 80,
     "description": "Official Heavy Support unit for the Iron Hands. Gladiator Valiant is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Heavy Support"
   },
@@ -44337,24 +44566,34 @@
     "id": "iron-hands-hammerfall-bunker",
     "name": "Hammerfall Bunker",
     "factionId": "iron-hands",
-    "category": "elites",
+    "category": "heavy-support",
     "points": 175,
     "models": 1,
-    "movement": 10,
+    "movement": 0,
     "toughness": 10,
     "save": 3,
-    "wounds": 12,
+    "wounds": 14,
     "leadership": 6,
-    "objectiveControl": 3,
+    "objectiveControl": 0,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
+        "name": "Hammerfall missile",
+        "range": 48,
         "attacks": 2,
-        "skill": 3,
-        "strength": 4,
-        "ap": 0,
-        "damage": 1,
+        "skill": 4,
+        "strength": 8,
+        "ap": -2,
+        "damage": 2,
+        "type": "ranged"
+      },
+      {
+        "name": "Heavy bolter",
+        "range": 36,
+        "attacks": 3,
+        "skill": 4,
+        "strength": 5,
+        "ap": -1,
+        "damage": 2,
         "type": "ranged"
       }
     ],
@@ -44362,8 +44601,8 @@
       "Infantry"
     ],
     "baseSize": 80,
-    "description": "Official Elite unit for the Iron Hands. Hammerfall Bunker is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Elites"
+    "description": "Official Heavy Support unit for the Iron Hands. Hammerfall Bunker is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Heavy Support"
   },
   {
     "id": "iron-hands-repulsor",
@@ -44585,10 +44824,10 @@
     "category": "hq",
     "points": 210,
     "models": 3,
-    "movement": 8,
-    "toughness": 8,
-    "save": 3,
-    "wounds": 8,
+    "movement": 6,
+    "toughness": 6,
+    "save": 2,
+    "wounds": 5,
     "leadership": 6,
     "objectiveControl": 1,
     "weapons": [
@@ -44616,7 +44855,7 @@
     "keywords": [
       "Character"
     ],
-    "baseSize": 80,
+    "baseSize": 40,
     "description": "Official Leader unit for the Iron Hands. Marneus Calgar is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Hq"
   },
@@ -44669,12 +44908,12 @@
     "category": "dedicated-transport",
     "points": 220,
     "models": 1,
-    "movement": 10,
-    "toughness": 11,
+    "movement": 12,
+    "toughness": 6,
     "save": 3,
-    "wounds": 24,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 5,
+    "objectiveControl": 3,
     "weapons": [
       {
         "name": "Twin heavy bolter",
@@ -44702,7 +44941,7 @@
       "Vehicle",
       "Transport"
     ],
-    "baseSize": 120,
+    "baseSize": 80,
     "description": "Official Transport unit for the Iron Hands. Land Raider Crusader is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Dedicated Transport"
   },
@@ -44893,33 +45132,43 @@
     "id": "iron-hands-roboute-guilliman",
     "name": "Roboute Guilliman",
     "factionId": "iron-hands",
-    "category": "elites",
+    "category": "hq",
     "points": 345,
     "models": 1,
     "movement": 8,
     "toughness": 8,
-    "save": 3,
-    "wounds": 8,
+    "save": 2,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 2,
+    "objectiveControl": 4,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
-        "attacks": 2,
+        "name": "Bolt Pistol",
+        "range": 12,
+        "attacks": 1,
         "skill": 3,
         "strength": 4,
         "ap": 0,
         "damage": 1,
         "type": "ranged"
+      },
+      {
+        "name": "Power Weapon",
+        "range": 0,
+        "attacks": 3,
+        "skill": 3,
+        "strength": 5,
+        "ap": -2,
+        "damage": 1,
+        "type": "melee"
       }
     ],
     "keywords": [
-      "Infantry"
+      "Character"
     ],
-    "baseSize": 80,
-    "description": "Official Elite unit for the Iron Hands. Roboute Guilliman is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Elites"
+    "baseSize": 60,
+    "description": "Official Leader unit for the Iron Hands. Roboute Guilliman is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Hq"
   },
   {
     "id": "leagues-of-votann-einhyr-champion",
@@ -45384,43 +45633,33 @@
     "id": "necrons-canoptek-scarab-swarms",
     "name": "Canoptek Scarab Swarms",
     "factionId": "necrons",
-    "category": "hq",
+    "category": "elites",
     "points": 40,
     "models": 3,
     "movement": 6,
     "toughness": 4,
     "save": 3,
-    "wounds": 4,
+    "wounds": 2,
     "leadership": 6,
-    "objectiveControl": 1,
+    "objectiveControl": 2,
     "weapons": [
       {
-        "name": "Bolt Pistol",
-        "range": 12,
-        "attacks": 1,
+        "name": "Boltgun",
+        "range": 24,
+        "attacks": 2,
         "skill": 3,
         "strength": 4,
         "ap": 0,
         "damage": 1,
         "type": "ranged"
-      },
-      {
-        "name": "Power Weapon",
-        "range": 0,
-        "attacks": 3,
-        "skill": 3,
-        "strength": 5,
-        "ap": -2,
-        "damage": 1,
-        "type": "melee"
       }
     ],
     "keywords": [
-      "Character"
+      "Infantry"
     ],
     "baseSize": 32,
-    "description": "Official Leader unit for the Necrons. Canoptek Scarab Swarms is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Hq"
+    "description": "Official Elite unit for the Necrons. Canoptek Scarab Swarms is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Elites"
   },
   {
     "id": "necrons-royal-warden",
@@ -45766,85 +46005,65 @@
     "id": "necrons-canoptek-reanimator",
     "name": "Canoptek Reanimator",
     "factionId": "necrons",
-    "category": "hq",
+    "category": "elites",
     "points": 75,
     "models": 1,
     "movement": 6,
     "toughness": 4,
     "save": 3,
-    "wounds": 4,
+    "wounds": 2,
     "leadership": 6,
-    "objectiveControl": 1,
+    "objectiveControl": 2,
     "weapons": [
       {
-        "name": "Bolt Pistol",
-        "range": 12,
-        "attacks": 1,
+        "name": "Boltgun",
+        "range": 24,
+        "attacks": 2,
         "skill": 3,
         "strength": 4,
         "ap": 0,
         "damage": 1,
         "type": "ranged"
-      },
-      {
-        "name": "Power Weapon",
-        "range": 0,
-        "attacks": 3,
-        "skill": 3,
-        "strength": 5,
-        "ap": -2,
-        "damage": 1,
-        "type": "melee"
       }
     ],
     "keywords": [
-      "Character"
+      "Infantry"
     ],
     "baseSize": 32,
-    "description": "Official Leader unit for the Necrons. Canoptek Reanimator is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Hq"
+    "description": "Official Elite unit for the Necrons. Canoptek Reanimator is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Elites"
   },
   {
     "id": "necrons-canoptek-spyders",
     "name": "Canoptek Spyders",
     "factionId": "necrons",
-    "category": "hq",
+    "category": "elites",
     "points": 75,
     "models": 1,
     "movement": 6,
     "toughness": 4,
     "save": 3,
-    "wounds": 4,
+    "wounds": 2,
     "leadership": 6,
-    "objectiveControl": 1,
+    "objectiveControl": 2,
     "weapons": [
       {
-        "name": "Bolt Pistol",
-        "range": 12,
-        "attacks": 1,
+        "name": "Boltgun",
+        "range": 24,
+        "attacks": 2,
         "skill": 3,
         "strength": 4,
         "ap": 0,
         "damage": 1,
         "type": "ranged"
-      },
-      {
-        "name": "Power Weapon",
-        "range": 0,
-        "attacks": 3,
-        "skill": 3,
-        "strength": 5,
-        "ap": -2,
-        "damage": 1,
-        "type": "melee"
       }
     ],
     "keywords": [
-      "Character"
+      "Infantry"
     ],
     "baseSize": 32,
-    "description": "Official Leader unit for the Necrons. Canoptek Spyders is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Hq"
+    "description": "Official Elite unit for the Necrons. Canoptek Spyders is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Elites"
   },
   {
     "id": "necrons-hexmark-destroyer",
@@ -46506,43 +46725,33 @@
     "id": "necrons-canoptek-wraiths",
     "name": "Canoptek Wraiths",
     "factionId": "necrons",
-    "category": "hq",
+    "category": "elites",
     "points": 115,
     "models": 3,
     "movement": 6,
     "toughness": 4,
     "save": 3,
-    "wounds": 4,
+    "wounds": 2,
     "leadership": 6,
-    "objectiveControl": 1,
+    "objectiveControl": 2,
     "weapons": [
       {
-        "name": "Bolt Pistol",
-        "range": 12,
-        "attacks": 1,
+        "name": "Boltgun",
+        "range": 24,
+        "attacks": 2,
         "skill": 3,
         "strength": 4,
         "ap": 0,
         "damage": 1,
         "type": "ranged"
-      },
-      {
-        "name": "Power Weapon",
-        "range": 0,
-        "attacks": 3,
-        "skill": 3,
-        "strength": 5,
-        "ap": -2,
-        "damage": 1,
-        "type": "melee"
       }
     ],
     "keywords": [
-      "Character"
+      "Infantry"
     ],
     "baseSize": 32,
-    "description": "Official Leader unit for the Necrons. Canoptek Wraiths is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Hq"
+    "description": "Official Elite unit for the Necrons. Canoptek Wraiths is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Elites"
   },
   {
     "id": "necrons-ghost-ark",
@@ -46623,43 +46832,33 @@
     "id": "necrons-canoptek-doomstalker",
     "name": "Canoptek Doomstalker",
     "factionId": "necrons",
-    "category": "hq",
+    "category": "heavy-support",
     "points": 145,
     "models": 1,
     "movement": 6,
     "toughness": 4,
     "save": 3,
-    "wounds": 4,
+    "wounds": 2,
     "leadership": 6,
-    "objectiveControl": 1,
+    "objectiveControl": 2,
     "weapons": [
       {
-        "name": "Bolt Pistol",
-        "range": 12,
-        "attacks": 1,
+        "name": "Boltgun",
+        "range": 24,
+        "attacks": 2,
         "skill": 3,
         "strength": 4,
         "ap": 0,
         "damage": 1,
         "type": "ranged"
-      },
-      {
-        "name": "Power Weapon",
-        "range": 0,
-        "attacks": 3,
-        "skill": 3,
-        "strength": 5,
-        "ap": -2,
-        "damage": 1,
-        "type": "melee"
       }
     ],
     "keywords": [
-      "Character"
+      "Infantry"
     ],
     "baseSize": 32,
-    "description": "Official Leader unit for the Necrons. Canoptek Doomstalker is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Hq"
+    "description": "Official Heavy Support unit for the Necrons. Canoptek Doomstalker is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Heavy Support"
   },
   {
     "id": "necrons-night-scythe",
@@ -47020,8 +47219,8 @@
     "models": 3,
     "movement": 10,
     "toughness": 11,
-    "save": 3,
-    "wounds": 18,
+    "save": 2,
+    "wounds": 16,
     "leadership": 6,
     "objectiveControl": 5,
     "weapons": [
@@ -47039,7 +47238,7 @@
     "keywords": [
       "Titanic"
     ],
-    "baseSize": 120,
+    "baseSize": 60,
     "description": "Official Lord of War unit for the Necrons. The Silent King is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Lord Of War"
   },
@@ -48124,7 +48323,7 @@
       }
     ],
     "keywords": [
-      "Infantry"
+      "Fly"
     ],
     "baseSize": 100,
     "description": "Official Flyer unit for the Orks. Blitza-bommer is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
@@ -50436,33 +50635,43 @@
     "id": "raven-guard-pedro-kantor",
     "name": "Pedro Kantor",
     "factionId": "raven-guard",
-    "category": "elites",
+    "category": "hq",
     "points": 90,
     "models": 1,
-    "movement": 6,
-    "toughness": 4,
-    "save": 3,
-    "wounds": 2,
+    "movement": 8,
+    "toughness": 8,
+    "save": 2,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 2,
+    "objectiveControl": 4,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
-        "attacks": 2,
+        "name": "Bolt Pistol",
+        "range": 12,
+        "attacks": 1,
         "skill": 3,
         "strength": 4,
         "ap": 0,
         "damage": 1,
         "type": "ranged"
+      },
+      {
+        "name": "Power Weapon",
+        "range": 0,
+        "attacks": 3,
+        "skill": 3,
+        "strength": 5,
+        "ap": -2,
+        "damage": 1,
+        "type": "melee"
       }
     ],
     "keywords": [
-      "Infantry"
+      "Character"
     ],
-    "baseSize": 32,
-    "description": "Official Elite unit for the Raven Guard. Pedro Kantor is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Elites"
+    "baseSize": 60,
+    "description": "Official Leader unit for the Raven Guard. Pedro Kantor is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Hq"
   },
   {
     "id": "raven-guard-tor-garadon",
@@ -51676,11 +51885,11 @@
     "points": 160,
     "models": 1,
     "movement": 10,
-    "toughness": 11,
+    "toughness": 10,
     "save": 3,
-    "wounds": 24,
+    "wounds": 12,
     "leadership": 6,
-    "objectiveControl": 5,
+    "objectiveControl": 3,
     "weapons": [
       {
         "name": "Multi-melta",
@@ -51716,7 +51925,7 @@
     "keywords": [
       "Infantry"
     ],
-    "baseSize": 120,
+    "baseSize": 80,
     "description": "Official Heavy Support unit for the Raven Guard. Gladiator Valiant is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Heavy Support"
   },
@@ -51841,24 +52050,34 @@
     "id": "raven-guard-hammerfall-bunker",
     "name": "Hammerfall Bunker",
     "factionId": "raven-guard",
-    "category": "elites",
+    "category": "heavy-support",
     "points": 175,
     "models": 1,
-    "movement": 10,
+    "movement": 0,
     "toughness": 10,
     "save": 3,
-    "wounds": 12,
+    "wounds": 14,
     "leadership": 6,
-    "objectiveControl": 3,
+    "objectiveControl": 0,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
+        "name": "Hammerfall missile",
+        "range": 48,
         "attacks": 2,
-        "skill": 3,
-        "strength": 4,
-        "ap": 0,
-        "damage": 1,
+        "skill": 4,
+        "strength": 8,
+        "ap": -2,
+        "damage": 2,
+        "type": "ranged"
+      },
+      {
+        "name": "Heavy bolter",
+        "range": 36,
+        "attacks": 3,
+        "skill": 4,
+        "strength": 5,
+        "ap": -1,
+        "damage": 2,
         "type": "ranged"
       }
     ],
@@ -51866,8 +52085,8 @@
       "Infantry"
     ],
     "baseSize": 80,
-    "description": "Official Elite unit for the Raven Guard. Hammerfall Bunker is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Elites"
+    "description": "Official Heavy Support unit for the Raven Guard. Hammerfall Bunker is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Heavy Support"
   },
   {
     "id": "raven-guard-repulsor",
@@ -52089,10 +52308,10 @@
     "category": "hq",
     "points": 210,
     "models": 3,
-    "movement": 8,
-    "toughness": 8,
-    "save": 3,
-    "wounds": 8,
+    "movement": 6,
+    "toughness": 6,
+    "save": 2,
+    "wounds": 5,
     "leadership": 6,
     "objectiveControl": 1,
     "weapons": [
@@ -52120,7 +52339,7 @@
     "keywords": [
       "Character"
     ],
-    "baseSize": 80,
+    "baseSize": 40,
     "description": "Official Leader unit for the Raven Guard. Marneus Calgar is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Hq"
   },
@@ -52173,12 +52392,12 @@
     "category": "dedicated-transport",
     "points": 220,
     "models": 1,
-    "movement": 10,
-    "toughness": 11,
+    "movement": 12,
+    "toughness": 6,
     "save": 3,
-    "wounds": 24,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 5,
+    "objectiveControl": 3,
     "weapons": [
       {
         "name": "Twin heavy bolter",
@@ -52206,7 +52425,7 @@
       "Vehicle",
       "Transport"
     ],
-    "baseSize": 120,
+    "baseSize": 80,
     "description": "Official Transport unit for the Raven Guard. Land Raider Crusader is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Dedicated Transport"
   },
@@ -52397,33 +52616,43 @@
     "id": "raven-guard-roboute-guilliman",
     "name": "Roboute Guilliman",
     "factionId": "raven-guard",
-    "category": "elites",
+    "category": "hq",
     "points": 345,
     "models": 1,
     "movement": 8,
     "toughness": 8,
-    "save": 3,
-    "wounds": 8,
+    "save": 2,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 2,
+    "objectiveControl": 4,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
-        "attacks": 2,
+        "name": "Bolt Pistol",
+        "range": 12,
+        "attacks": 1,
         "skill": 3,
         "strength": 4,
         "ap": 0,
         "damage": 1,
         "type": "ranged"
+      },
+      {
+        "name": "Power Weapon",
+        "range": 0,
+        "attacks": 3,
+        "skill": 3,
+        "strength": 5,
+        "ap": -2,
+        "damage": 1,
+        "type": "melee"
       }
     ],
     "keywords": [
-      "Infantry"
+      "Character"
     ],
-    "baseSize": 80,
-    "description": "Official Elite unit for the Raven Guard. Roboute Guilliman is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Elites"
+    "baseSize": 60,
+    "description": "Official Leader unit for the Raven Guard. Roboute Guilliman is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Hq"
   },
   {
     "id": "salamanders-bladeguard-ancient",
@@ -54103,33 +54332,43 @@
     "id": "salamanders-pedro-kantor",
     "name": "Pedro Kantor",
     "factionId": "salamanders",
-    "category": "elites",
+    "category": "hq",
     "points": 90,
     "models": 1,
-    "movement": 6,
-    "toughness": 4,
-    "save": 3,
-    "wounds": 2,
+    "movement": 8,
+    "toughness": 8,
+    "save": 2,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 2,
+    "objectiveControl": 4,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
-        "attacks": 2,
+        "name": "Bolt Pistol",
+        "range": 12,
+        "attacks": 1,
         "skill": 3,
         "strength": 4,
         "ap": 0,
         "damage": 1,
         "type": "ranged"
+      },
+      {
+        "name": "Power Weapon",
+        "range": 0,
+        "attacks": 3,
+        "skill": 3,
+        "strength": 5,
+        "ap": -2,
+        "damage": 1,
+        "type": "melee"
       }
     ],
     "keywords": [
-      "Infantry"
+      "Character"
     ],
-    "baseSize": 32,
-    "description": "Official Elite unit for the Salamanders. Pedro Kantor is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Elites"
+    "baseSize": 60,
+    "description": "Official Leader unit for the Salamanders. Pedro Kantor is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Hq"
   },
   {
     "id": "salamanders-tor-garadon",
@@ -55343,11 +55582,11 @@
     "points": 160,
     "models": 1,
     "movement": 10,
-    "toughness": 11,
+    "toughness": 10,
     "save": 3,
-    "wounds": 24,
+    "wounds": 12,
     "leadership": 6,
-    "objectiveControl": 5,
+    "objectiveControl": 3,
     "weapons": [
       {
         "name": "Multi-melta",
@@ -55383,7 +55622,7 @@
     "keywords": [
       "Infantry"
     ],
-    "baseSize": 120,
+    "baseSize": 80,
     "description": "Official Heavy Support unit for the Salamanders. Gladiator Valiant is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Heavy Support"
   },
@@ -55508,24 +55747,34 @@
     "id": "salamanders-hammerfall-bunker",
     "name": "Hammerfall Bunker",
     "factionId": "salamanders",
-    "category": "elites",
+    "category": "heavy-support",
     "points": 175,
     "models": 1,
-    "movement": 10,
+    "movement": 0,
     "toughness": 10,
     "save": 3,
-    "wounds": 12,
+    "wounds": 14,
     "leadership": 6,
-    "objectiveControl": 3,
+    "objectiveControl": 0,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
+        "name": "Hammerfall missile",
+        "range": 48,
         "attacks": 2,
-        "skill": 3,
-        "strength": 4,
-        "ap": 0,
-        "damage": 1,
+        "skill": 4,
+        "strength": 8,
+        "ap": -2,
+        "damage": 2,
+        "type": "ranged"
+      },
+      {
+        "name": "Heavy bolter",
+        "range": 36,
+        "attacks": 3,
+        "skill": 4,
+        "strength": 5,
+        "ap": -1,
+        "damage": 2,
         "type": "ranged"
       }
     ],
@@ -55533,8 +55782,8 @@
       "Infantry"
     ],
     "baseSize": 80,
-    "description": "Official Elite unit for the Salamanders. Hammerfall Bunker is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Elites"
+    "description": "Official Heavy Support unit for the Salamanders. Hammerfall Bunker is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Heavy Support"
   },
   {
     "id": "salamanders-repulsor",
@@ -55756,10 +56005,10 @@
     "category": "hq",
     "points": 210,
     "models": 3,
-    "movement": 8,
-    "toughness": 8,
-    "save": 3,
-    "wounds": 8,
+    "movement": 6,
+    "toughness": 6,
+    "save": 2,
+    "wounds": 5,
     "leadership": 6,
     "objectiveControl": 1,
     "weapons": [
@@ -55787,7 +56036,7 @@
     "keywords": [
       "Character"
     ],
-    "baseSize": 80,
+    "baseSize": 40,
     "description": "Official Leader unit for the Salamanders. Marneus Calgar is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Hq"
   },
@@ -55840,12 +56089,12 @@
     "category": "dedicated-transport",
     "points": 220,
     "models": 1,
-    "movement": 10,
-    "toughness": 11,
+    "movement": 12,
+    "toughness": 6,
     "save": 3,
-    "wounds": 24,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 5,
+    "objectiveControl": 3,
     "weapons": [
       {
         "name": "Twin heavy bolter",
@@ -55873,7 +56122,7 @@
       "Vehicle",
       "Transport"
     ],
-    "baseSize": 120,
+    "baseSize": 80,
     "description": "Official Transport unit for the Salamanders. Land Raider Crusader is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Dedicated Transport"
   },
@@ -56064,33 +56313,43 @@
     "id": "salamanders-roboute-guilliman",
     "name": "Roboute Guilliman",
     "factionId": "salamanders",
-    "category": "elites",
+    "category": "hq",
     "points": 345,
     "models": 1,
     "movement": 8,
     "toughness": 8,
-    "save": 3,
-    "wounds": 8,
+    "save": 2,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 2,
+    "objectiveControl": 4,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
-        "attacks": 2,
+        "name": "Bolt Pistol",
+        "range": 12,
+        "attacks": 1,
         "skill": 3,
         "strength": 4,
         "ap": 0,
         "damage": 1,
         "type": "ranged"
+      },
+      {
+        "name": "Power Weapon",
+        "range": 0,
+        "attacks": 3,
+        "skill": 3,
+        "strength": 5,
+        "ap": -2,
+        "damage": 1,
+        "type": "melee"
       }
     ],
     "keywords": [
-      "Infantry"
+      "Character"
     ],
-    "baseSize": 80,
-    "description": "Official Elite unit for the Salamanders. Roboute Guilliman is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Elites"
+    "baseSize": 60,
+    "description": "Official Leader unit for the Salamanders. Roboute Guilliman is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Hq"
   },
   {
     "id": "space-marines-bladeguard-ancient",
@@ -57770,33 +58029,43 @@
     "id": "space-marines-pedro-kantor",
     "name": "Pedro Kantor",
     "factionId": "space-marines",
-    "category": "elites",
+    "category": "hq",
     "points": 90,
     "models": 1,
-    "movement": 6,
-    "toughness": 4,
-    "save": 3,
-    "wounds": 2,
+    "movement": 8,
+    "toughness": 8,
+    "save": 2,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 2,
+    "objectiveControl": 4,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
-        "attacks": 2,
+        "name": "Bolt Pistol",
+        "range": 12,
+        "attacks": 1,
         "skill": 3,
         "strength": 4,
         "ap": 0,
         "damage": 1,
         "type": "ranged"
+      },
+      {
+        "name": "Power Weapon",
+        "range": 0,
+        "attacks": 3,
+        "skill": 3,
+        "strength": 5,
+        "ap": -2,
+        "damage": 1,
+        "type": "melee"
       }
     ],
     "keywords": [
-      "Infantry"
+      "Character"
     ],
-    "baseSize": 32,
-    "description": "Official Elite unit for the Space Marines. Pedro Kantor is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Elites"
+    "baseSize": 60,
+    "description": "Official Leader unit for the Space Marines. Pedro Kantor is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Hq"
   },
   {
     "id": "space-marines-tor-garadon",
@@ -59010,11 +59279,11 @@
     "points": 160,
     "models": 1,
     "movement": 10,
-    "toughness": 11,
+    "toughness": 10,
     "save": 3,
-    "wounds": 24,
+    "wounds": 12,
     "leadership": 6,
-    "objectiveControl": 5,
+    "objectiveControl": 3,
     "weapons": [
       {
         "name": "Multi-melta",
@@ -59050,7 +59319,7 @@
     "keywords": [
       "Infantry"
     ],
-    "baseSize": 120,
+    "baseSize": 80,
     "description": "Official Heavy Support unit for the Space Marines. Gladiator Valiant is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Heavy Support"
   },
@@ -59175,24 +59444,34 @@
     "id": "space-marines-hammerfall-bunker",
     "name": "Hammerfall Bunker",
     "factionId": "space-marines",
-    "category": "elites",
+    "category": "heavy-support",
     "points": 175,
     "models": 1,
-    "movement": 10,
+    "movement": 0,
     "toughness": 10,
     "save": 3,
-    "wounds": 12,
+    "wounds": 14,
     "leadership": 6,
-    "objectiveControl": 3,
+    "objectiveControl": 0,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
+        "name": "Hammerfall missile",
+        "range": 48,
         "attacks": 2,
-        "skill": 3,
-        "strength": 4,
-        "ap": 0,
-        "damage": 1,
+        "skill": 4,
+        "strength": 8,
+        "ap": -2,
+        "damage": 2,
+        "type": "ranged"
+      },
+      {
+        "name": "Heavy bolter",
+        "range": 36,
+        "attacks": 3,
+        "skill": 4,
+        "strength": 5,
+        "ap": -1,
+        "damage": 2,
         "type": "ranged"
       }
     ],
@@ -59200,8 +59479,8 @@
       "Infantry"
     ],
     "baseSize": 80,
-    "description": "Official Elite unit for the Space Marines. Hammerfall Bunker is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Elites"
+    "description": "Official Heavy Support unit for the Space Marines. Hammerfall Bunker is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Heavy Support"
   },
   {
     "id": "space-marines-repulsor",
@@ -59423,10 +59702,10 @@
     "category": "hq",
     "points": 210,
     "models": 3,
-    "movement": 8,
-    "toughness": 8,
-    "save": 3,
-    "wounds": 8,
+    "movement": 6,
+    "toughness": 6,
+    "save": 2,
+    "wounds": 5,
     "leadership": 6,
     "objectiveControl": 1,
     "weapons": [
@@ -59454,7 +59733,7 @@
     "keywords": [
       "Character"
     ],
-    "baseSize": 80,
+    "baseSize": 40,
     "description": "Official Leader unit for the Space Marines. Marneus Calgar is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Hq"
   },
@@ -59507,12 +59786,12 @@
     "category": "dedicated-transport",
     "points": 220,
     "models": 1,
-    "movement": 10,
-    "toughness": 11,
+    "movement": 12,
+    "toughness": 6,
     "save": 3,
-    "wounds": 24,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 5,
+    "objectiveControl": 3,
     "weapons": [
       {
         "name": "Twin heavy bolter",
@@ -59540,7 +59819,7 @@
       "Vehicle",
       "Transport"
     ],
-    "baseSize": 120,
+    "baseSize": 80,
     "description": "Official Transport unit for the Space Marines. Land Raider Crusader is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Dedicated Transport"
   },
@@ -59731,33 +60010,43 @@
     "id": "space-marines-roboute-guilliman",
     "name": "Roboute Guilliman",
     "factionId": "space-marines",
-    "category": "elites",
+    "category": "hq",
     "points": 345,
     "models": 1,
     "movement": 8,
     "toughness": 8,
-    "save": 3,
-    "wounds": 8,
+    "save": 2,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 2,
+    "objectiveControl": 4,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
-        "attacks": 2,
+        "name": "Bolt Pistol",
+        "range": 12,
+        "attacks": 1,
         "skill": 3,
         "strength": 4,
         "ap": 0,
         "damage": 1,
         "type": "ranged"
+      },
+      {
+        "name": "Power Weapon",
+        "range": 0,
+        "attacks": 3,
+        "skill": 3,
+        "strength": 5,
+        "ap": -2,
+        "damage": 1,
+        "type": "melee"
       }
     ],
     "keywords": [
-      "Infantry"
+      "Character"
     ],
-    "baseSize": 80,
-    "description": "Official Elite unit for the Space Marines. Roboute Guilliman is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Elites"
+    "baseSize": 60,
+    "description": "Official Leader unit for the Space Marines. Roboute Guilliman is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Hq"
   },
   {
     "id": "space-wolves-cyberwolf",
@@ -62097,33 +62386,43 @@
     "id": "space-wolves-pedro-kantor",
     "name": "Pedro Kantor",
     "factionId": "space-wolves",
-    "category": "elites",
+    "category": "hq",
     "points": 90,
     "models": 1,
-    "movement": 6,
-    "toughness": 4,
-    "save": 3,
-    "wounds": 2,
+    "movement": 8,
+    "toughness": 8,
+    "save": 2,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 2,
+    "objectiveControl": 4,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
-        "attacks": 2,
+        "name": "Bolt Pistol",
+        "range": 12,
+        "attacks": 1,
         "skill": 3,
         "strength": 4,
         "ap": 0,
         "damage": 1,
         "type": "ranged"
+      },
+      {
+        "name": "Power Weapon",
+        "range": 0,
+        "attacks": 3,
+        "skill": 3,
+        "strength": 5,
+        "ap": -2,
+        "damage": 1,
+        "type": "melee"
       }
     ],
     "keywords": [
-      "Infantry"
+      "Character"
     ],
-    "baseSize": 32,
-    "description": "Official Elite unit for the Space Wolves. Pedro Kantor is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Elites"
+    "baseSize": 60,
+    "description": "Official Leader unit for the Space Wolves. Pedro Kantor is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Hq"
   },
   {
     "id": "space-wolves-tor-garadon",
@@ -62711,10 +63010,10 @@
     "models": 1,
     "movement": 8,
     "toughness": 8,
-    "save": 3,
-    "wounds": 8,
+    "save": 2,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 1,
+    "objectiveControl": 4,
     "weapons": [
       {
         "name": "Bolt Pistol",
@@ -62740,7 +63039,7 @@
     "keywords": [
       "Character"
     ],
-    "baseSize": 80,
+    "baseSize": 60,
     "description": "Official Leader unit for the Space Wolves. Logan Grimnar is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Hq"
   },
@@ -63665,11 +63964,11 @@
     "points": 160,
     "models": 1,
     "movement": 10,
-    "toughness": 11,
+    "toughness": 10,
     "save": 3,
-    "wounds": 24,
+    "wounds": 12,
     "leadership": 6,
-    "objectiveControl": 5,
+    "objectiveControl": 3,
     "weapons": [
       {
         "name": "Multi-melta",
@@ -63705,7 +64004,7 @@
     "keywords": [
       "Infantry"
     ],
-    "baseSize": 120,
+    "baseSize": 80,
     "description": "Official Heavy Support unit for the Space Wolves. Gladiator Valiant is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Heavy Support"
   },
@@ -63862,24 +64161,34 @@
     "id": "space-wolves-hammerfall-bunker",
     "name": "Hammerfall Bunker",
     "factionId": "space-wolves",
-    "category": "elites",
+    "category": "heavy-support",
     "points": 175,
     "models": 1,
-    "movement": 10,
+    "movement": 0,
     "toughness": 10,
     "save": 3,
-    "wounds": 12,
+    "wounds": 14,
     "leadership": 6,
-    "objectiveControl": 3,
+    "objectiveControl": 0,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
+        "name": "Hammerfall missile",
+        "range": 48,
         "attacks": 2,
-        "skill": 3,
-        "strength": 4,
-        "ap": 0,
-        "damage": 1,
+        "skill": 4,
+        "strength": 8,
+        "ap": -2,
+        "damage": 2,
+        "type": "ranged"
+      },
+      {
+        "name": "Heavy bolter",
+        "range": 36,
+        "attacks": 3,
+        "skill": 4,
+        "strength": 5,
+        "ap": -1,
+        "damage": 2,
         "type": "ranged"
       }
     ],
@@ -63887,8 +64196,8 @@
       "Infantry"
     ],
     "baseSize": 80,
-    "description": "Official Elite unit for the Space Wolves. Hammerfall Bunker is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Elites"
+    "description": "Official Heavy Support unit for the Space Wolves. Hammerfall Bunker is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Heavy Support"
   },
   {
     "id": "space-wolves-logan-grimnar-on-stormrider",
@@ -63899,10 +64208,10 @@
     "models": 1,
     "movement": 8,
     "toughness": 8,
-    "save": 3,
-    "wounds": 8,
+    "save": 2,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 1,
+    "objectiveControl": 4,
     "weapons": [
       {
         "name": "Bolt Pistol",
@@ -63928,7 +64237,7 @@
     "keywords": [
       "Character"
     ],
-    "baseSize": 80,
+    "baseSize": 60,
     "description": "Official Leader unit for the Space Wolves. Logan Grimnar on Stormrider is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Hq"
   },
@@ -64216,10 +64525,10 @@
     "category": "hq",
     "points": 210,
     "models": 3,
-    "movement": 8,
-    "toughness": 8,
-    "save": 3,
-    "wounds": 8,
+    "movement": 6,
+    "toughness": 6,
+    "save": 2,
+    "wounds": 5,
     "leadership": 6,
     "objectiveControl": 1,
     "weapons": [
@@ -64247,7 +64556,7 @@
     "keywords": [
       "Character"
     ],
-    "baseSize": 80,
+    "baseSize": 40,
     "description": "Official Leader unit for the Space Wolves. Marneus Calgar is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Hq"
   },
@@ -64300,12 +64609,12 @@
     "category": "dedicated-transport",
     "points": 220,
     "models": 1,
-    "movement": 10,
-    "toughness": 11,
+    "movement": 12,
+    "toughness": 6,
     "save": 3,
-    "wounds": 24,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 5,
+    "objectiveControl": 3,
     "weapons": [
       {
         "name": "Twin heavy bolter",
@@ -64333,7 +64642,7 @@
       "Vehicle",
       "Transport"
     ],
-    "baseSize": 120,
+    "baseSize": 80,
     "description": "Official Transport unit for the Space Wolves. Land Raider Crusader is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Dedicated Transport"
   },
@@ -64608,33 +64917,43 @@
     "id": "space-wolves-roboute-guilliman",
     "name": "Roboute Guilliman",
     "factionId": "space-wolves",
-    "category": "elites",
+    "category": "hq",
     "points": 345,
     "models": 1,
     "movement": 8,
     "toughness": 8,
-    "save": 3,
-    "wounds": 8,
+    "save": 2,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 2,
+    "objectiveControl": 4,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
-        "attacks": 2,
+        "name": "Bolt Pistol",
+        "range": 12,
+        "attacks": 1,
         "skill": 3,
         "strength": 4,
         "ap": 0,
         "damage": 1,
         "type": "ranged"
+      },
+      {
+        "name": "Power Weapon",
+        "range": 0,
+        "attacks": 3,
+        "skill": 3,
+        "strength": 5,
+        "ap": -2,
+        "damage": 1,
+        "type": "melee"
       }
     ],
     "keywords": [
-      "Infantry"
+      "Character"
     ],
-    "baseSize": 80,
-    "description": "Official Elite unit for the Space Wolves. Roboute Guilliman is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Elites"
+    "baseSize": 60,
+    "description": "Official Leader unit for the Space Wolves. Roboute Guilliman is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Hq"
   },
   {
     "id": "thousand-sons-tzaangor-enlightened",
@@ -65705,33 +66024,43 @@
     "id": "thousand-sons-magnus-the-red",
     "name": "Magnus the Red",
     "factionId": "thousand-sons",
-    "category": "lord-of-war",
+    "category": "hq",
     "points": 465,
     "models": 1,
-    "movement": 10,
-    "toughness": 11,
-    "save": 3,
-    "wounds": 18,
+    "movement": 8,
+    "toughness": 8,
+    "save": 2,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 5,
+    "objectiveControl": 4,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
-        "attacks": 2,
+        "name": "Bolt Pistol",
+        "range": 12,
+        "attacks": 1,
         "skill": 3,
         "strength": 4,
         "ap": 0,
         "damage": 1,
         "type": "ranged"
+      },
+      {
+        "name": "Power Weapon",
+        "range": 0,
+        "attacks": 3,
+        "skill": 3,
+        "strength": 5,
+        "ap": -2,
+        "damage": 1,
+        "type": "melee"
       }
     ],
     "keywords": [
-      "Titanic"
+      "Character"
     ],
-    "baseSize": 120,
-    "description": "Official Lord of War unit for the Thousand Sons. Magnus the Red is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Lord Of War"
+    "baseSize": 60,
+    "description": "Official Leader unit for the Thousand Sons. Magnus the Red is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Hq"
   },
   {
     "id": "tyranids-ripper-swarms",
@@ -66414,28 +66743,38 @@
     "category": "elites",
     "points": 80,
     "models": 3,
-    "movement": 8,
+    "movement": 6,
     "toughness": 8,
     "save": 3,
-    "wounds": 8,
+    "wounds": 4,
     "leadership": 6,
     "objectiveControl": 2,
     "weapons": [
       {
-        "name": "Lasgun",
-        "range": 24,
-        "attacks": 1,
+        "name": "Scything Talons",
+        "range": 0,
+        "attacks": 5,
         "skill": 4,
-        "strength": 3,
-        "ap": 0,
+        "strength": 7,
+        "ap": -1,
         "damage": 1,
-        "type": "ranged"
+        "type": "melee"
+      },
+      {
+        "name": "Crushing Claws",
+        "range": 0,
+        "attacks": 2,
+        "skill": 4,
+        "strength": 10,
+        "ap": -2,
+        "damage": 2,
+        "type": "melee"
       }
     ],
     "keywords": [
       "Infantry"
     ],
-    "baseSize": 80,
+    "baseSize": 50,
     "description": "Official Elite unit for the Tyranids. Tyrant Guard is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Elites"
   },
@@ -66510,28 +66849,28 @@
     "category": "elites",
     "points": 100,
     "models": 3,
-    "movement": 8,
-    "toughness": 8,
+    "movement": 6,
+    "toughness": 6,
     "save": 3,
-    "wounds": 8,
+    "wounds": 4,
     "leadership": 6,
     "objectiveControl": 2,
     "weapons": [
       {
-        "name": "Lasgun",
-        "range": 24,
-        "attacks": 1,
+        "name": "Impaler Cannon",
+        "range": 36,
+        "attacks": 2,
         "skill": 4,
-        "strength": 3,
-        "ap": 0,
-        "damage": 1,
+        "strength": 8,
+        "ap": -2,
+        "damage": 2,
         "type": "ranged"
       }
     ],
     "keywords": [
       "Infantry"
     ],
-    "baseSize": 80,
+    "baseSize": 50,
     "description": "Official Elite unit for the Tyranids. Hive Guard is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Elites"
   },
@@ -69007,33 +69346,43 @@
     "id": "ultramarines-pedro-kantor",
     "name": "Pedro Kantor",
     "factionId": "ultramarines",
-    "category": "elites",
+    "category": "hq",
     "points": 90,
     "models": 1,
-    "movement": 6,
-    "toughness": 4,
-    "save": 3,
-    "wounds": 2,
+    "movement": 8,
+    "toughness": 8,
+    "save": 2,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 2,
+    "objectiveControl": 4,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
-        "attacks": 2,
+        "name": "Bolt Pistol",
+        "range": 12,
+        "attacks": 1,
         "skill": 3,
         "strength": 4,
         "ap": 0,
         "damage": 1,
         "type": "ranged"
+      },
+      {
+        "name": "Power Weapon",
+        "range": 0,
+        "attacks": 3,
+        "skill": 3,
+        "strength": 5,
+        "ap": -2,
+        "damage": 1,
+        "type": "melee"
       }
     ],
     "keywords": [
-      "Infantry"
+      "Character"
     ],
-    "baseSize": 32,
-    "description": "Official Elite unit for the Ultramarines. Pedro Kantor is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Elites"
+    "baseSize": 60,
+    "description": "Official Leader unit for the Ultramarines. Pedro Kantor is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Hq"
   },
   {
     "id": "ultramarines-tor-garadon",
@@ -70247,11 +70596,11 @@
     "points": 160,
     "models": 1,
     "movement": 10,
-    "toughness": 11,
+    "toughness": 10,
     "save": 3,
-    "wounds": 24,
+    "wounds": 12,
     "leadership": 6,
-    "objectiveControl": 5,
+    "objectiveControl": 3,
     "weapons": [
       {
         "name": "Multi-melta",
@@ -70287,7 +70636,7 @@
     "keywords": [
       "Infantry"
     ],
-    "baseSize": 120,
+    "baseSize": 80,
     "description": "Official Heavy Support unit for the Ultramarines. Gladiator Valiant is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Heavy Support"
   },
@@ -70412,24 +70761,34 @@
     "id": "ultramarines-hammerfall-bunker",
     "name": "Hammerfall Bunker",
     "factionId": "ultramarines",
-    "category": "elites",
+    "category": "heavy-support",
     "points": 175,
     "models": 1,
-    "movement": 10,
+    "movement": 0,
     "toughness": 10,
     "save": 3,
-    "wounds": 12,
+    "wounds": 14,
     "leadership": 6,
-    "objectiveControl": 3,
+    "objectiveControl": 0,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
+        "name": "Hammerfall missile",
+        "range": 48,
         "attacks": 2,
-        "skill": 3,
-        "strength": 4,
-        "ap": 0,
-        "damage": 1,
+        "skill": 4,
+        "strength": 8,
+        "ap": -2,
+        "damage": 2,
+        "type": "ranged"
+      },
+      {
+        "name": "Heavy bolter",
+        "range": 36,
+        "attacks": 3,
+        "skill": 4,
+        "strength": 5,
+        "ap": -1,
+        "damage": 2,
         "type": "ranged"
       }
     ],
@@ -70437,8 +70796,8 @@
       "Infantry"
     ],
     "baseSize": 80,
-    "description": "Official Elite unit for the Ultramarines. Hammerfall Bunker is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Elites"
+    "description": "Official Heavy Support unit for the Ultramarines. Hammerfall Bunker is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Heavy Support"
   },
   {
     "id": "ultramarines-repulsor",
@@ -70660,10 +71019,10 @@
     "category": "hq",
     "points": 210,
     "models": 3,
-    "movement": 8,
-    "toughness": 8,
-    "save": 3,
-    "wounds": 8,
+    "movement": 6,
+    "toughness": 6,
+    "save": 2,
+    "wounds": 5,
     "leadership": 6,
     "objectiveControl": 1,
     "weapons": [
@@ -70691,7 +71050,7 @@
     "keywords": [
       "Character"
     ],
-    "baseSize": 80,
+    "baseSize": 40,
     "description": "Official Leader unit for the Ultramarines. Marneus Calgar is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Hq"
   },
@@ -70744,12 +71103,12 @@
     "category": "dedicated-transport",
     "points": 220,
     "models": 1,
-    "movement": 10,
-    "toughness": 11,
+    "movement": 12,
+    "toughness": 6,
     "save": 3,
-    "wounds": 24,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 5,
+    "objectiveControl": 3,
     "weapons": [
       {
         "name": "Twin heavy bolter",
@@ -70777,7 +71136,7 @@
       "Vehicle",
       "Transport"
     ],
-    "baseSize": 120,
+    "baseSize": 80,
     "description": "Official Transport unit for the Ultramarines. Land Raider Crusader is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Dedicated Transport"
   },
@@ -70968,33 +71327,43 @@
     "id": "ultramarines-roboute-guilliman",
     "name": "Roboute Guilliman",
     "factionId": "ultramarines",
-    "category": "elites",
+    "category": "hq",
     "points": 345,
     "models": 1,
     "movement": 8,
     "toughness": 8,
-    "save": 3,
-    "wounds": 8,
+    "save": 2,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 2,
+    "objectiveControl": 4,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
-        "attacks": 2,
+        "name": "Bolt Pistol",
+        "range": 12,
+        "attacks": 1,
         "skill": 3,
         "strength": 4,
         "ap": 0,
         "damage": 1,
         "type": "ranged"
+      },
+      {
+        "name": "Power Weapon",
+        "range": 0,
+        "attacks": 3,
+        "skill": 3,
+        "strength": 5,
+        "ap": -2,
+        "damage": 1,
+        "type": "melee"
       }
     ],
     "keywords": [
-      "Infantry"
+      "Character"
     ],
-    "baseSize": 80,
-    "description": "Official Elite unit for the Ultramarines. Roboute Guilliman is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Elites"
+    "baseSize": 60,
+    "description": "Official Leader unit for the Ultramarines. Roboute Guilliman is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Hq"
   },
   {
     "id": "white-scars-bladeguard-ancient",
@@ -72674,33 +73043,43 @@
     "id": "white-scars-pedro-kantor",
     "name": "Pedro Kantor",
     "factionId": "white-scars",
-    "category": "elites",
+    "category": "hq",
     "points": 90,
     "models": 1,
-    "movement": 6,
-    "toughness": 4,
-    "save": 3,
-    "wounds": 2,
+    "movement": 8,
+    "toughness": 8,
+    "save": 2,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 2,
+    "objectiveControl": 4,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
-        "attacks": 2,
+        "name": "Bolt Pistol",
+        "range": 12,
+        "attacks": 1,
         "skill": 3,
         "strength": 4,
         "ap": 0,
         "damage": 1,
         "type": "ranged"
+      },
+      {
+        "name": "Power Weapon",
+        "range": 0,
+        "attacks": 3,
+        "skill": 3,
+        "strength": 5,
+        "ap": -2,
+        "damage": 1,
+        "type": "melee"
       }
     ],
     "keywords": [
-      "Infantry"
+      "Character"
     ],
-    "baseSize": 32,
-    "description": "Official Elite unit for the White Scars. Pedro Kantor is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Elites"
+    "baseSize": 60,
+    "description": "Official Leader unit for the White Scars. Pedro Kantor is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Hq"
   },
   {
     "id": "white-scars-tor-garadon",
@@ -73914,11 +74293,11 @@
     "points": 160,
     "models": 1,
     "movement": 10,
-    "toughness": 11,
+    "toughness": 10,
     "save": 3,
-    "wounds": 24,
+    "wounds": 12,
     "leadership": 6,
-    "objectiveControl": 5,
+    "objectiveControl": 3,
     "weapons": [
       {
         "name": "Multi-melta",
@@ -73954,7 +74333,7 @@
     "keywords": [
       "Infantry"
     ],
-    "baseSize": 120,
+    "baseSize": 80,
     "description": "Official Heavy Support unit for the White Scars. Gladiator Valiant is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Heavy Support"
   },
@@ -74079,24 +74458,34 @@
     "id": "white-scars-hammerfall-bunker",
     "name": "Hammerfall Bunker",
     "factionId": "white-scars",
-    "category": "elites",
+    "category": "heavy-support",
     "points": 175,
     "models": 1,
-    "movement": 10,
+    "movement": 0,
     "toughness": 10,
     "save": 3,
-    "wounds": 12,
+    "wounds": 14,
     "leadership": 6,
-    "objectiveControl": 3,
+    "objectiveControl": 0,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
+        "name": "Hammerfall missile",
+        "range": 48,
         "attacks": 2,
-        "skill": 3,
-        "strength": 4,
-        "ap": 0,
-        "damage": 1,
+        "skill": 4,
+        "strength": 8,
+        "ap": -2,
+        "damage": 2,
+        "type": "ranged"
+      },
+      {
+        "name": "Heavy bolter",
+        "range": 36,
+        "attacks": 3,
+        "skill": 4,
+        "strength": 5,
+        "ap": -1,
+        "damage": 2,
         "type": "ranged"
       }
     ],
@@ -74104,8 +74493,8 @@
       "Infantry"
     ],
     "baseSize": 80,
-    "description": "Official Elite unit for the White Scars. Hammerfall Bunker is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Elites"
+    "description": "Official Heavy Support unit for the White Scars. Hammerfall Bunker is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Heavy Support"
   },
   {
     "id": "white-scars-repulsor",
@@ -74327,10 +74716,10 @@
     "category": "hq",
     "points": 210,
     "models": 3,
-    "movement": 8,
-    "toughness": 8,
-    "save": 3,
-    "wounds": 8,
+    "movement": 6,
+    "toughness": 6,
+    "save": 2,
+    "wounds": 5,
     "leadership": 6,
     "objectiveControl": 1,
     "weapons": [
@@ -74358,7 +74747,7 @@
     "keywords": [
       "Character"
     ],
-    "baseSize": 80,
+    "baseSize": 40,
     "description": "Official Leader unit for the White Scars. Marneus Calgar is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Hq"
   },
@@ -74411,12 +74800,12 @@
     "category": "dedicated-transport",
     "points": 220,
     "models": 1,
-    "movement": 10,
-    "toughness": 11,
+    "movement": 12,
+    "toughness": 6,
     "save": 3,
-    "wounds": 24,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 5,
+    "objectiveControl": 3,
     "weapons": [
       {
         "name": "Twin heavy bolter",
@@ -74444,7 +74833,7 @@
       "Vehicle",
       "Transport"
     ],
-    "baseSize": 120,
+    "baseSize": 80,
     "description": "Official Transport unit for the White Scars. Land Raider Crusader is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
     "role": "Dedicated Transport"
   },
@@ -74635,33 +75024,43 @@
     "id": "white-scars-roboute-guilliman",
     "name": "Roboute Guilliman",
     "factionId": "white-scars",
-    "category": "elites",
+    "category": "hq",
     "points": 345,
     "models": 1,
     "movement": 8,
     "toughness": 8,
-    "save": 3,
-    "wounds": 8,
+    "save": 2,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 2,
+    "objectiveControl": 4,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
-        "attacks": 2,
+        "name": "Bolt Pistol",
+        "range": 12,
+        "attacks": 1,
         "skill": 3,
         "strength": 4,
         "ap": 0,
         "damage": 1,
         "type": "ranged"
+      },
+      {
+        "name": "Power Weapon",
+        "range": 0,
+        "attacks": 3,
+        "skill": 3,
+        "strength": 5,
+        "ap": -2,
+        "damage": 1,
+        "type": "melee"
       }
     ],
     "keywords": [
-      "Infantry"
+      "Character"
     ],
-    "baseSize": 80,
-    "description": "Official Elite unit for the White Scars. Roboute Guilliman is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Elites"
+    "baseSize": 60,
+    "description": "Official Leader unit for the White Scars. Roboute Guilliman is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Hq"
   },
   {
     "id": "world-eaters-jakhals",
@@ -75518,33 +75917,43 @@
     "id": "world-eaters-angron",
     "name": "Angron",
     "factionId": "world-eaters",
-    "category": "lord-of-war",
+    "category": "hq",
     "points": 435,
     "models": 1,
-    "movement": 10,
-    "toughness": 11,
-    "save": 3,
-    "wounds": 18,
+    "movement": 8,
+    "toughness": 8,
+    "save": 2,
+    "wounds": 10,
     "leadership": 6,
-    "objectiveControl": 5,
+    "objectiveControl": 4,
     "weapons": [
       {
-        "name": "Boltgun",
-        "range": 24,
-        "attacks": 2,
+        "name": "Bolt Pistol",
+        "range": 12,
+        "attacks": 1,
         "skill": 3,
         "strength": 4,
         "ap": 0,
         "damage": 1,
         "type": "ranged"
+      },
+      {
+        "name": "Power Weapon",
+        "range": 0,
+        "attacks": 3,
+        "skill": 3,
+        "strength": 5,
+        "ap": -2,
+        "damage": 1,
+        "type": "melee"
       }
     ],
     "keywords": [
-      "Titanic"
+      "Character"
     ],
-    "baseSize": 120,
-    "description": "Official Lord of War unit for the World Eaters. Angron is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
-    "role": "Lord Of War"
+    "baseSize": 60,
+    "description": "Official Leader unit for the World Eaters. Angron is a current Warhammer 40,000 10th Edition datasheet with points from the Munitorum Field Manual.",
+    "role": "Hq"
   },
   {
     "id": "world-eaters-khorne-lord-of-skulls",

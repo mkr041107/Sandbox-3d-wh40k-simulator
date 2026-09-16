@@ -9,6 +9,7 @@ import type {
   GameSettings,
 } from '../types/game'
 import { generateAIArmy, initBattle } from '../engine/battle'
+import { isDetachmentValidForFaction } from '../data/detachments'
 import { upgradesKey } from '../data/units'
 
 interface GameStore {
@@ -19,6 +20,7 @@ interface GameStore {
 
   setScreen: (screen: AppScreen) => void
   setFaction: (factionId: FactionId) => void
+  setDetachment: (detachmentId: string | null) => void
   setArmyName: (name: string) => void
   addUnit: (profileId: string, upgrades?: string[]) => void
   removeUnit: (entryId: string) => void
@@ -34,6 +36,7 @@ interface GameStore {
 const defaultArmy: ArmyList = {
   name: 'My Army',
   factionId: 'space-marines',
+  detachmentId: null,
   pointsLimit: 1000,
   entries: [],
 }
@@ -56,8 +59,18 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
   setFaction: (factionId) =>
     set((s) => ({
-      playerArmy: { ...s.playerArmy, factionId, entries: [] },
+      playerArmy: {
+        ...s.playerArmy,
+        factionId,
+        detachmentId: isDetachmentValidForFaction(s.playerArmy.detachmentId ?? '', factionId)
+          ? s.playerArmy.detachmentId
+          : null,
+        entries: [],
+      },
     })),
+
+  setDetachment: (detachmentId) =>
+    set((s) => ({ playerArmy: { ...s.playerArmy, detachmentId } })),
 
   setArmyName: (name) =>
     set((s) => ({ playerArmy: { ...s.playerArmy, name } })),

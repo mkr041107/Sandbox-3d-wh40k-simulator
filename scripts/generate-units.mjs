@@ -124,21 +124,69 @@ function detectFactionHeader(line) {
   return { id: matched.id, rest: matched.rest }
 }
 
+function isCharacterCastellan(n) {
+  return /\b(cadian castellan|castellan crowe)\b/.test(n)
+    || (/\bcastellan\b/.test(n) && !/\bknight castellan\b/.test(n))
+}
+
+function isKnightVehicleName(n) {
+  if (/\bknight-centura\b/.test(n)) return false
+  return /\bknight castellan\b/.test(n)
+    || /\bknight (crusader|paladin|preceptor|errant|gallant|valiant|warden|dominus|desecrator|rampager|abominant|tyrant)\b/.test(n)
+    || /\b(armiger|war dog)\b/.test(n)
+    || /\b(imperial knight|chaos knight)\b/.test(n)
+}
+
+/** Infantry units whose names contain vehicle/monster keywords (Castellan-style false positives). */
+function isInfantryUnitName(n) {
+  if (/\b(squad|squadron|team|mob|boyz|warriors|company|patrol|brotherhood|retinue|hybrids|jackals|riders|claws|pilgrims)\b/.test(n)) return true
+  if (/\b(paladin squad|crusader squad|scout squad|assault squad|terminator squad|inceptor squad|interceptor squad|incursor squad|infiltrator squad|outrider squad|aggressor squad|black knights|centurion assault|centurion devastator|company heroes|command squad|heavy weapons squad|shock troops|battle sisters|sacresants|canoptek wraiths|canoptek scarab|deathwing|stormwing|kill team)\b/.test(n)) return true
+  if (isCharacterCastellan(n) || /\bknight-centura\b/.test(n)) return true
+  if (/\b(marneus calgar|chaplain grimaldus|grimaldus)\b/.test(n)) return true
+  return false
+}
+
+function isEpicHeroName(n) {
+  return /\b(marneus calgar|roboute guilliman|logan grimnar|mortarion|fulgrim|magnus|angron|trajann|azrael|dante|mephiston|abaddon|be'?lakor|tyrion|shadowsun|farsight|grimaldus|calgar|guilliman|grimnar|eisenhorn|greyfax|coteaz|draxus|pedro kantor)\b/.test(n)
+}
+
+function isFortificationName(n) {
+  return /\b(hammerfall bunker|firestorm redoubt|aegis defence line)\b/.test(n)
+    || (/\b(bunker|strongpoint)\b/.test(n) && !/\bsquad\b/.test(n))
+}
+
+function isAircraftName(n) {
+  if (/\binterceptor squad\b/.test(n)) return false
+  return /\b(flyer|gunship|bomber|crone|harpy|doom scythe|stormraven|stormtalon|stormhawk|thunderhawk|dakkajet|blitza|burna-bomber|hemlock|nightwing|crimson hunter|phoenix|razorwing|voidraven|archaeopter|wraithfighter|jetfighter|aircraft)\b/.test(n)
+    || /\b(stormhawk interceptor|stormtalon gunship)\b/.test(n)
+    || (/\binterceptor\b/.test(n) && !/\bsquad\b/.test(n))
+}
+
 function inferCategory(name) {
   const n = name.toLowerCase()
-  if (/\b(titan|knight castellan|knight tyrant|knight crusader|baneblade|banehammer|banesword|stormlord|shadowsword|warlord|reaver|warhound|phantom|revenant|greater daemon|bloodthirster|great unclean|lord of change|keeper of secrets|skarbrand|be'?lakor|shalaxi|fulgrim|magnus|angron|khorne lord of skulls|silent king|void dragon|nightbringer|hive tyrant|wraithknight)\b/.test(n)) return 'lord-of-war'
+  if (/\b(cadian castellan|castellan crowe)\b/.test(n)) return 'hq'
+  if (/\bcastellan\b/.test(n) && !/\bknight castellan\b/.test(n)) return 'elites'
+  if (/\bknight-centura\b/.test(n)) return 'hq'
+  if (/\binterceptor squad\b/.test(n)) return 'elites'
+  if (/\bpaladin squad\b/.test(n)) return 'elites'
+  if (/\bcanoptek (wraiths|scarab swarms|spyders|reanimator)\b/.test(n)) return 'elites'
+  if (isFortificationName(n)) return 'heavy-support'
+  if (/\b(taurox|taurox prime)\b/.test(n)) return 'fast-attack'
+  if (/\b(silent king|szarekh)\b/.test(n)) return 'lord-of-war'
+  if (isEpicHeroName(n)) return 'hq'
+  if (/\b(titan|knight castellan|knight tyrant|knight crusader|baneblade|banehammer|banesword|stormlord|shadowsword|warlord titan|reaver titan|warhound|phantom titan|revenant titan|greater daemon|bloodthirster|great unclean|lord of change|keeper of secrets|skarbrand|be'?lakor|shalaxi|fulgrim|magnus|angron|khorne lord of skulls|silent king|void dragon|nightbringer|hive tyrant|wraithknight)\b/.test(n)) return 'lord-of-war'
   if (/\b(rhino|raider|venom|devilfish|chimera|dunerider|truck|rockgrinder|drop pod|impulsor|repulsor|land raider|ghost ark|wave serpent|falcon|dedicated transport|battlewagon|goliath)\b/.test(n) && !/squad|team|kill/i.test(n)) {
     if (/\b(transport|rhino|raider|venom|devilfish|chimera|dunerider|truck|drop pod|impulsor|ghost ark|wave serpent)\b/.test(n)) return 'dedicated-transport'
   }
-  if (/\b(flyer|gunship|bomber|interceptor|crone|harpy|doom scythe|stormraven|stormtalon|stormhawk|thunderhawk|dakkajet|blitza|burna-bomber|hemlock|nightwing|crimson hunter|phoenix|razorwing|voidraven|archaeopter)\b/.test(n)) return 'flyer'
-  if (/\b(captain|lieutenant|lord|hq|character|warboss|warlord|autarch|farseer|warlock|cryptek|chronomancer|technomancer|plasmancer|skorpekh|overlord|necron lord|canoptek|canoness|marshal|inquisitor|commissar|ethereal|commander|archon|succubus|haemonculus|patriarch|magus|primus|sorcerer|daemon prince|master of|hq|ancient|chaplain|librarian|apothecary|tech-priest|techmarine|iron father|judiciar|ancient|shield-captain|blade champion|traitor|grimaldus|dante|azrael|mephiston|calgar|grimnar|tyrion|shadowsun|farsight|szarekh|trajann|cawl|yvraine|yncarne|eisenhorn|greyfax|coteaz|assassin|callidus|culexus|vindicare|eversor)\b/.test(n) && !/squad|team|mob|boyz|warriors|guard|sisters|marines|legionaries|squadron/i.test(n)) return 'hq'
+  if (isAircraftName(n)) return 'flyer'
+  if (/\b(captain|lieutenant|lord|hq|character|warboss|autarch|farseer|warlock|cryptek|chronomancer|technomancer|plasmancer|skorpekh|overlord|necron lord|canoness|marshal|inquisitor|commissar|ethereal|commander|archon|succubus|haemonculus|patriarch|magus|primus|sorcerer|daemon prince|master of|hq|ancient|chaplain|librarian|apothecary|tech-priest|techmarine|iron father|judiciar|ancient|shield-captain|blade champion|traitor|grimaldus|dante|azrael|mephiston|tyrion|shadowsun|farsight|szarekh|trajann|cawl|yvraine|yncarne|eisenhorn|greyfax|coteaz|assassin|callidus|culexus|vindicare|eversor)\b/.test(n) && !/squad|team|mob|boyz|warriors|guard|sisters|marines|legionaries|squadron/i.test(n)) return 'hq'
   if (/\b(outrider|bike|biker|storm speeder|land speeder|invader|pteraxii|serberys|scarab|hellion|reaver|skyweaver|atv|rough rider|death rider|wolf|thunderwolf|warglaive|helverin|war dog|dreadwing|black knight|ravenwing|scourge|hellion|atalan|jackal|deffkopta|scourge)\b/.test(n)) return 'fast-attack'
   if (/\b(terminator|elite|chosen|sternguard|vanguard veteran|bladeguard|aggressor|centurion|eradicator|hellblaster|heavy intercessor|deathwing|allarus|custodian warden|sacresant|incubi|wych|wyches|scarab occult|blightlord|poxwalker|pox|flayed|wraithguard|wraithblade|lictor|warrior|tyranid warrior|zoanthrope|neurothrope|hybrid|metamorph|aberrant|kataphron|fulgurite|electro-priest|corpuscarii|sicarian|ruststalker|infiltrator|destroyer|flayed|immortal|deathmark|berzerker|eightbound|rubric|plague marine|kabalite|guardian|dire avenger|fire dragon|howling banshee|strik|breacher|kasrkin|scion|tempestus|ogryn|bullgryn|crisis|broadside|crisis|stealth|pathfinder|genestealer|purestrain|harlequin troupe|troupe)\b/.test(n) || /squad|squadron|team|mob/i.test(n) && /terminator|elite|chosen|veteran|guard|incubi|wych/i.test(n)) {
     if (/\b(troops|intercessor|legionary|boyz|gaunt|termagant|hormagaunt|guardian|kabalite|warrior|immortal|sister|shock|krieg|catachan|cadian|hybrid|neophyte|cultist|bloodletter|plaguebearer|daemonette|horror|poxwalker|gretchin|strike team|breacher|hearthkyn|ranger|vanguard|crusader|tactical|assault intercessor)\b/i.test(n)) return 'troops'
     return 'elites'
   }
   if (/\b(troops|intercessor|legionar|boyz|gaunt|termagant|hormagaunt|guardian|kabalite|warrior|immortal|sister|shock|krieg|catachan|cadian|hybrid|neophyte|cultist|bloodletter|plaguebearer|daemonette|horror|poxwalker|gretchin|strike team|breacher|hearthkyn|ranger|vanguard|crusader|tactical|assault intercessor|legionaries|jakhal|accursed cultist|poxwalker|necron warrior)\b/i.test(n)) return 'troops'
-  if (/\b(dreadnought|predator|vindicator|land raider|repulsor|gladiator|hammerhead|leman russ|rhino|chimera|basilisk|manticore|wyvern|deathstrike|doomsday|annihilation|monolith|doomstalker|defiler|forgefiend|maulerfiend|heldrake|helbrute|deff dread|killa kan|trukk|battlewagon|falcon|fire prism|night spinner|wave serpent|devilfish|hammerhead|broadside|ghostkeel|riptide|stormsurge|exocrine|haruspex|carnifex|trygon|mawloc|tyrannofex|tesseract|doom scythe|doomsday|ghost ark|doomsday ark|onager|dunecrawler|skorpius|disintegrator|kastelan|armiger|knight|crusader|castellan|paladin|preceptor|errant|gallant|valiant|abominant|desecrator|despoiler|rampager|baneblade|rogal dorn|rogal|macharius|stormblade|shadowsword|stormlord|banehammer|banesword|doomhammer|hellhammer|stormlord|crusader|land raider|repulsor executioner|redemptor|ballistus|brutalis|invictor|warsuit|dreadknight|nemesis|wraithlord|wraithknight|falcon|fire prism|night spinner|scorpion|cobra|phantom|revenant|war walker|warwalker|war engine|sentinel|armoured sentinel|scout sentinel|basilisk|manticore|hydra|deathstrike|doomsday|monolith|annihilation|doomstalker|canoptek spider|spyder|tomb stalker|ctan|shard)\b/i.test(n)) return 'heavy-support'
+  if (!isInfantryUnitName(n) && /\b(dreadnought|predator|vindicator|land raider|repulsor|gladiator|hammerhead|leman russ|rhino|chimera|basilisk|manticore|wyvern|deathstrike|doomsday|annihilation|monolith|doomstalker|defiler|forgefiend|maulerfiend|heldrake|helbrute|deff dread|killa kan|trukk|battlewagon|falcon|fire prism|night spinner|wave serpent|devilfish|hammerhead|broadside|ghostkeel|riptide|stormsurge|exocrine|haruspex|carnifex|trygon|mawloc|tyrannofex|tesseract|doom scythe|doomsday|ghost ark|doomsday ark|onager|dunecrawler|skorpius|disintegrator|kastelan|armiger|knight castellan|knight crusader|knight paladin|knight preceptor|knight errant|knight gallant|knight valiant|baneblade|rogal dorn|rogal|macharius|stormblade|shadowsword|stormlord|banehammer|banesword|doomhammer|hellhammer|repulsor executioner|redemptor|ballistus|brutalis|invictor|warsuit|dreadknight|nemesis|wraithlord|wraithknight|scorpion|cobra|phantom|revenant|war walker|warwalker|war engine|sentinel|armoured sentinel|scout sentinel|hydra|canoptek spider|spyder|tomb stalker|ctan|shard|taurox)\b/i.test(n)) return 'heavy-support'
   if (/\b(squad|team|mob|warriors|troops|intercessor|boyz|gaunts)\b/i.test(n)) return 'troops'
   if (/\b(character|captain|lord|hq)\b/i.test(n)) return 'hq'
   return 'elites'
@@ -146,11 +194,16 @@ function inferCategory(name) {
 
 function inferStats(name, category, models, points) {
   const n = name.toLowerCase()
-  const isVehicle = /\b(tank|predator|rhino|chimera|land raider|repulsor|dreadnought|walker|knight|baneblade|battlewagon|falcon|hammerhead|devilfish|raider|venom|dunerider|onager|dunecrawler|defiler|helbrute|deff|maulerfiend|forgefiend|heldrake|monolith|ark|prism|spinner|crusader|castellan|armiger|war dog|sentinel|basilisk|manticore|vindicator|gladiator|impulsor|drop pod|wave serpent|ghost ark|doomsday|annihilation|skorpius|disintegrator|kastelan|trukk|goliath|rockgrinder|bunker|strongpoint)\b/.test(n)
-  const isMonster = /\b(carnifex|trygon|mawloc|haruspex|exocrine|tyrannofex|hive tyrant|swarmlord|broodlord|daemon prince|bloodthirster|great unclean|lord of change|keeper|skarbrand|be'?lakor|mutalith|vortex beast|ctan|shard|avatar|wraithlord|wraithknight|greater|fulgrim|magnus|angron|mortarion|guilliman|calgar|grimnar|silent king|void dragon|nightbringer|deceiver|tyrant|prime|maleceptor|neurothrope|zoanthrope|biovore|hive guard|warrior prime)\b/.test(n)
-  const isTerminator = /\bterminator\b/.test(n)
+  const isVehicle = !isInfantryUnitName(n) && !isEpicHeroName(n) && (
+    /\b(tank|predator|rhino|chimera|land raider|repulsor|dreadnought|walker|baneblade|battlewagon|falcon|hammerhead|devilfish|raider|venom|dunerider|onager|dunecrawler|defiler|helbrute|deff|maulerfiend|forgefiend|heldrake|monolith|ark|prism|spinner|armiger|war dog|sentinel|basilisk|manticore|vindicator|gladiator|impulsor|drop pod|wave serpent|ghost ark|doomsday|annihilation|skorpius|disintegrator|kastelan|trukk|goliath|rockgrinder|taurox)\b/.test(n)
+    || isKnightVehicleName(n)
+    || isFortificationName(n)
+  )
+  const isMonster = !isInfantryUnitName(n) && !isEpicHeroName(n)
+    && /\b(carnifex|trygon|mawloc|haruspex|exocrine|tyrannofex|hive tyrant|swarmlord|broodlord|daemon prince|bloodthirster|great unclean|lord of change|keeper|skarbrand|be'?lakor|mutalith|vortex beast|ctan|shard|avatar|wraithlord|wraithknight|greater|fulgrim|magnus|angron|mortarion|silent king|void dragon|nightbringer|deceiver|maleceptor|neurothrope|zoanthrope|biovore|warrior prime|winged tyranid prime|tyranid prime)\b/.test(n)
+  const isTerminator = /\b(terminator|paladin squad)\b/.test(n)
   const isFlyer = category === 'flyer'
-  const isTitanic = category === 'lord-of-war' || /\b(titan|baneblade|knight castellan|knight tyrant|warlord|reaver|phantom|revenant|greater|lord of skulls)\b/.test(n)
+  const isTitanic = category === 'lord-of-war' || /\b(titan|baneblade|knight castellan|knight tyrant|warlord titan|reaver titan|phantom titan|revenant titan|greater|lord of skulls)\b/.test(n)
 
   let movement = 6, toughness = 4, save = 3, wounds = 2, leadership = 6, oc = 2
   let baseSize = 32
@@ -173,7 +226,7 @@ function inferStats(name, category, models, points) {
     if (/\b(rhino|chimera|raider|venom|trukk|dunerider)\b/.test(n)) { toughness = 6; wounds = 10; movement = 12 }
     if (/\b(dreadnought|helbrute|deff|invictor|warsuit|ballistus|brutalis|redemptor)\b/.test(n)) { movement = 6; toughness = 9; wounds = 8; baseSize = 60 }
     if (/\b(armiger|war dog)\b/.test(n)) { movement = 12; toughness = 8; wounds = 12 }
-    if (/\b(knight|crusader|castellan|paladin|preceptor|errant|gallant|valiant|abominant|desecrator)\b/.test(n)) { movement = 10; toughness = 11; wounds = 24; oc = 5; baseSize = 120 }
+    if (isKnightVehicleName(n)) { movement = 10; toughness = 11; wounds = 24; oc = 5; baseSize = 120 }
   }
   if (isMonster) {
     movement = 8; toughness = 8; save = 3; wounds = 8; baseSize = 80
@@ -191,6 +244,17 @@ function inferStats(name, category, models, points) {
   if (/\b(ork)\b/.test(n)) { toughness = 5 }
   if (/\b(necron)\b/.test(n)) { leadership = 10 }
   if (/\b(sororitas|sister)\b/.test(n)) { save = 3 }
+  if (/\bknight-centura\b/.test(n)) { movement = 6; toughness = 3; save = 4; wounds = 4; baseSize = 32; oc = 1 }
+  if (/\binterceptor squad\b/.test(n)) { movement = 12; baseSize = 32; wounds = 2 }
+  if (/\bmarneus calgar\b/.test(n)) { movement = 6; toughness = 6; save = 2; wounds = 5; baseSize = 40; oc = 1 }
+  if (/\bgrimaldus\b/.test(n)) { movement = 6; toughness = 4; save = 3; wounds = 4; baseSize = 32; oc = 1 }
+  if (/\bhive guard\b/.test(n)) { movement = 6; toughness = 6; save = 3; wounds = 4; baseSize = 50 }
+  if (/\btyrant guard\b/.test(n)) { movement = 6; toughness = 8; save = 3; wounds = 4; baseSize = 50 }
+  if (/\b(taurox|taurox prime)\b/.test(n)) { movement = 12; toughness = 8; save = 3; wounds = 10; baseSize = 80; oc = 2 }
+  if (/\b(silent king|szarekh)\b/.test(n)) { movement = 10; toughness = 11; save = 2; wounds = 16; baseSize = 60; oc = 5 }
+  if (/\bkastelan\b/.test(n)) { movement = 6; toughness = 9; save = 3; wounds = 7; baseSize = 60; oc = 2 }
+  if (isFortificationName(n)) { movement = 0; toughness = 10; save = 3; wounds = 14; baseSize = 80; oc = 0 }
+  if (isEpicHeroName(n) && !/\b(marneus calgar|grimaldus)\b/.test(n)) { movement = 8; toughness = 8; save = 2; wounds = 10; baseSize = 60; oc = 4 }
 
   return { movement, toughness, save, wounds, leadership, objectiveControl: oc, models, baseSize }
 }
@@ -378,6 +442,18 @@ function vehicleLoadout(n) {
   if (/\b(annihilation|doomsday)\b/.test(n)) {
     return [gun('Doomsday cannon', 72, 1, 4, 14, -4, 3), gun('Gauss flux arc', 24, 5, 4, 5, 0, 1)]
   }
+  if (/\b(taurox|taurox prime)\b/.test(n)) {
+    return [
+      gun('Taurox battle cannon', 48, 2, 4, 8, -1, 2),
+      gun('Twin autocannon', 48, 2, 4, 9, -1, 2),
+    ]
+  }
+  if (isFortificationName(n)) {
+    return [
+      gun('Hammerfall missile', 48, 2, 4, 8, -2, 2),
+      gun('Heavy bolter', 36, 3, 4, 5, -1, 2),
+    ]
+  }
   if (/\b(armiger|war dog)\b/.test(n)
     || /\bknight (crusader|castellan|paladin|preceptor|errant|gallant|valiant|warden|dominus|desecrator|rampager|abominant)\b/.test(n)
     || /\b(imperial knight|chaos knight)\b/.test(n)) {
@@ -403,12 +479,14 @@ function vehicleLoadout(n) {
 }
 
 function isVehicleUnit(n, category) {
+  if (isInfantryUnitName(n) || isEpicHeroName(n)) return false
   if (category === 'dedicated-transport' || category === 'flyer') return true
   if (/\b(squad|team|mob|boyz|warriors|troops|intercessor|legionaries|gaunt|guard)\b/.test(n)
     && !/\b(weapon|artillery|sentinel)\b/.test(n)) return false
-  return /\b(tank|predator|vindicator|rhino|chimera|leman russ|hammerhead|basilisk|manticore|wyvern|deathstrike|hydra|sentinel|baneblade|repulsor|gladiator|land raider|dreadnought|helbrute|deff dread|defiler|forgefiend|maulerfiend|heldrake|monolith|onager|dunecrawler|skorpius|disintegrator|battlewagon|trukk|falcon|devilfish|wave serpent|ghost ark|dunerider|rogal dorn|macharius|annihilation|doomsday|crusader|castellan|armiger|war dog|invictor|warsuit|redemptor|ballistus|brutalis|kastelan|broadside|riptide|ghostkeel|stormsurge|exocrine|haruspex|carnifex|trygon|mawloc|tyrannofex|doom scythe|razorwing|stormraven|dakkajet|artillery|knight|wraithknight|contemptor)\b/.test(n)
-    || (category === 'heavy-support' && /\b(vehicle|walker|platform|engine|drone|suit)\b/.test(n) === false
-      && /\b(support|tank|artillery|cannon|platform|engine|sentinel|suit|walker|dread|knight|crisis|broadside|riptide|carnifex|trygon|monolith|defiler|predator|vindicator|basilisk|manticore|hammerhead|leman|baneblade|repulsor|gladiator|heldrake|forgefiend|maulerfiend|exocrine|haruspex|tyrannofex|stormsurge|ghostkeel|doomsday|annihilation|disintegrator|skorpius|onager|dunecrawler|battlewagon|trukk|falcon|prism|spinner)\b/.test(n))
+  if (isKnightVehicleName(n)) return true
+  if (isFortificationName(n)) return true
+  return /\b(tank|predator|vindicator|rhino|chimera|leman russ|hammerhead|basilisk|manticore|wyvern|deathstrike|hydra|sentinel|baneblade|repulsor|gladiator|land raider|dreadnought|helbrute|deff dread|defiler|forgefiend|maulerfiend|heldrake|monolith|onager|dunecrawler|skorpius|disintegrator|battlewagon|trukk|falcon|devilfish|wave serpent|ghost ark|dunerider|rogal dorn|macharius|annihilation|doomsday|armiger|war dog|invictor|warsuit|redemptor|ballistus|brutalis|kastelan|broadside|riptide|ghostkeel|stormsurge|exocrine|haruspex|carnifex|trygon|mawloc|tyrannofex|doom scythe|razorwing|stormraven|dakkajet|artillery|wraithknight|contemptor|taurox)\b/.test(n)
+    || (category === 'heavy-support' && /\b(support|tank|artillery|cannon|platform|engine|drone|suit|walker|dread|crisis|broadside|riptide|carnifex|trygon|monolith|defiler|predator|vindicator|basilisk|manticore|hammerhead|leman|baneblade|repulsor|gladiator|heldrake|forgefiend|maulerfiend|exocrine|haruspex|tyrannofex|stormsurge|ghostkeel|doomsday|annihilation|disintegrator|skorpius|onager|dunecrawler|battlewagon|trukk|falcon|prism|spinner)\b/.test(n))
 }
 
 function defaultWeapons(name, category) {
@@ -427,6 +505,27 @@ function defaultWeapons(name, category) {
 
   if (/\b(tank|battle cannon)\b/.test(n)) {
     return [gun('Battle cannon', 48, 2, 4, 10, -2, 3), ...hullWeapons()]
+  }
+  if (/\b(grey knight|brotherhood|paladin squad|interceptor squad)\b/.test(n)) {
+    return [
+      { name: 'Storm Bolter', range: 24, attacks: 2, skill: 3, strength: 4, ap: 0, damage: 1, type: 'ranged' },
+      { name: 'Nemesis Force Weapon', range: 0, attacks: 3, skill: 3, strength: 6, ap: -2, damage: 2, type: 'melee' },
+    ]
+  }
+  if (/\b(hive guard)\b/.test(n)) {
+    return [{ name: 'Impaler Cannon', range: 36, attacks: 2, skill: 4, strength: 8, ap: -2, damage: 2, type: 'ranged' }]
+  }
+  if (/\b(tyrant guard)\b/.test(n)) {
+    return [
+      { name: 'Scything Talons', range: 0, attacks: 5, skill: 4, strength: 7, ap: -1, damage: 1, type: 'melee' },
+      { name: 'Crushing Claws', range: 0, attacks: 2, skill: 4, strength: 10, ap: -2, damage: 2, type: 'melee' },
+    ]
+  }
+  if (/\bknight-centura\b/.test(n)) {
+    return [
+      { name: 'Executioner Greatblade', range: 0, attacks: 3, skill: 3, strength: 6, ap: -2, damage: 2, type: 'melee' },
+      { name: 'Pyrithite Pistol', range: 12, attacks: 1, skill: 3, strength: 5, ap: -1, damage: 1, type: 'ranged' },
+    ]
   }
   if (/\b(terminator)\b/.test(n)) {
     return [
@@ -506,7 +605,7 @@ function inferKeywords(name, category) {
   if (/\b(vehicle|tank|rhino|chimera|predator|repulsor|land raider|hammerhead|devilfish|raider|venom|dunerider|battlewagon|trukk|falcon|wave serpent|ghost ark|onager|dunecrawler|defiler|heldrake|baneblade|basilisk|manticore|wyvern|hydra|deathstrike|sentinel|rockgrinder|goliath)\b/.test(n)) kw.push('Vehicle')
   if (/\b(dreadnought|helbrute|deff dread|walker|warsuit|invictor|kastelan|armiger|war dog|sentinel|war walker|wraithlord)\b/.test(n)) kw.push('Walker')
   if (/\b(tank|predator|leman russ|hammerhead|baneblade|rogal dorn|basilisk|manticore|wyvern|hydra|deathstrike)\b/.test(n)) kw.push('Tank')
-  if (/\b(flyer|gunship|bomber|interceptor|crone|harpy|doom scythe|stormraven|dakkajet)\b/.test(n)) kw.push('Fly')
+  if (/\b(flyer|gunship|bomber|crone|harpy|doom scythe|stormraven|dakkajet)\b/.test(n) || isAircraftName(n)) kw.push('Fly')
   if (/\b(monster|carnifex|trygon|mawloc|haruspex|exocrine|tyrannofex|daemon prince|bloodthirster|greater|ctan|avatar|wraithknight|mutalith)\b/.test(n)) kw.push('Monster')
   if (/\b(psyker|librarian|farseer|warlock|sorcerer|grey knight|brotherhood)\b/.test(n)) kw.push('Psyker')
   if (/\b(bike|outrider|land speeder|scourge|hellion|deffkopta|atv)\b/.test(n)) kw.push('Mounted')

@@ -1,5 +1,12 @@
-import type { AIDifficulty, BattleState, BattleUnit, Position } from '../types/game'
+import type { AIDifficulty, BattleModel, BattleState, BattleUnit, CombatDoctrine, Position } from '../types/game'
+import type { ShotVisualPayload } from '../engine/combatVfx'
 import {
+  autoConfigureCommandPhase,
+  getUsableStratagems,
+  useStratagem,
+} from '../engine/detachmentBattle'
+import {
+  canMoveModelTo,
   chargeUnit,
   distance,
   fightCombat,
@@ -13,8 +20,11 @@ import {
   getValidShootTargets,
   moveUnit,
   nextPhase,
+  setDoctrine,
   shootAtTarget,
 } from '../engine/battle'
+import { sortUnitsByFightPriority } from '../engine/battlefieldRules'
+import { getDetachmentRuleConfig } from '../data/detachmentEffects'
 
 export interface AIConfig {
   difficulty: AIDifficulty
@@ -103,13 +113,19 @@ export function selectTarget(
   return scored[0].target
 }
 
-function findBestMovePosition(
+function nearestEnemyModelDistance(from: Position, enemy: BattleUnit): number {
+  if (enemy.models.length === 0) return distance(from, enemy.position)
+  return Math.min(...enemy.models.map((model) => distance(from, model.position)))
+}
+
+function findBestModelMovePosition(
   unit: BattleUnit,
+  model: BattleModel,
   state: BattleState,
   config: AIConfig,
 ): Position | null {
   const profile = getProfile(unit)
-  const enemies = getEnemyUnits(state, unit.owner)
+  const enemies = getEnemyUnits(state, unit.owner).filter((enemy) => !enemy.inReserves)
   if (enemies.length === 0) return null
 
   const rangedWeapons = getRangedWeapons(profile)
@@ -119,20 +135,26 @@ function findBestMovePosition(
   let bestPos: Position | null = null
   let bestScore = -Infinity
 
+  const minX = 2
+  const maxX = state.battlefieldWidth - 2
+  const minY = 2
+  const maxY = state.battlefieldHeight - 2
   const angles = 16
+  const step = profile.movement * (0.45 + config.aggression * 0.5)
+
   for (let i = 0; i < angles; i++) {
     const angle = (i / angles) * Math.PI * 2
-    const dist = profile.movement * (0.5 + config.aggression * 0.5)
     const candidate: Position = {
-      x: unit.position.x + Math.cos(angle) * dist,
-      y: unit.position.y + Math.sin(angle) * dist,
+      x: model.position.x + Math.cos(angle) * step,
+      y: model.position.y + Math.sin(angle) * step,
     }
 
-    if (candidate.x < 2 || candidate.x > 58 || candidate.y < 2 || candidate.y > 42) continue
+    if (candidate.x < minX || candidate.x > maxX || candidate.y < minY || candidate.y > maxY) continue
+    if (!canMoveModelTo(unit, model, candidate, state)) continue
 
     let score = 0
     for (const enemy of enemies) {
-      const d = distance(candidate, enemy.position)
+      const d = nearestEnemyModelDistance(candidate, enemy)
       if (hasRanged) {
         if (d <= maxRange && d > 1) score += 20
         if (d < maxRange * 0.7) score -= 10
@@ -155,10 +177,13 @@ function findBestMovePosition(
 }
 
 export interface AIAction {
-  type: 'move' | 'shoot' | 'charge' | 'fight' | 'nextPhase' | 'wait'
+  type: 'move' | 'shoot' | 'charge' | 'fight' | 'nextPhase' | 'wait' | 'stratagem' | 'doctrine'
   unitId?: string
+  modelId?: string
   targetId?: string
   position?: Position
+  stratagemName?: string
+  doctrine?: CombatDoctrine
   delay: number
 }
 
@@ -169,12 +194,37 @@ export function planAITurn(state: BattleState, config: AIConfig): AIAction[] {
   const aiUnits = getUnitsForPlayer(state, 'ai')
 
   switch (state.phase) {
+    case 'command': {
+      const detachment = state.aiDetachment
+      const ruleConfig = getDetachmentRuleConfig(detachment.detachmentId)
+      if (ruleConfig.doctrineCycle && !detachment.doctrine) {
+        const rangedCount = aiUnits.filter((u) => getRangedWeapons(getProfile(u)).length > 0).length
+        const doctrine: CombatDoctrine = rangedCount >= aiUnits.length / 2 ? 'devastator' : 'assault'
+        actions.push({ type: 'doctrine', doctrine, delay: 400 })
+      } else if (ruleConfig.kauyon) {
+        actions.push({ type: 'doctrine', doctrine: 'kauyon', delay: 400 })
+      } else if (ruleConfig.montkaTurns) {
+        actions.push({ type: 'doctrine', doctrine: 'montka', delay: 400 })
+      }
+      actions.push({ type: 'nextPhase', delay: config.thinkDelayMs })
+      break
+    }
+
     case 'movement':
       for (const unit of aiUnits) {
-        if (unit.hasMoved || unit.isEngaged) continue
-        const pos = findBestMovePosition(unit, state, config)
-        if (pos) {
-          actions.push({ type: 'move', unitId: unit.id, position: pos, delay: config.thinkDelayMs })
+        if (unit.isEngaged || unit.inReserves) continue
+        for (const model of unit.models) {
+          if (model.hasMoved) continue
+          const pos = findBestModelMovePosition(unit, model, state, config)
+          if (pos) {
+            actions.push({
+              type: 'move',
+              unitId: unit.id,
+              modelId: model.id,
+              position: pos,
+              delay: config.thinkDelayMs,
+            })
+          }
         }
       }
       actions.push({ type: 'nextPhase', delay: config.thinkDelayMs })
@@ -183,6 +233,15 @@ export function planAITurn(state: BattleState, config: AIConfig): AIAction[] {
     case 'shooting':
       for (const unit of aiUnits) {
         if (unit.hasShot) continue
+        const strats = getUsableStratagems(state, 'ai', 'shooting')
+        if (strats.length > 0 && config.tacticalAwareness > 0.45) {
+          actions.push({
+            type: 'stratagem',
+            unitId: unit.id,
+            stratagemName: strats[0].name,
+            delay: 300,
+          })
+        }
         const targets = getValidShootTargets(state, unit.id)
         const target = selectTarget(state, unit, targets, config)
         if (target) {
@@ -208,8 +267,17 @@ export function planAITurn(state: BattleState, config: AIConfig): AIAction[] {
       break
 
     case 'fight':
-      for (const unit of aiUnits) {
+      for (const unit of sortUnitsByFightPriority(aiUnits)) {
         if (!unit.isEngaged || unit.hasFought) continue
+        const strats = getUsableStratagems(state, 'ai', 'fight')
+        if (strats.length > 0 && config.tacticalAwareness > 0.4) {
+          actions.push({
+            type: 'stratagem',
+            unitId: unit.id,
+            stratagemName: strats[0].name,
+            delay: 300,
+          })
+        }
         const enemies = getEnemyUnits(state, 'ai').filter((e) => {
           const u = getUnit(state, unit.id)
           return u && distance(u.position, e.position) < 3
@@ -222,7 +290,6 @@ export function planAITurn(state: BattleState, config: AIConfig): AIAction[] {
       actions.push({ type: 'nextPhase', delay: config.thinkDelayMs })
       break
 
-    case 'command':
     case 'morale':
       actions.push({ type: 'nextPhase', delay: 500 })
       break
@@ -231,31 +298,52 @@ export function planAITurn(state: BattleState, config: AIConfig): AIAction[] {
   return actions
 }
 
-export function executeAIAction(state: BattleState, action: AIAction): BattleState {
+export interface AIActionOutcome {
+  state: BattleState
+  shot?: ShotVisualPayload
+}
+
+export function executeAIAction(state: BattleState, action: AIAction): AIActionOutcome {
   switch (action.type) {
+    case 'doctrine':
+      if (action.doctrine) {
+        let newState = setDoctrine(state, 'ai', action.doctrine)
+        newState = autoConfigureCommandPhase(newState, 'ai')
+        return { state: newState }
+      }
+      return { state }
+    case 'stratagem':
+      if (action.stratagemName) {
+        return { state: useStratagem(state, 'ai', action.stratagemName, action.unitId) }
+      }
+      return { state }
     case 'move':
       if (action.unitId && action.position) {
-        return moveUnit(state, action.unitId, action.position)
+        return { state: moveUnit(state, action.unitId, action.position, action.modelId) }
       }
-      return state
+      return { state }
     case 'shoot':
       if (action.unitId && action.targetId) {
-        return shootAtTarget(state, action.unitId, action.targetId)
+        const result = shootAtTarget(state, action.unitId, action.targetId)
+        return { state: result.state, shot: result.shot }
       }
-      return state
+      return { state }
     case 'charge':
       if (action.unitId && action.targetId) {
-        return chargeUnit(state, action.unitId, action.targetId)
+        return { state: chargeUnit(state, action.unitId, action.targetId) }
       }
-      return state
+      return { state }
     case 'fight':
       if (action.unitId && action.targetId) {
-        return fightCombat(state, action.unitId, action.targetId)
+        return { state: fightCombat(state, action.unitId, action.targetId) }
       }
-      return state
+      return { state }
     case 'nextPhase':
-      return nextPhase(state)
+      if (state.phase === 'command' && state.activePlayer === 'ai') {
+        return { state: nextPhase(autoConfigureCommandPhase(state, 'ai')) }
+      }
+      return { state: nextPhase(state) }
     default:
-      return state
+      return { state }
   }
 }

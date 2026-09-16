@@ -11,7 +11,7 @@ export function Home() {
           Build your army. Test your tactics. Fight the machine.
         </p>
         <div className="home-actions">
-          <button className="btn btn-primary btn-lg" onClick={() => setScreen('army-builder')}>
+          <button className="btn btn-primary btn-lg" onClick={() => setScreen('detachment-setup')}>
             Build Army
           </button>
           <button className="btn btn-secondary btn-lg" onClick={() => setScreen('battle-setup')}>

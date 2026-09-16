@@ -3,16 +3,28 @@ import { Canvas, type ThreeEvent } from '@react-three/fiber'
 import { ContactShadows, Grid, OrbitControls, Sky, Stars, Text } from '@react-three/drei'
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib'
 import type { BattleState, Position } from '../../types/game'
-import { getValidShootTargets } from '../../engine/battle'
+import {
+  canArriveFromReserves,
+  canMoveModelTo,
+  canPlaceUnitAt,
+  getModel,
+  getUnit,
+  getValidShootTargets,
+  isDeepStrikeArrivalPosition,
+} from '../../engine/battle'
 import { getBattleUnitProfile } from '../../data/battleProfile'
 import { UnitToken } from './UnitToken'
 import { BattlefieldTerrain } from './BattlefieldTerrain'
 import { MovementRangeRing } from './MovementRangeRing'
 import { BattlefieldCameraControls, type CameraPreset } from './BattlefieldCameraControls'
+import { CombatVfxLayer, type ActiveShotVfx } from './vfx/CombatVfxLayer'
 
 interface Battlefield3DProps {
   battleState: BattleState
+  shotVfx: ActiveShotVfx[]
+  onShotVfxComplete: (id: string) => void
   onSelectUnit: (unitId: string | null) => void
+  onSelectModel: (unitId: string, modelId: string) => void
   onMoveUnit: (position: Position) => void
   battlefieldWidth: number
   battlefieldHeight: number
@@ -20,7 +32,10 @@ interface Battlefield3DProps {
 
 function BattlefieldScene({
   battleState,
+  shotVfx,
+  onShotVfxComplete,
   onSelectUnit,
+  onSelectModel,
   onMoveUnit,
   battlefieldWidth,
   battlefieldHeight,
@@ -45,9 +60,64 @@ function BattlefieldScene({
     return new Set(getValidShootTargets(battleState, selectedUnit.id).map((u) => u.id))
   }, [battleState, selectedUnit])
 
+  const isDeployment = battleState.phase === 'deployment'
+  const placingReserves = isDeployment && battleState.selectedDeployMode === 'reserves'
+  const canPlaceOnBoard = !placingReserves && Boolean(battleState.selectedDeployId || battleState.selectedUnitId)
+  const selectedReserve = selectedUnit?.inReserves ? selectedUnit : null
+  const canDeepStrikeNow = selectedReserve ? canArriveFromReserves(selectedReserve, battleState) : false
+  const selectedModel = selectedUnit && battleState.selectedModelId
+    ? getModel(selectedUnit, battleState.selectedModelId) ?? null
+    : selectedUnit?.models.find((model) => !model.hasMoved) ?? selectedUnit?.models[0] ?? null
+
+  const movementAnchor = selectedModel?.position ?? selectedUnit?.position
+
+  const deployPreview = useMemo(() => {
+    if (!isDeployment || placingReserves) return null
+    if (battleState.selectedDeployId) {
+      const pending = battleState.pendingDeployment.find((entry) => entry.deployId === battleState.selectedDeployId)
+      const mode = battleState.selectedDeployMode ?? 'normal'
+      return pending ? { profileId: pending.profileId, excludeUnitId: undefined as string | undefined, mode } : null
+    }
+    if (battleState.selectedUnitId) {
+      const unit = getUnit(battleState, battleState.selectedUnitId)
+      return unit && !unit.inReserves
+        ? { profileId: unit.profileId, excludeUnitId: unit.id, mode: unit.deployMode ?? 'normal' }
+        : null
+    }
+    return null
+  }, [battleState, isDeployment, placingReserves])
+
+  const hoverValid = hoverPos && deployPreview
+    ? canPlaceUnitAt(
+      battleState,
+      deployPreview.profileId,
+      hoverPos,
+      'player',
+      deployPreview.excludeUnitId,
+      deployPreview.mode,
+    )
+    : hoverPos && selectedUnit && selectedModel && battleState.phase === 'movement'
+      ? canMoveModelTo(selectedUnit, selectedModel, hoverPos, battleState)
+      : hoverPos && canDeepStrikeNow
+        ? isDeepStrikeArrivalPosition(battleState, hoverPos, 'player')
+        : false
+
   const handleGroundClick = (e: ThreeEvent<MouseEvent>) => {
-    if (battleState.activePlayer !== 'player' || battleState.phase !== 'movement') return
-    if (!selectedUnit) return
+    if (battleState.activePlayer !== 'player') return
+
+    if (canDeepStrikeNow && selectedReserve) {
+      onMoveUnit({ x: e.point.x, y: e.point.z })
+      return
+    }
+
+    if (isDeployment) {
+      if (!canPlaceOnBoard) return
+      onMoveUnit({ x: e.point.x, y: e.point.z })
+      return
+    }
+
+    if (battleState.phase !== 'movement') return
+    if (!selectedUnit || selectedUnit.inReserves) return
     onMoveUnit({ x: e.point.x, y: e.point.z })
   }
 
@@ -80,7 +150,15 @@ function BattlefieldScene({
         receiveShadow
         onClick={handleGroundClick}
         onPointerMove={(e) => {
-          if (selectedUnit && battleState.phase === 'movement') {
+          if (canDeepStrikeNow) {
+            setHoverPos({ x: e.point.x, y: e.point.z })
+            return
+          }
+          if (isDeployment && canPlaceOnBoard) {
+            setHoverPos({ x: e.point.x, y: e.point.z })
+            return
+          }
+          if (selectedUnit && battleState.phase === 'movement' && !selectedUnit.inReserves) {
             setHoverPos({ x: e.point.x, y: e.point.z })
           }
         }}
@@ -106,14 +184,27 @@ function BattlefieldScene({
       {/* Deployment zones */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[cx, 0.02, 6]}>
         <planeGeometry args={[battlefieldWidth - 4, 9]} />
-        <meshBasicMaterial color="#1a4a7a" transparent opacity={0.12} />
+        <meshBasicMaterial
+          color="#1a4a7a"
+          transparent
+          opacity={isDeployment ? 0.22 : 0.12}
+        />
       </mesh>
       <Text position={[cx, 0.15, 3]} fontSize={0.7} color="#4488cc" anchorX="center">
         YOUR DEPLOYMENT
       </Text>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[cx, 0.02, 12]}>
+        <planeGeometry args={[battlefieldWidth - 4, 6]} />
+        <meshBasicMaterial
+          color="#2a6a9a"
+          transparent
+          opacity={isDeployment && battleState.selectedDeployMode === 'scouts' ? 0.18 : 0.05}
+        />
+      </mesh>
+
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[cx, 0.02, battlefieldHeight - 6]}>
         <planeGeometry args={[battlefieldWidth - 4, 9]} />
-        <meshBasicMaterial color="#7a1a1a" transparent opacity={0.12} />
+        <meshBasicMaterial color="#7a1a1a" transparent opacity={isDeployment ? 0.06 : 0.12} />
       </mesh>
       <Text position={[cx, 0.15, battlefieldHeight - 3]} fontSize={0.7} color="#cc4444" anchorX="center">
         ENEMY DEPLOYMENT
@@ -138,12 +229,19 @@ function BattlefieldScene({
 
       <ContactShadows position={[0, 0.02, 0]} opacity={0.45} scale={80} blur={2.5} far={30} color="#000000" />
 
-      {selectedUnit && selectedProfile && battleState.phase === 'movement' && battleState.activePlayer === 'player' && (
+      {selectedUnit && selectedProfile && battleState.phase === 'movement' && battleState.activePlayer === 'player' && movementAnchor && (
         <MovementRangeRing
-          x={selectedUnit.position.x}
-          z={selectedUnit.position.y}
+          x={movementAnchor.x}
+          z={movementAnchor.y}
           radius={selectedProfile.movement}
         />
+      )}
+
+      {hoverPos && ((isDeployment && canPlaceOnBoard) || canDeepStrikeNow || (battleState.phase === 'movement' && selectedModel)) && (
+        <mesh position={[hoverPos.x, 0.05, hoverPos.y]} rotation={[-Math.PI / 2, 0, 0]}>
+          <ringGeometry args={[0.4, 0.55, 32]} />
+          <meshBasicMaterial color={hoverValid ? '#00ffaa' : '#ff4444'} transparent opacity={0.75} />
+        </mesh>
       )}
 
       {hoverPos && selectedUnit && battleState.phase === 'movement' && (
@@ -153,24 +251,30 @@ function BattlefieldScene({
         </mesh>
       )}
 
-      {battleState.playerUnits.map((unit) => (
+      {battleState.playerUnits.filter((unit) => !unit.inReserves).map((unit) => (
         <UnitToken
           key={unit.id}
           unit={unit}
           selected={unit.id === battleState.selectedUnitId}
+          selectedModelId={battleState.selectedModelId}
+          showCoherency={unit.id === battleState.selectedUnitId && unit.models.length > 1}
           isShootTarget={shootTargetIds.has(unit.id)}
           onClick={() => onSelectUnit(unit.id)}
+          onModelClick={(modelId) => onSelectModel(unit.id, modelId)}
         />
       ))}
-      {battleState.aiUnits.map((unit) => (
+      {!isDeployment && battleState.aiUnits.filter((unit) => !unit.inReserves).map((unit) => (
         <UnitToken
           key={unit.id}
           unit={unit}
           selected={unit.id === battleState.selectedUnitId}
+          selectedModelId={battleState.selectedModelId}
           isShootTarget={shootTargetIds.has(unit.id)}
           onClick={() => onSelectUnit(unit.id)}
         />
       ))}
+
+      <CombatVfxLayer shots={shotVfx} onShotComplete={onShotVfxComplete} />
 
       <BattlefieldCameraControls
         preset={cameraPreset}

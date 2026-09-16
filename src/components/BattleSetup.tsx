@@ -1,4 +1,5 @@
 import { FACTIONS, getFactionUiColor } from '../data/factions'
+import { getDetachment } from '../data/detachments'
 import { calculateArmyPoints, calculateEntryPoints, getUnitProfile } from '../data/units'
 import { formatUpgradeList } from './SquadUpgradeSelector'
 import { LlmSettingsPanel } from './LlmSettingsPanel'
@@ -26,6 +27,7 @@ export function BattleSetup() {
   const totalPoints = calculateArmyPoints(playerArmy.entries)
   const playerFaction = FACTIONS.find((f) => f.id === playerArmy.factionId)!
   const aiFaction = FACTIONS.find((f) => f.id === settings.aiFactionId)!
+  const detachment = getDetachment(playerArmy.detachmentId)
   const canStart = playerArmy.entries.length > 0 && totalPoints <= playerArmy.pointsLimit
 
   return (
@@ -44,6 +46,12 @@ export function BattleSetup() {
           <div className="army-preview" style={{ borderColor: getFactionUiColor(playerFaction) }}>
             <h4 style={{ color: getFactionUiColor(playerFaction) }}>{playerArmy.name}</h4>
             <p>{playerFaction.name} — {totalPoints} pts</p>
+            {detachment && (
+              <p className="setup-detachment">
+                <strong>{detachment.name}</strong>
+                <span className="detachment-focus">{detachment.focus}</span>
+              </p>
+            )}
             <ul className="army-preview-list">
               {playerArmy.entries.map((e) => {
                 const unit = getUnitProfile(e.profileId)

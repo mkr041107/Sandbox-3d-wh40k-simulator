@@ -18,7 +18,7 @@ export const LLM_SYSTEM_PROMPT = `You are an expert Warhammer 40,000 10th Editio
 You receive the current battle snapshot as JSON and must return ONLY valid JSON (no markdown) in this shape:
 {
   "actions": [
-    { "type": "move", "unitId": "...", "position": { "x": number, "y": number } },
+    { "type": "move", "unitId": "...", "modelId": "...", "position": { "x": number, "y": number } },
     { "type": "shoot", "unitId": "...", "targetId": "..." },
     { "type": "charge", "unitId": "...", "targetId": "..." },
     { "type": "fight", "unitId": "...", "targetId": "..." },
@@ -29,7 +29,7 @@ You receive the current battle snapshot as JSON and must return ONLY valid JSON 
 RULES:
 - Only use unit IDs from the snapshot.
 - Only choose actions listed as legal for the current phase.
-- For movement, position must be within the unit's movement distance from its current position.
+- For movement, move one model at a time. Each position must be within that model's Movement from its current position, preserve squad coherency (2"), and not overlap other baseplates.
 - End the phase with exactly one { "type": "nextPhase" } action.
 - If no useful actions exist this phase, return only [{ "type": "nextPhase" }].
 - Focus fire wounded enemies, protect high-value units, advance toward objectives, and charge when melee is favorable.
@@ -85,15 +85,19 @@ export function buildBattleSnapshot(state: BattleState, battlefieldWidth: number
 
   if (state.phase === 'movement') {
     legal.moves = aiUnits
-      .filter((u) => !u.hasMoved && !u.isEngaged)
-      .map((u) => {
+      .filter((u) => !u.isEngaged && !u.inReserves)
+      .flatMap((u) => {
         const profile = getProfile(u)
-        return {
-          unitId: u.id,
-          name: profile.name,
-          from: u.position,
-          maxDistance: profile.movement,
-        }
+        return u.models
+          .filter((model) => !model.hasMoved)
+          .map((model) => ({
+            unitId: u.id,
+            modelId: model.id,
+            modelIndex: model.index,
+            unitName: profile.name,
+            from: model.position,
+            maxDistance: profile.movement,
+          }))
       })
   }
 
@@ -159,6 +163,7 @@ export function buildBattleSnapshot(state: BattleState, battlefieldWidth: number
 interface RawLlmAction {
   type?: string
   unitId?: string
+  modelId?: string
   targetId?: string
   position?: Position
 }
@@ -182,6 +187,7 @@ function parseLlmActions(raw: string): AIAction[] {
           actions.push({
             type: 'move',
             unitId: action.unitId,
+            modelId: action.modelId,
             position: { x: Number(action.position.x), y: Number(action.position.y) },
             delay: 800,
           })
@@ -261,6 +267,7 @@ export async function planAITurnWithLlm(
 
 export function phaseLabel(phase: BattlePhase): string {
   const labels: Record<BattlePhase, string> = {
+    deployment: 'Deployment',
     command: 'Command',
     movement: 'Movement',
     shooting: 'Shooting',

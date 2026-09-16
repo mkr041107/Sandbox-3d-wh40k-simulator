@@ -1333,6 +1333,248 @@ h1, h2, h3, h4 {
   color: var(--accent-gold);
 }
 
+/* Detachment Setup */
+.detachment-setup {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.detachment-layout {
+  display: grid;
+  grid-template-columns: 220px 1fr 320px;
+  flex: 1;
+  overflow: hidden;
+}
+
+.detachment-main {
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.detachment-main-header {
+  margin-bottom: 16px;
+}
+
+.detachment-panel-hint {
+  color: var(--text-secondary);
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+.detachment-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+}
+
+.detachment-card {
+  text-align: left;
+  cursor: pointer;
+  padding: 14px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.detachment-card:hover {
+  border-color: rgba(201, 162, 39, 0.35);
+}
+
+.detachment-card.selected {
+  box-shadow: 0 0 0 1px rgba(201, 162, 39, 0.25);
+  background: linear-gradient(165deg, rgba(30, 24, 12, 0.5) 0%, rgba(8, 10, 14, 0.98) 100%);
+}
+
+.detachment-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.detachment-card-header h4 {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--color-bone);
+}
+
+.detachment-focus {
+  display: inline-block;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent-gold);
+  background: rgba(201, 162, 39, 0.12);
+  padding: 2px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.detachment-description {
+  color: var(--text-secondary);
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+.detachment-rule-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.detachment-rule-preview strong {
+  color: var(--text-primary);
+  font-size: 12px;
+}
+
+.detachment-detail-panel {
+  border-left: 1px solid var(--border);
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.detachment-detail-panel h3 {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.detachment-empty {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.detachment-detail-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.detachment-detail-header h4 {
+  font-family: var(--font-display);
+}
+
+.detachment-detail-section {
+  margin-top: 16px;
+}
+
+.detachment-stratagem-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.stratagem-cp {
+  margin-left: 8px;
+  font-size: 11px;
+  color: var(--accent-blue);
+  font-weight: 600;
+}
+
+.ability-meta {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+
+.army-detachment-badge {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 13px;
+}
+
+.army-detachment-badge strong {
+  display: block;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.army-detachment-label {
+  display: block;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+
+.setup-detachment {
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.setup-detachment .detachment-focus {
+  margin-left: 8px;
+}
+
+.army-source-panel .army-source-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.army-source-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-card);
+  font-size: 12px;
+}
+
+.army-source-item.primary {
+  border-color: rgba(201, 162, 39, 0.35);
+}
+
+.army-source-item strong {
+  display: block;
+  color: var(--text-primary);
+  font-size: 13px;
+}
+
+.army-source-meta {
+  display: block;
+  color: var(--text-muted);
+  font-size: 11px;
+  margin-top: 2px;
+}
+
+.source-filters {
+  margin-bottom: 8px;
+}
+
+.unit-source-badge {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent-blue);
+  background: rgba(110, 181, 240, 0.12);
+  padding: 2px 6px;
+  border-radius: 999px;
+}
+
+.detachment-ally-hint {
+  color: var(--accent-gold);
+  font-size: 12px;
+}
+
 .army-roster {
   background: var(--bg-secondary);
   border-left: 1px solid var(--border);
@@ -1637,6 +1879,110 @@ h1, h2, h3, h4 {
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--color-muted);
+}
+
+.battle-detachment-panel,
+.battle-stratagem-panel,
+.battle-deployment-panel {
+  margin-bottom: 0.75rem;
+}
+
+.battle-deployment-panel .deploy-unit-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0.5rem 0;
+}
+
+.deploy-placed-count {
+  font-size: 0.85rem;
+  color: var(--text-muted, #8899aa);
+  margin: 0.35rem 0 0.75rem;
+}
+
+.deploy-mode-list {
+  margin: 0.5rem 0;
+}
+
+.deploy-special-tag {
+  opacity: 0.75;
+  font-size: 0.8em;
+}
+
+.deploy-reserves-list {
+  margin: 0.5rem 0;
+}
+
+.deploy-reserve-chip {
+  display: inline-block;
+  margin: 0.15rem 0.35rem 0.15rem 0;
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  background: rgba(120, 80, 200, 0.2);
+  color: #c9b8ff;
+  font-size: 0.8rem;
+}
+
+.model-picker {
+  margin: 0.5rem 0;
+}
+
+.battle-reserves-panel {
+  margin-bottom: 0.75rem;
+}
+
+.battle-detachment-panel,
+.battle-stratagem-panel {
+  margin: 0 12px 12px;
+  padding: 12px;
+}
+
+.battle-detachment-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.battle-detachment-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+.battle-cp-badge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(201, 162, 39, 0.15);
+  color: var(--accent-gold);
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.battle-army-rule {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+
+.battle-doctrine-active {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--accent-blue);
+}
+
+.doctrine-buttons,
+.stratagem-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.stratagem-btn {
+  text-align: left;
 }
 
 .turn-info {

@@ -1,4 +1,5 @@
 import { useGameStore } from './store/gameStore'
+import { DetachmentSetup } from './components/DetachmentSetup'
 import { Home } from './components/Home'
 import { ArmyBuilder } from './components/ArmyBuilder'
 import { BattleSetup } from './components/BattleSetup'
@@ -12,6 +13,7 @@ export default function App() {
     <div className="app app-bg">
       <main className="app-main">
         {screen === 'home' && <Home />}
+        {screen === 'detachment-setup' && <DetachmentSetup />}
         {screen === 'army-builder' && <ArmyBuilder />}
         {screen === 'battle-setup' && <BattleSetup />}
         {screen === 'battle' && <Battle />}

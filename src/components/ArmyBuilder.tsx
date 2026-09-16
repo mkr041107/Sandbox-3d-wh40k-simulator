@@ -1,9 +1,16 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { FACTIONS, getFactionUiColor } from '../data/factions'
-import { calculateArmyPoints, calculateEntryPoints, getUnitsForFaction } from '../data/units'
+import { describeArmyAllies, getArmyBuilderFactions } from '../data/factionAllies'
+import { getDetachment } from '../data/detachments'
+import {
+  calculateArmyPoints,
+  calculateEntryPoints,
+  getBuildableUnits,
+  getUnitProfile,
+} from '../data/units'
 import { calculateUpgradePoints, getUpgradesForUnit } from '../data/squadUpgrades'
 import { useGameStore } from '../store/gameStore'
-import type { UnitCategory, UnitProfile } from '../types/game'
+import type { FactionId, UnitCategory, UnitProfile } from '../types/game'
 import { UnitDetailPanel } from './UnitDetailPanel'
 import { SquadUpgradeSelector, formatUpgradeList } from './SquadUpgradeSelector'
 import { CATEGORY_GLOSSARY } from '../data/glossary'
@@ -27,7 +34,6 @@ export function ArmyBuilder() {
   const {
     playerArmy,
     setScreen,
-    setFaction,
     setArmyName,
     addUnit,
     removeUnit,
@@ -36,30 +42,50 @@ export function ArmyBuilder() {
   } = useGameStore()
 
   const [filterCategory, setFilterCategory] = useState<UnitCategory | 'all'>('all')
+  const [filterSource, setFilterSource] = useState<FactionId | 'all'>('all')
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedUnit, setSelectedUnit] = useState<UnitProfile | null>(null)
   const [pendingUpgrades, setPendingUpgrades] = useState<string[]>([])
   const [showGlossary, setShowGlossary] = useState(false)
 
   const faction = FACTIONS.find((f) => f.id === playerArmy.factionId)!
-  const availableUnits = getUnitsForFaction(playerArmy.factionId)
+  const detachment = getDetachment(playerArmy.detachmentId)
+  const armyFactions = useMemo(
+    () => getArmyBuilderFactions(playerArmy.factionId),
+    [playerArmy.factionId],
+  )
+  const sourceLabels = useMemo(
+    () => new Map(armyFactions.map((f) => [f.factionId, f.label])),
+    [armyFactions],
+  )
+  const availableUnits = useMemo(
+    () => getBuildableUnits(playerArmy.factionId),
+    [playerArmy.factionId],
+  )
   const totalPoints = calculateArmyPoints(playerArmy.entries)
+
+  useEffect(() => {
+    if (!playerArmy.detachmentId) {
+      setScreen('detachment-setup')
+    }
+  }, [playerArmy.detachmentId, setScreen])
 
   const filteredUnits = useMemo(() => {
     const query = searchQuery.trim().toLowerCase()
     return availableUnits.filter((u) => {
+      if (filterSource !== 'all' && u.factionId !== filterSource) return false
       if (filterCategory !== 'all' && u.category !== filterCategory) return false
       if (!query) return true
       return u.name.toLowerCase().includes(query) || u.id.includes(query)
     })
-  }, [availableUnits, filterCategory, searchQuery])
+  }, [availableUnits, filterCategory, filterSource, searchQuery])
 
   const canDeploy = playerArmy.entries.length > 0 && totalPoints <= playerArmy.pointsLimit
 
   return (
     <div className="army-builder">
       <header className="page-header">
-        <button className="btn btn-ghost" onClick={() => setScreen('home')}>← Back</button>
+        <button className="btn btn-ghost" onClick={() => setScreen('detachment-setup')}>← Detachment</button>
         <h2>Army Builder</h2>
         <button
           className="btn btn-primary"
@@ -71,29 +97,45 @@ export function ArmyBuilder() {
       </header>
 
       <div className="builder-layout">
-        <aside className="faction-panel">
-          <h3>Faction</h3>
-          <div className="faction-grid">
-            {FACTIONS.map((f) => (
-              <button
-                key={f.id}
-                className={`faction-btn ${f.id === playerArmy.factionId ? 'active' : ''}`}
-                style={{ '--faction-color': f.primaryColor } as React.CSSProperties}
-                onClick={() => setFaction(f.id)}
-                title={f.description}
-              >
-                <span className="faction-dot" />
-                {f.name}
-              </button>
-            ))}
+        <aside className="faction-panel army-source-panel">
+          <h3>Army Roster</h3>
+          <p className="detachment-panel-hint">{describeArmyAllies(playerArmy.factionId)}</p>
+          <div className="army-source-list">
+            {armyFactions.map((entry) => {
+              const f = FACTIONS.find((x) => x.id === entry.factionId)!
+              const count = availableUnits.filter((u) => u.factionId === entry.factionId).length
+              return (
+                <div
+                  key={entry.factionId}
+                  className={`army-source-item ${entry.role === 'primary' ? 'primary' : ''}`}
+                  style={{ '--faction-color': f.primaryColor } as React.CSSProperties}
+                >
+                  <span className="faction-dot" />
+                  <div>
+                    <strong>{entry.label}</strong>
+                    <span className="army-source-meta">
+                      {entry.role === 'primary' ? 'Primary' : entry.role === 'codex' ? 'Codex ally' : 'Ally'}
+                      {' · '}{count} units
+                    </span>
+                  </div>
+                </div>
+              )
+            })}
           </div>
+          <button
+            type="button"
+            className="btn btn-ghost btn-full"
+            onClick={() => setScreen('detachment-setup')}
+          >
+            Change detachment
+          </button>
         </aside>
 
         <main className="unit-catalog">
           <div className="catalog-header">
             <div className="catalog-title-row">
               <h3 style={{ color: getFactionUiColor(faction) }}>
-                {faction.name} Units ({filteredUnits.length}/{availableUnits.length})
+                {faction.name} Army ({filteredUnits.length}/{availableUnits.length})
               </h3>
               <button className="btn btn-ghost btn-sm" onClick={() => setShowGlossary(!showGlossary)}>
                 {showGlossary ? 'Hide' : '?'} Rules Guide
@@ -118,6 +160,25 @@ export function ArmyBuilder() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
+            {armyFactions.length > 1 && (
+              <div className="category-filters source-filters">
+                <button
+                  className={`filter-btn ${filterSource === 'all' ? 'active' : ''}`}
+                  onClick={() => setFilterSource('all')}
+                >
+                  All sources
+                </button>
+                {armyFactions.map((entry) => (
+                  <button
+                    key={entry.factionId}
+                    className={`filter-btn ${filterSource === entry.factionId ? 'active' : ''}`}
+                    onClick={() => setFilterSource(entry.factionId)}
+                  >
+                    {entry.role === 'primary' ? entry.label : entry.label.split(' ')[0]}
+                  </button>
+                ))}
+              </div>
+            )}
             <div className="category-filters">
               <button
                 className={`filter-btn ${filterCategory === 'all' ? 'active' : ''}`}
@@ -156,6 +217,11 @@ export function ArmyBuilder() {
                     <span className="unit-category" title={CATEGORY_GLOSSARY[unit.category].explanation}>
                       {CATEGORY_LABELS[unit.category]}
                     </span>
+                    {unit.factionId !== playerArmy.factionId && (
+                      <span className="unit-source-badge" title={sourceLabels.get(unit.factionId)}>
+                        {sourceLabels.get(unit.factionId)?.split(' ')[0]}
+                      </span>
+                    )}
                     <span className="unit-points">{unit.points} pts</span>
                   </div>
                   <h4>{unit.name}</h4>
@@ -234,6 +300,22 @@ export function ArmyBuilder() {
             onChange={(e) => setArmyName(e.target.value)}
             placeholder="Army name"
           />
+          {detachment && (
+            <div className="army-detachment-badge">
+              <div>
+                <span className="army-detachment-label">Detachment</span>
+                <strong>{detachment.name}</strong>
+                <span className="detachment-focus">{detachment.focus}</span>
+              </div>
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm"
+                onClick={() => setScreen('detachment-setup')}
+              >
+                Change
+              </button>
+            </div>
+          )}
           <div className="points-selector">
             <label>Points Limit</label>
             <select
@@ -255,7 +337,7 @@ export function ArmyBuilder() {
               <p className="empty-roster">Add units from the catalog</p>
             )}
             {playerArmy.entries.map((entry) => {
-              const unit = availableUnits.find((u) => u.id === entry.profileId)!
+              const unit = getUnitProfile(entry.profileId)
               const upgradeLabel = entry.upgrades.length > 0
                 ? formatUpgradeList(entry.upgrades, entry.profileId)
                 : null

@@ -129,6 +129,7 @@ export interface ArmyListEntry {
 export interface ArmyList {
   name: string
   factionId: FactionId
+  detachmentId: string | null
   pointsLimit: number
   entries: ArmyListEntry[]
 }
@@ -138,9 +139,71 @@ export interface Position {
   y: number
 }
 
-export type BattlePhase = 'command' | 'movement' | 'shooting' | 'charge' | 'fight' | 'morale'
+export interface BattleModel {
+  id: string
+  index: number
+  position: Position
+  hasMoved: boolean
+}
+
+export type BattlePhase = 'deployment' | 'command' | 'movement' | 'shooting' | 'charge' | 'fight' | 'morale'
+
+export type DeployMode = 'normal' | 'infiltrate' | 'scouts' | 'reserves'
 
 export type PlayerId = 'player' | 'ai'
+
+export type CombatDoctrine = 'devastator' | 'tactical' | 'assault' | 'montka' | 'kauyon'
+
+export interface CombatModifiers {
+  rangedHitBonus?: number
+  rangedHitPenalty?: number
+  meleeHitBonus?: number
+  woundBonus?: number
+  saveBonus?: number
+  chargeBonus?: number
+  cover?: boolean
+  invulnerableSave?: number
+  feelNoPain?: number
+  rerollHits?: boolean
+  rerollWounds?: boolean
+  autoHit?: boolean
+  ignoresCover?: boolean
+  denyCover?: boolean
+  fightsTwice?: boolean
+  chargeAfterAdvance?: boolean
+}
+
+export interface BattleEffect {
+  id: string
+  name: string
+  source: 'army-rule' | 'stratagem'
+  owner: PlayerId
+  scope: 'army' | 'unit'
+  unitId?: string
+  createdTurn: number
+  expiresTurn: number
+  validPhases: BattlePhase[]
+  modifiers: CombatModifiers
+}
+
+export interface BattleDetachmentState {
+  detachmentId: string | null
+  detachmentName: string
+  armyRuleName: string
+  commandPoints: number
+  maxCommandPoints: number
+  usedStratagemNames: string[]
+  activeEffects: BattleEffect[]
+  doctrine: CombatDoctrine | null
+  oathTargetId: string | null
+  waaaghTurnsRemaining: number
+}
+
+export interface PendingDeployUnit {
+  deployId: string
+  profileId: string
+  upgrades: string[]
+}
 
 export interface BattleUnit {
   id: string
@@ -149,6 +212,9 @@ export interface BattleUnit {
   owner: PlayerId
   position: Position
   rotation: number
+  models: BattleModel[]
+  squadMarker: number
+  squadTint: number
   currentWounds: number
   modelsRemaining: number
   hasMoved: boolean
@@ -156,6 +222,8 @@ export interface BattleUnit {
   hasCharged: boolean
   hasFought: boolean
   isEngaged: boolean
+  inReserves?: boolean
+  deployMode?: DeployMode
 }
 
 export interface BattleState {
@@ -165,7 +233,16 @@ export interface BattleState {
   phase: BattlePhase
   playerUnits: BattleUnit[]
   aiUnits: BattleUnit[]
+  pendingDeployment: PendingDeployUnit[]
+  selectedDeployId: string | null
+  selectedDeployMode: DeployMode | null
+  opponentArmy: ArmyList
+  battlefieldWidth: number
+  battlefieldHeight: number
+  playerDetachment: BattleDetachmentState
+  aiDetachment: BattleDetachmentState
   selectedUnitId: string | null
+  selectedModelId: string | null
   log: BattleLogEntry[]
   playerVp: number
   aiVp: number
@@ -190,4 +267,4 @@ export interface GameSettings {
   battlefieldHeight: number
 }
 
-export type AppScreen = 'home' | 'army-builder' | 'battle-setup' | 'battle'
+export type AppScreen = 'home' | 'detachment-setup' | 'army-builder' | 'battle-setup' | 'battle'
