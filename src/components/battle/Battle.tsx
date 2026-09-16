@@ -10,7 +10,7 @@ import {
   shootAtTarget,
 } from '../../engine/battle'
 import { AI_DIFFICULTY_CONFIG, executeAIAction, planAITurn } from '../../ai/opponent'
-import { isLlmConfigured, loadLlmSettings } from '../../ai/llmSettings'
+import { isLlmConfigured, loadLlmSettings, resolveLlmSettings } from '../../ai/llmSettings'
 import { planAITurnWithLlm } from '../../ai/llmOpponent'
 import { Battlefield3D } from './Battlefield3D'
 import { BattleHUD } from './BattleHUD'
@@ -26,8 +26,8 @@ export function Battle() {
 
     aiProcessing.current = true
     const config = AI_DIFFICULTY_CONFIG[settings.aiDifficulty]
-    const llmSettings = loadLlmSettings()
-    const useLlm = isLlmConfigured(llmSettings)
+    const llmSettings = resolveLlmSettings(loadLlmSettings())
+    const useLlm = isLlmConfigured(loadLlmSettings())
     let currentState = state
 
     setAiThinking(useLlm)

@@ -1398,6 +1398,87 @@ h1, h2, h3, h4 {
   line-height: 1.45;
 }
 
+.llm-config-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.llm-config-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 12px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  text-align: left;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  transition: all 0.15s;
+}
+
+.llm-config-btn strong {
+  color: var(--accent-gold);
+}
+
+.llm-config-btn span {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.35;
+}
+
+.llm-config-btn.active {
+  border-color: var(--accent-gold);
+  background: rgba(201, 162, 39, 0.08);
+}
+
+.llm-config-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.llm-env-profile {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  margin-bottom: 8px;
+}
+
+.llm-env-profile h4 {
+  color: var(--accent-gold);
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+.llm-env-details {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+}
+
+.llm-env-details div {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.llm-env-details dt {
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-size: 11px;
+}
+
+.llm-env-details dd {
+  margin: 0;
+  color: var(--text-secondary);
+  word-break: break-all;
+}
+
 .llm-toggle {
   display: flex;
   align-items: center;

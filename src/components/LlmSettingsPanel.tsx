@@ -1,22 +1,39 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import {
-  DEFAULT_LLM_SETTINGS,
+  clearLlmSettings,
+  getEnvConfigGaps,
+  getEnvProfileSettings,
   getProviderDefaults,
-  hasEnvLlmDefaults,
-  isApiKeyFromEnv,
+  isEnvConfigReady,
   isLlmConfigured,
   loadLlmSettings,
+  maskApiKey,
+  resolveLlmSettings,
   saveLlmSettings,
+  type LlmConfigSource,
   type LlmProviderPreset,
   type LlmSettings,
 } from '../ai/llmSettings'
 import { LlmClientError, requestChatCompletion } from '../ai/llmClient'
 
-const PROVIDERS: { id: LlmProviderPreset; label: string; hint: string }[] = [
+const MANUAL_PROVIDERS: { id: LlmProviderPreset; label: string; hint: string }[] = [
   { id: 'openai', label: 'OpenAI', hint: 'api.openai.com' },
   { id: 'openrouter', label: 'OpenRouter', hint: 'openrouter.ai' },
   { id: 'groq', label: 'Groq', hint: 'groq.com' },
-  { id: 'custom', label: 'Custom / Local', hint: 'LM Studio, Ollama OpenAI shim, etc.' },
+  { id: 'custom', label: 'Local server', hint: 'LM Studio, Ollama OpenAI shim, etc.' },
+]
+
+const CONFIG_SOURCES: { id: LlmConfigSource; label: string; description: string }[] = [
+  {
+    id: 'manual',
+    label: 'Manual',
+    description: 'Pick a provider and enter your API key in the browser',
+  },
+  {
+    id: 'env',
+    label: 'Custom',
+    description: 'Load API key, URL, and model from your .env file',
+  },
 ]
 
 export function LlmSettingsPanel() {
@@ -24,30 +41,60 @@ export function LlmSettingsPanel() {
   const [testStatus, setTestStatus] = useState<'idle' | 'testing' | 'ok' | 'error'>('idle')
   const [testMessage, setTestMessage] = useState('')
 
-  useEffect(() => {
-    saveLlmSettings(settings)
-  }, [settings])
+  const activeSettings = resolveLlmSettings(settings)
+  const envReady = isEnvConfigReady()
+  const envGaps = getEnvConfigGaps()
+  const envProfile = getEnvProfileSettings()
+
+  const commitSettings = (next: LlmSettings) => {
+    setSettings(next)
+    saveLlmSettings(next)
+  }
 
   const update = (patch: Partial<LlmSettings>) => {
-    setSettings((prev) => ({ ...prev, ...patch }))
+    commitSettings({ ...settings, ...patch })
+  }
+
+  const handleConfigSourceChange = (configSource: LlmConfigSource) => {
+    if (configSource === 'env' && !envReady) return
+
+    if (configSource === 'env') {
+      commitSettings({
+        configSource: 'env',
+        enabled: settings.enabled,
+        provider: envProfile.provider,
+        apiKey: envProfile.apiKey,
+        baseUrl: envProfile.baseUrl,
+        model: envProfile.model,
+      })
+    } else {
+      commitSettings({
+        ...settings,
+        configSource: 'manual',
+      })
+    }
+    setTestStatus('idle')
+    setTestMessage('')
   }
 
   const handleProviderChange = (provider: LlmProviderPreset) => {
     const defaults = getProviderDefaults(provider)
-    setSettings((prev) => ({
-      ...prev,
+    commitSettings({
+      ...settings,
+      configSource: 'manual',
       provider,
       baseUrl: defaults.baseUrl,
       model: defaults.model,
-    }))
+    })
     setTestStatus('idle')
   }
 
   const handleTestConnection = async () => {
     setTestStatus('testing')
     setTestMessage('')
+    const toTest = resolveLlmSettings(settings)
     try {
-      const content = await requestChatCompletion(settings, [
+      const content = await requestChatCompletion(toTest, [
         { role: 'system', content: 'Reply with JSON: {"ok":true}' },
         { role: 'user', content: 'ping' },
       ])
@@ -65,24 +112,16 @@ export function LlmSettingsPanel() {
   }
 
   const configured = isLlmConfigured(settings)
-  const envDefaults = hasEnvLlmDefaults()
-  const apiKeyFromEnv = isApiKeyFromEnv(settings)
 
   return (
     <section className="setup-card llm-settings-card">
       <h3>LLM Opponent (optional)</h3>
       <p className="llm-settings-intro">
-        Replace the built-in heuristic AI with a real language model. Keys entered here are saved in
-        <strong> localStorage</strong>. Self-hosters can also set <code>.env</code> (see <code>.env.example</code>)
-        so settings persist without re-entering them each session.
+        Replace the built-in heuristic AI with a real language model. Choose <strong>Manual</strong> to
+        enter keys in the browser, or <strong>Custom</strong> to load a profile from your local{' '}
+        <code>.env</code> file (see <code>.env.example</code>). Restart <code>npm run dev</code> after
+        editing <code>.env</code>.
       </p>
-
-      {envDefaults && (
-        <p className="llm-env-banner">
-          Server environment detected — some LLM settings are pre-filled from your <code>.env</code> file.
-          UI changes still save to this browser.
-        </p>
-      )}
 
       <label className="llm-toggle">
         <input
@@ -96,58 +135,115 @@ export function LlmSettingsPanel() {
       {settings.enabled && (
         <div className="llm-settings-fields">
           <div className="form-group">
-            <label>Provider</label>
-            <select
-              value={settings.provider}
-              onChange={(e) => handleProviderChange(e.target.value as LlmProviderPreset)}
-            >
-              {PROVIDERS.map((p) => (
-                <option key={p.id} value={p.id}>{p.label}</option>
+            <label>Configuration</label>
+            <div className="llm-config-grid">
+              {CONFIG_SOURCES.map((source) => (
+                <button
+                  key={source.id}
+                  type="button"
+                  className={`llm-config-btn ${settings.configSource === source.id ? 'active' : ''}`}
+                  disabled={source.id === 'env' && !envReady}
+                  onClick={() => handleConfigSourceChange(source.id)}
+                >
+                  <strong>{source.label}</strong>
+                  <span>{source.description}</span>
+                </button>
               ))}
-            </select>
-            <span className="field-hint">{PROVIDERS.find((p) => p.id === settings.provider)?.hint}</span>
-          </div>
-
-          <div className="form-group">
-            <label>API Key</label>
-            <input
-              type="password"
-              value={settings.apiKey}
-              onChange={(e) => update({ apiKey: e.target.value })}
-              placeholder={apiKeyFromEnv ? 'Loaded from .env' : 'sk-...'}
-              autoComplete="off"
-            />
-            {apiKeyFromEnv && (
-              <span className="field-hint">Using key from environment — type here to override for this browser.</span>
+            </div>
+            {!envReady && (
+              <p className="warning">
+                Custom profile unavailable — set <code>VITE_LLM_API_KEY</code> in <code>.env</code> and restart the dev server.
+              </p>
             )}
           </div>
 
-          <div className="form-group">
-            <label>Base URL</label>
-            <input
-              type="url"
-              value={settings.baseUrl}
-              onChange={(e) => update({ baseUrl: e.target.value })}
-              placeholder={DEFAULT_LLM_SETTINGS.baseUrl}
-            />
-          </div>
+          {settings.configSource === 'env' ? (
+            <div className="llm-env-profile">
+              <h4>Custom profile (.env)</h4>
+              <dl className="llm-env-details">
+                <div>
+                  <dt>API key</dt>
+                  <dd>{maskApiKey(envProfile.apiKey)}</dd>
+                </div>
+                <div>
+                  <dt>Base URL</dt>
+                  <dd><code>{envProfile.baseUrl}</code></dd>
+                </div>
+                <div>
+                  <dt>Model</dt>
+                  <dd><code>{envProfile.model}</code></dd>
+                </div>
+                <div>
+                  <dt>Provider hint</dt>
+                  <dd>{envProfile.provider}</dd>
+                </div>
+              </dl>
+              {envGaps.length > 0 && (
+                <p className="llm-env-banner">
+                  Using built-in defaults for {envGaps.join(' and ')} — uncomment those lines in{' '}
+                  <code>.env</code> (e.g. nano-gpt URL + model) for best results.
+                </p>
+              )}
+              <p className="field-hint">
+                Values are read from <code>.env</code> at startup and are not stored in localStorage.
+              </p>
+            </div>
+          ) : (
+            <>
+              <div className="form-group">
+                <label>Provider</label>
+                <select
+                  value={settings.provider}
+                  onChange={(e) => handleProviderChange(e.target.value as LlmProviderPreset)}
+                >
+                  {MANUAL_PROVIDERS.map((p) => (
+                    <option key={p.id} value={p.id}>{p.label}</option>
+                  ))}
+                </select>
+                <span className="field-hint">
+                  {MANUAL_PROVIDERS.find((p) => p.id === settings.provider)?.hint}
+                </span>
+              </div>
 
-          <div className="form-group">
-            <label>Model</label>
-            <input
-              type="text"
-              value={settings.model}
-              onChange={(e) => update({ model: e.target.value })}
-              placeholder="gpt-4o-mini"
-            />
-          </div>
+              <div className="form-group">
+                <label>API Key</label>
+                <input
+                  type="password"
+                  value={settings.apiKey}
+                  onChange={(e) => update({ apiKey: e.target.value })}
+                  placeholder="sk-..."
+                  autoComplete="off"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Base URL</label>
+                <input
+                  type="url"
+                  value={settings.baseUrl}
+                  onChange={(e) => update({ baseUrl: e.target.value })}
+                  placeholder={getProviderDefaults(settings.provider).baseUrl}
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Model</label>
+                <input
+                  type="text"
+                  value={settings.model}
+                  onChange={(e) => update({ model: e.target.value })}
+                  placeholder="gpt-4o-mini"
+                />
+              </div>
+            </>
+          )}
 
           <div className="llm-settings-actions">
             <button
               type="button"
               className="btn btn-secondary btn-sm"
               onClick={handleTestConnection}
-              disabled={!settings.apiKey || testStatus === 'testing'}
+              disabled={!activeSettings.apiKey || testStatus === 'testing'}
             >
               {testStatus === 'testing' ? 'Testing…' : 'Test connection'}
             </button>
@@ -155,12 +251,13 @@ export function LlmSettingsPanel() {
               type="button"
               className="btn btn-ghost btn-sm"
               onClick={() => {
-                setSettings({ ...DEFAULT_LLM_SETTINGS })
+                clearLlmSettings()
+                setSettings(loadLlmSettings())
                 setTestStatus('idle')
                 setTestMessage('')
               }}
             >
-              Clear saved settings
+              Clear saved preferences
             </button>
           </div>
 
@@ -171,7 +268,11 @@ export function LlmSettingsPanel() {
           )}
 
           {!configured && (
-            <p className="warning">Enter an API key to enable the LLM opponent.</p>
+            <p className="warning">
+              {settings.configSource === 'env'
+                ? 'Custom profile is incomplete — check your .env file.'
+                : 'Enter an API key to enable the LLM opponent.'}
+            </p>
           )}
 
           <p className="field-hint">
