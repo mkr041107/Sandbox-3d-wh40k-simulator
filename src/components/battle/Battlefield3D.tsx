@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Canvas, type ThreeEvent } from '@react-three/fiber'
 import { ContactShadows, Grid, OrbitControls, Sky, Stars, Text } from '@react-three/drei'
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib'
@@ -18,6 +18,7 @@ import { BattlefieldTerrain } from './BattlefieldTerrain'
 import { MovementRangeRing } from './MovementRangeRing'
 import { BattlefieldCameraControls, type CameraPreset } from './BattlefieldCameraControls'
 import { CombatVfxLayer, type ActiveShotVfx } from './vfx/CombatVfxLayer'
+import { BattlefieldRuler, measureDistance } from './BattlefieldRuler'
 
 interface Battlefield3DProps {
   battleState: BattleState
@@ -41,9 +42,21 @@ function BattlefieldScene({
   battlefieldHeight,
   cameraPreset,
   controlsRef,
+  rulerActive,
+  rulerStart,
+  rulerEnd,
+  rulerHover,
+  onRulerClick,
+  onRulerHover,
 }: Battlefield3DProps & {
   cameraPreset: CameraPreset
   controlsRef: React.RefObject<OrbitControlsImpl | null>
+  rulerActive: boolean
+  rulerStart: Position | null
+  rulerEnd: Position | null
+  rulerHover: Position | null
+  onRulerClick: (position: Position) => void
+  onRulerHover: (position: Position | null) => void
 }) {
   const [hoverPos, setHoverPos] = useState<Position | null>(null)
   const cx = battlefieldWidth / 2
@@ -103,6 +116,11 @@ function BattlefieldScene({
         : false
 
   const handleGroundClick = (e: ThreeEvent<MouseEvent>) => {
+    if (rulerActive) {
+      onRulerClick({ x: e.point.x, y: e.point.z })
+      return
+    }
+
     if (battleState.activePlayer !== 'player') return
 
     if (canDeepStrikeNow && selectedReserve) {
@@ -150,6 +168,10 @@ function BattlefieldScene({
         receiveShadow
         onClick={handleGroundClick}
         onPointerMove={(e) => {
+          if (rulerActive) {
+            onRulerHover({ x: e.point.x, y: e.point.z })
+            return
+          }
           if (canDeepStrikeNow) {
             setHoverPos({ x: e.point.x, y: e.point.z })
             return
@@ -162,7 +184,13 @@ function BattlefieldScene({
             setHoverPos({ x: e.point.x, y: e.point.z })
           }
         }}
-        onPointerLeave={() => setHoverPos(null)}
+        onPointerLeave={() => {
+          if (rulerActive) {
+            onRulerHover(null)
+            return
+          }
+          setHoverPos(null)
+        }}
       >
         <planeGeometry args={[battlefieldWidth, battlefieldHeight]} />
         <meshStandardMaterial color="#2d3a2e" roughness={0.95} metalness={0.02} />
@@ -259,6 +287,7 @@ function BattlefieldScene({
           selectedModelId={battleState.selectedModelId}
           showCoherency={unit.id === battleState.selectedUnitId && unit.models.length > 1}
           isShootTarget={shootTargetIds.has(unit.id)}
+          disableInteraction={rulerActive}
           onClick={() => onSelectUnit(unit.id)}
           onModelClick={(modelId) => onSelectModel(unit.id, modelId)}
         />
@@ -270,9 +299,14 @@ function BattlefieldScene({
           selected={unit.id === battleState.selectedUnitId}
           selectedModelId={battleState.selectedModelId}
           isShootTarget={shootTargetIds.has(unit.id)}
+          disableInteraction={rulerActive}
           onClick={() => onSelectUnit(unit.id)}
         />
       ))}
+
+      {rulerActive && (
+        <BattlefieldRuler start={rulerStart} end={rulerEnd} hover={rulerHover} />
+      )}
 
       <CombatVfxLayer shots={shotVfx} onShotComplete={onShotVfxComplete} />
 
@@ -306,10 +340,56 @@ const CAMERA_LABELS: Record<CameraPreset, string> = {
 export function Battlefield3D(props: Battlefield3DProps) {
   const { battlefieldWidth, battlefieldHeight } = props
   const [cameraPreset, setCameraPreset] = useState<CameraPreset>('table')
+  const [rulerActive, setRulerActive] = useState(false)
+  const [rulerStart, setRulerStart] = useState<Position | null>(null)
+  const [rulerEnd, setRulerEnd] = useState<Position | null>(null)
+  const [rulerHover, setRulerHover] = useState<Position | null>(null)
   const controlsRef = useRef<OrbitControlsImpl | null>(null)
 
+  const clearRuler = () => {
+    setRulerStart(null)
+    setRulerEnd(null)
+    setRulerHover(null)
+  }
+
+  const toggleRuler = () => {
+    setRulerActive((active) => {
+      if (active) clearRuler()
+      return !active
+    })
+  }
+
+  const handleRulerClick = (position: Position) => {
+    if (!rulerStart || rulerEnd) {
+      setRulerStart(position)
+      setRulerEnd(null)
+      return
+    }
+    setRulerEnd(position)
+  }
+
+  const rulerReadout = useMemo(() => {
+    if (!rulerActive) return null
+    if (!rulerStart) return 'Click start point'
+    if (!rulerEnd) {
+      if (!rulerHover) return 'Click end point'
+      return `${measureDistance(rulerStart, rulerHover).toFixed(1)}"`
+    }
+    return `${measureDistance(rulerStart, rulerEnd).toFixed(1)}"`
+  }, [rulerActive, rulerStart, rulerEnd, rulerHover])
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape' || !rulerActive) return
+      setRulerActive(false)
+      clearRuler()
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [rulerActive])
+
   return (
-    <div className="battlefield-3d">
+    <div className={`battlefield-3d ${rulerActive ? 'ruler-active' : ''}`}>
       <div className="battlefield-camera-bar">
         {(Object.keys(CAMERA_LABELS) as CameraPreset[]).map((key) => (
           <button
@@ -321,7 +401,27 @@ export function Battlefield3D(props: Battlefield3DProps) {
             {CAMERA_LABELS[key]}
           </button>
         ))}
-        <span className="camera-hint">Scroll zoom · Drag rotate · Right-drag pan</span>
+        <button
+          type="button"
+          className={`camera-preset-btn ruler-tool-btn ${rulerActive ? 'active' : ''}`}
+          onClick={toggleRuler}
+          title="Measure distance on the board (Esc to exit)"
+        >
+          Ruler
+        </button>
+        {rulerActive && rulerStart && rulerEnd && (
+          <button type="button" className="camera-preset-btn ruler-clear-btn" onClick={clearRuler}>
+            Clear
+          </button>
+        )}
+        {rulerActive && rulerReadout && (
+          <span className="ruler-readout">{rulerReadout}</span>
+        )}
+        <span className="camera-hint">
+          {rulerActive
+            ? 'Click two points on the mat · Esc to exit ruler'
+            : 'Scroll zoom · Drag rotate · Right-drag pan'}
+        </span>
       </div>
       <Canvas
         shadows
@@ -332,6 +432,12 @@ export function Battlefield3D(props: Battlefield3DProps) {
           {...props}
           cameraPreset={cameraPreset}
           controlsRef={controlsRef}
+          rulerActive={rulerActive}
+          rulerStart={rulerStart}
+          rulerEnd={rulerEnd}
+          rulerHover={rulerHover}
+          onRulerClick={handleRulerClick}
+          onRulerHover={setRulerHover}
         />
       </Canvas>
     </div>

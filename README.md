@@ -62,6 +62,7 @@ Interactive deployment phase before turn 1:
 - **Shoot target highlights** — valid enemies show a red ring during shooting
 - **Click-to-shoot** — select your shooter, then click a highlighted enemy on the board (or use HUD buttons)
 - **Combat VFX** — tracers, beams, missiles, artillery arcs, flamer cones, impact bursts, and floating wound/kill labels
+- **Distance ruler** — toggle **Ruler** on the camera bar; click two points on the mat to measure in inches (live preview while placing the second point)
 - Click the battlefield to move units; select units to shoot, charge, or fight via the HUD
 
 ### Combat Visual Effects

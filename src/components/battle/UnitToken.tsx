@@ -17,6 +17,7 @@ interface UnitTokenProps {
   selected: boolean
   selectedModelId?: string | null
   isShootTarget?: boolean
+  disableInteraction?: boolean
   showCoherency?: boolean
   onClick: () => void
   onModelClick?: (modelId: string) => void
@@ -49,6 +50,7 @@ function ModelMiniature({
   silhouette,
   greaterDaemonVariant,
   mechanical,
+  disableInteraction,
   onModelClick,
 }: {
   unit: BattleUnit
@@ -63,6 +65,7 @@ function ModelMiniature({
   silhouette: ReturnType<typeof getMiniatureSilhouette>
   greaterDaemonVariant: ReturnType<typeof getGreaterDaemonVariant> | undefined
   mechanical: boolean
+  disableInteraction?: boolean
   onModelClick?: (modelId: string) => void
 }) {
   const groupRef = useRef<Group>(null)
@@ -80,6 +83,7 @@ function ModelMiniature({
       position={[model.position.x, groundOffset, model.position.y]}
       rotation={[0, unit.rotation, 0]}
       onClick={(e) => {
+        if (disableInteraction) return
         if (!onModelClick) return
         e.stopPropagation()
         onModelClick(model.id)
@@ -128,6 +132,7 @@ export function UnitToken({
   selected,
   selectedModelId = null,
   isShootTarget = false,
+  disableInteraction = false,
   showCoherency = false,
   onClick,
   onModelClick,
@@ -163,11 +168,12 @@ export function UnitToken({
   const coherencyPairs = showCoherency ? getCoherencyPairs(unit.models, profile.baseSize) : []
   const displayName = `${profile.name} · #${unit.squadMarker}`
 
-  const showShootHint = isShootTarget && unit.owner === 'ai'
+  const showShootHint = isShootTarget && unit.owner === 'ai' && !disableInteraction
 
   return (
     <group
       onClick={(e) => {
+        if (disableInteraction) return
         e.stopPropagation()
         onClick()
       }}
@@ -210,6 +216,7 @@ export function UnitToken({
           silhouette={silhouette}
           greaterDaemonVariant={greaterDaemonVariant}
           mechanical={mechanical}
+          disableInteraction={disableInteraction}
           onModelClick={onModelClick}
         />
       ))}
