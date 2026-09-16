@@ -19,15 +19,15 @@ export function Home() {
           </button>
         </div>
         <div className="home-features">
-          <div className="feature-card">
+          <div className="feature-card app-panel">
             <h3>36 Official Factions</h3>
             <p>All current Warhammer 40,000 armies from Space Marines to Tyranids</p>
           </div>
-          <div className="feature-card">
+          <div className="feature-card app-panel">
             <h3>3D Battlefield</h3>
             <p>Top-down tactical view with unit movement, shooting, and melee combat</p>
           </div>
-          <div className="feature-card">
+          <div className="feature-card app-panel">
             <h3>AI Opponent</h3>
             <p>Four difficulty levels from Recruit to Chapter Master</p>
           </div>

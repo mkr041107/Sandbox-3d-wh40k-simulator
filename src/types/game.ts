@@ -60,9 +60,14 @@ export interface WeaponProfile {
   description?: string
 }
 
+export type UnitAbilityKind = 'weapon' | 'rule'
+
 export interface UnitAbility {
   name: string
   description: string
+  kind?: UnitAbilityKind
+  weapon?: WeaponProfile
+  keywords?: string[]
 }
 
 export interface UnitProfile {

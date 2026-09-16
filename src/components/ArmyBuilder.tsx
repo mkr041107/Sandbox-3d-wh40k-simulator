@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { FACTIONS } from '../data/factions'
+import { FACTIONS, getFactionUiColor } from '../data/factions'
 import { calculateArmyPoints, calculateEntryPoints, getUnitsForFaction } from '../data/units'
 import { calculateUpgradePoints, getUpgradesForUnit } from '../data/squadUpgrades'
 import { useGameStore } from '../store/gameStore'
@@ -92,7 +92,7 @@ export function ArmyBuilder() {
         <main className="unit-catalog">
           <div className="catalog-header">
             <div className="catalog-title-row">
-              <h3 style={{ color: faction.primaryColor }}>
+              <h3 style={{ color: getFactionUiColor(faction) }}>
                 {faction.name} Units ({filteredUnits.length}/{availableUnits.length})
               </h3>
               <button className="btn btn-ghost btn-sm" onClick={() => setShowGlossary(!showGlossary)}>
@@ -191,7 +191,7 @@ export function ArmyBuilder() {
 
           {selectedUnit && (
             <div className="unit-detail-overlay" onClick={() => setSelectedUnit(null)}>
-              <div className="unit-detail-modal unit-detail-modal-wide" onClick={(e) => e.stopPropagation()}>
+              <div className="unit-detail-modal unit-detail-modal-wide app-panel-elevated" onClick={(e) => e.stopPropagation()}>
                 <UnitDetailPanel
                   unit={selectedUnit}
                   selectedUpgrades={pendingUpgrades}

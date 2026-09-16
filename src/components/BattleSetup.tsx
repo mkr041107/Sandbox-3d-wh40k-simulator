@@ -1,4 +1,4 @@
-import { FACTIONS } from '../data/factions'
+import { FACTIONS, getFactionUiColor } from '../data/factions'
 import { calculateArmyPoints, calculateEntryPoints, getUnitProfile } from '../data/units'
 import { formatUpgradeList } from './SquadUpgradeSelector'
 import { LlmSettingsPanel } from './LlmSettingsPanel'
@@ -39,10 +39,10 @@ export function BattleSetup() {
       </header>
 
       <div className="setup-layout">
-        <section className="setup-card">
+        <section className="setup-card app-panel">
           <h3>Your Army</h3>
-          <div className="army-preview" style={{ borderColor: playerFaction.primaryColor }}>
-            <h4 style={{ color: playerFaction.primaryColor }}>{playerArmy.name}</h4>
+          <div className="army-preview" style={{ borderColor: getFactionUiColor(playerFaction) }}>
+            <h4 style={{ color: getFactionUiColor(playerFaction) }}>{playerArmy.name}</h4>
             <p>{playerFaction.name} — {totalPoints} pts</p>
             <ul className="army-preview-list">
               {playerArmy.entries.map((e) => {
@@ -64,7 +64,7 @@ export function BattleSetup() {
           </div>
         </section>
 
-        <section className="setup-card">
+        <section className="setup-card app-panel">
           <h3>Battle Settings</h3>
           <div className="form-group">
             <label>Points Limit</label>
@@ -77,7 +77,7 @@ export function BattleSetup() {
           </div>
         </section>
 
-        <section className="setup-card">
+        <section className="setup-card app-panel">
           <h3>AI Opponent</h3>
           <div className="form-group">
             <label>Enemy Faction</label>
@@ -87,8 +87,8 @@ export function BattleSetup() {
               ))}
             </select>
           </div>
-          <div className="ai-faction-preview" style={{ borderColor: aiFaction.primaryColor }}>
-            <span style={{ color: aiFaction.primaryColor }}>{aiFaction.name}</span>
+          <div className="ai-faction-preview" style={{ borderColor: getFactionUiColor(aiFaction) }}>
+            <span style={{ color: getFactionUiColor(aiFaction) }}>{aiFaction.name}</span>
             <p>{aiFaction.description}</p>
           </div>
 

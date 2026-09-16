@@ -195,16 +195,238 @@ function inferStats(name, category, models, points) {
   return { movement, toughness, save, wounds, leadership, objectiveControl: oc, models, baseSize }
 }
 
+function gun(name, range, attacks, skill, strength, ap, damage, type = 'ranged', description) {
+  const w = { name, range, attacks, skill, strength, ap, damage, type }
+  if (description) w.description = description
+  return w
+}
+
+function melee(name, attacks, skill, strength, ap, damage, description) {
+  return gun(name, 0, attacks, skill, strength, ap, damage, 'melee', description)
+}
+
+function hullWeapons(includeFlamer = false) {
+  const weapons = [
+    gun('Heavy bolter', 36, 3, 4, 5, -1, 2),
+    gun('Hunter-killer missile', 48, 1, 4, 14, -3, 3),
+  ]
+  if (includeFlamer) {
+    weapons.splice(1, 0, gun('Heavy flamer', 12, 6, 4, 5, -1, 1, 'ranged', 'Torrent · Ignores Cover'))
+  }
+  return weapons
+}
+
+function transportLoadout(n) {
+  if (/\brhino\b/.test(n)) {
+    return [
+      gun('Storm bolter', 24, 2, 3, 4, 0, 1),
+      gun('Hunter-killer missile', 48, 1, 4, 14, -3, 3),
+    ]
+  }
+  if (/\bchimera\b/.test(n)) {
+    return [
+      gun('Multi-laser', 36, 4, 4, 6, 0, 1),
+      gun('Heavy bolter', 36, 3, 4, 5, -1, 2),
+      gun('Hunter-killer missile', 48, 1, 4, 14, -3, 3),
+    ]
+  }
+  if (/\bdrop pod\b/.test(n)) return [gun('Storm bolter', 24, 2, 3, 4, 0, 1)]
+  if (/\bimpulsor\b/.test(n)) {
+    return [
+      gun('Heavy on-board cannon', 24, 3, 3, 5, -1, 2),
+      gun('Fragstorm grenade launcher', 18, 3, 3, 4, 0, 1),
+    ]
+  }
+  if (/\btrukk\b/.test(n)) return [gun('Big shoota', 36, 3, 5, 5, 0, 1)]
+  if (/\b(raider|venom|dunerider|devilfish|ghost ark|wave serpent)\b/.test(n)) {
+    return [
+      gun('Primary turret weapon', 24, 3, 4, 5, 0, 1),
+      gun('Defensive weapon', 18, 2, 4, 4, 0, 1),
+    ]
+  }
+  return hullWeapons()
+}
+
+function vehicleLoadout(n) {
+  if (/\bbasilisk\b/.test(n)) {
+    return [
+      gun('Earthshaker cannon', 240, 1, 4, 7, -1, 2, 'ranged', 'Indirect Fire · Blast'),
+      ...hullWeapons(true),
+    ]
+  }
+  if (/\bmanticore\b/.test(n)) {
+    return [
+      gun('Manticore multi-missile launcher', 48, 4, 4, 8, -2, 2, 'ranged', 'Blast · Indirect Fire'),
+      ...hullWeapons(),
+    ]
+  }
+  if (/\bwyvern\b/.test(n)) {
+    return [
+      gun('Wyvern twin-linked mortar', 48, 6, 4, 6, -1, 1, 'ranged', 'Blast · Indirect Fire · Twin-linked'),
+      ...hullWeapons(),
+    ]
+  }
+  if (/\bdeathstrike\b/.test(n)) {
+    return [
+      gun('Deathstrike missile', 72, 1, 4, 10, -2, 3, 'ranged', 'Blast · One-shot'),
+      ...hullWeapons(),
+    ]
+  }
+  if (/\bhydra\b/.test(n)) {
+    return [
+      gun('Hydra autocannon', 36, 3, 4, 7, -1, 2, 'ranged', 'Anti-Fly'),
+      ...hullWeapons(),
+    ]
+  }
+  if (/\bartillery team\b/.test(n)) {
+    return [gun('Heavy mortar', 48, 3, 4, 6, -1, 1, 'ranged', 'Indirect Fire · Blast')]
+  }
+  if (/\b(leman russ demolisher|demolisher leman)\b/.test(n) || /\bleman russ demolisher\b/.test(n)) {
+    return [gun('Demolisher cannon', 24, 1, 4, 11, -3, 3), ...hullWeapons(true)]
+  }
+  if (/\bleman russ (punisher|eradicator|executioner|exterminator|vanquisher)\b/.test(n)) {
+    if (/punisher/.test(n)) return [gun('Punisher gatling cannon', 36, 20, 4, 6, 0, 1), ...hullWeapons()]
+    if (/eradicator/.test(n)) return [gun('Eradicator nova cannon', 36, 1, 4, 9, -2, 3), ...hullWeapons()]
+    if (/executioner/.test(n)) return [gun('Plasma destroyer', 36, 2, 4, 8, -3, 2), ...hullWeapons()]
+    if (/exterminator/.test(n)) return [gun('Exterminator autocannon', 48, 4, 4, 7, -1, 2), ...hullWeapons()]
+    if (/vanquisher/.test(n)) return [gun('Vanquisher battle cannon', 48, 1, 4, 12, -3, 3), ...hullWeapons()]
+  }
+  if (/\bleman russ\b/.test(n) || /\brogal dorn\b/.test(n) || /\bmacharius\b/.test(n)) {
+    return [gun('Battle cannon', 48, 2, 4, 10, -2, 3), ...hullWeapons(true)]
+  }
+  if (/\b(baneblade|banehammer|banesword|stormlord|shadowsword|stormblade|doomhammer|hellhammer)\b/.test(n)) {
+    return [
+      gun('Baneblade cannon', 48, 2, 4, 10, -2, 3),
+      gun('Demolisher cannon', 24, 1, 4, 11, -3, 3),
+      gun('Twin heavy bolter', 36, 3, 4, 5, -1, 2, 'ranged', 'Twin-linked'),
+      gun('Heavy bolter', 36, 3, 4, 5, -1, 2),
+      gun('Hunter-killer missile', 48, 1, 4, 14, -3, 3),
+    ]
+  }
+  if (/\bpredator annihilator\b/.test(n)) {
+    return [gun('Lascannon', 48, 2, 4, 12, -3, 3), ...hullWeapons()]
+  }
+  if (/\bpredator\b/.test(n)) {
+    return [gun('Predator autocannon', 48, 2, 4, 9, -1, 3), ...hullWeapons()]
+  }
+  if (/\bvindicator\b/.test(n)) {
+    return [gun('Demolisher cannon', 24, 1, 4, 11, -3, 3), ...hullWeapons()]
+  }
+  if (/\bgladiator lancer\b/.test(n)) {
+    return [gun('Lancer laser destroyer', 72, 1, 4, 14, -4, 3), ...hullWeapons()]
+  }
+  if (/\bgladiator reaper\b/.test(n)) {
+    return [gun('Reaper autocannon', 48, 4, 4, 7, -1, 2), ...hullWeapons()]
+  }
+  if (/\bgladiator valiant\b/.test(n)) {
+    return [gun('Multi-melta', 18, 2, 4, 9, -4, 3), ...hullWeapons()]
+  }
+  if (/\brepulsor executioner\b/.test(n)) {
+    return [
+      gun('Executioner laser destroyer', 72, 2, 4, 14, -4, 3),
+      gun('Heavy on-board cannon', 24, 3, 3, 5, -1, 2),
+      gun('Twin heavy bolter', 36, 3, 4, 5, -1, 2, 'ranged', 'Twin-linked'),
+    ]
+  }
+  if (/\brepulsor\b/.test(n)) {
+    return [
+      gun('Heavy on-board cannon', 24, 3, 3, 5, -1, 2),
+      gun('Twin heavy bolter', 36, 3, 4, 5, -1, 2, 'ranged', 'Twin-linked'),
+      gun('Hunter-killer missile', 48, 1, 4, 14, -3, 3),
+    ]
+  }
+  if (/\bland raider\b/.test(n)) {
+    return [
+      gun('Twin heavy bolter', 36, 3, 4, 5, -1, 2, 'ranged', 'Twin-linked'),
+      gun('Hunter-killer missile', 48, 1, 4, 14, -3, 3),
+    ]
+  }
+  if (/\bhammerhead\b/.test(n)) {
+    return [gun('Railgun', 72, 1, 4, 14, -4, 3), ...hullWeapons()]
+  }
+  if (/\b(sentinel|armoured sentinel|scout sentinel)\b/.test(n)) {
+    return [gun('Multi-laser', 36, 4, 4, 6, 0, 1), gun('Heavy flamer', 12, 6, 4, 5, -1, 1)]
+  }
+  if (/\bdefiler\b/.test(n)) {
+    return [
+      gun('Battle cannon', 48, 2, 4, 10, -2, 3),
+      gun('Reaper autocannon', 48, 4, 4, 7, -1, 2),
+      melee('Defiler claws', 5, 4, 12, -2, 3),
+    ]
+  }
+  if (/\bforgefiend\b/.test(n)) {
+    return [gun('Hades autocannon', 48, 4, 4, 8, -1, 2), gun('Hades autocannon', 48, 4, 4, 8, -1, 2)]
+  }
+  if (/\bmaulerfiend\b/.test(n)) {
+    return [melee('Magma cutter', 2, 4, 9, -4, 3), melee('Magma cutter', 2, 4, 9, -4, 3)]
+  }
+  if (/\bheldrake\b/.test(n)) {
+    return [gun('Baleflamer', 12, 6, 4, 6, -1, 2, 'ranged', 'Torrent · Ignores Cover')]
+  }
+  if (/\bmonolith\b/.test(n)) {
+    return [gun('Particle whip', 24, 3, 4, 8, -2, 2), gun('Gauss flux arc', 24, 5, 4, 5, 0, 1)]
+  }
+  if (/\b(onager|dunecrawler)\b/.test(n)) {
+    return [gun('Eradicator nova cannon', 36, 1, 4, 9, -2, 3), gun('Heavy phosphor blaster', 24, 3, 4, 6, -1, 1)]
+  }
+  if (/\b(skorpius|disintegrator)\b/.test(n)) {
+    return [gun('Disintegrator cannon', 36, 3, 4, 8, -2, 2), ...hullWeapons()]
+  }
+  if (/\bbattlewagon\b/.test(n)) {
+    return [gun('Killkannon', 36, 1, 5, 9, -2, 3), gun('Big shoota', 36, 3, 5, 5, 0, 1)]
+  }
+  if (/\b(annihilation|doomsday)\b/.test(n)) {
+    return [gun('Doomsday cannon', 72, 1, 4, 14, -4, 3), gun('Gauss flux arc', 24, 5, 4, 5, 0, 1)]
+  }
+  if (/\b(armiger|war dog)\b/.test(n)
+    || /\bknight (crusader|castellan|paladin|preceptor|errant|gallant|valiant|warden|dominus|desecrator|rampager|abominant)\b/.test(n)
+    || /\b(imperial knight|chaos knight)\b/.test(n)) {
+    return [
+      gun('Knight main weapon', 48, 2, 4, 12, -3, 3),
+      gun('Heavy stubber', 36, 3, 4, 4, 0, 1),
+      melee('Knight melee weapon', 4, 4, 14, -3, 3),
+    ]
+  }
+  if (/\b(dreadnought|helbrute|deff dread|redemptor|ballistus|brutalis|invictor|warsuit|kastelan)\b/.test(n)) {
+    return [
+      gun('Heavy bolter', 36, 3, 4, 5, -1, 2),
+      melee('Close combat weapon', 4, 4, 10, -2, 3),
+    ]
+  }
+  if (/\b(falcon|fire prism|night spinner|razorwing|stormraven|stormtalon|dakkajet|doom scythe|crimson hunter|phoenix)\b/.test(n)) {
+    return [gun('Primary aircraft weapon', 48, 2, 4, 8, -2, 2), gun('Defensive weapon', 24, 2, 4, 5, 0, 1)]
+  }
+  if (/\b(exocrine|haruspex|carnifex|trygon|mawloc|tyrannofex|broadside|ghostkeel|riptide|stormsurge)\b/.test(n)) {
+    return [gun('Bio-cannon', 36, 2, 4, 9, -2, 3), melee('Monstrous scything talons', 4, 4, 9, -2, 2)]
+  }
+  return null
+}
+
+function isVehicleUnit(n, category) {
+  if (category === 'dedicated-transport' || category === 'flyer') return true
+  if (/\b(squad|team|mob|boyz|warriors|troops|intercessor|legionaries|gaunt|guard)\b/.test(n)
+    && !/\b(weapon|artillery|sentinel)\b/.test(n)) return false
+  return /\b(tank|predator|vindicator|rhino|chimera|leman russ|hammerhead|basilisk|manticore|wyvern|deathstrike|hydra|sentinel|baneblade|repulsor|gladiator|land raider|dreadnought|helbrute|deff dread|defiler|forgefiend|maulerfiend|heldrake|monolith|onager|dunecrawler|skorpius|disintegrator|battlewagon|trukk|falcon|devilfish|wave serpent|ghost ark|dunerider|rogal dorn|macharius|annihilation|doomsday|crusader|castellan|armiger|war dog|invictor|warsuit|redemptor|ballistus|brutalis|kastelan|broadside|riptide|ghostkeel|stormsurge|exocrine|haruspex|carnifex|trygon|mawloc|tyrannofex|doom scythe|razorwing|stormraven|dakkajet|artillery|knight|wraithknight|contemptor)\b/.test(n)
+    || (category === 'heavy-support' && /\b(vehicle|walker|platform|engine|drone|suit)\b/.test(n) === false
+      && /\b(support|tank|artillery|cannon|platform|engine|sentinel|suit|walker|dread|knight|crisis|broadside|riptide|carnifex|trygon|monolith|defiler|predator|vindicator|basilisk|manticore|hammerhead|leman|baneblade|repulsor|gladiator|heldrake|forgefiend|maulerfiend|exocrine|haruspex|tyrannofex|stormsurge|ghostkeel|doomsday|annihilation|disintegrator|skorpius|onager|dunecrawler|battlewagon|trukk|falcon|prism|spinner)\b/.test(n))
+}
+
 function defaultWeapons(name, category) {
   const n = name.toLowerCase()
-  if (/\b(tank|predator|leman russ|hammerhead|battle cannon)\b/.test(n)) {
-    return [{ name: 'Battle Cannon', range: 48, attacks: 2, skill: 4, strength: 10, ap: -2, damage: 3, type: 'ranged' }]
+
+  const vehicle = vehicleLoadout(n)
+  if (vehicle) return vehicle
+
+  if (category === 'dedicated-transport' || /\b(transport|rhino|chimera|trukk|raider|venom|impulsor|drop pod)\b/.test(n)) {
+    return transportLoadout(n)
   }
-  if (/\b(dreadnought|helbrute|deff dread|redemptor|ballistus|brutalis)\b/.test(n)) {
-    return [
-      { name: 'Heavy Bolter', range: 36, attacks: 3, skill: 4, strength: 5, ap: -1, damage: 2, type: 'ranged' },
-      { name: 'Close Combat Weapon', range: 0, attacks: 4, skill: 4, strength: 10, ap: -2, damage: 3, type: 'melee' },
-    ]
+
+  if (isVehicleUnit(n, category)) {
+    return [gun('Main cannon', 48, 2, 4, 10, -2, 3), ...hullWeapons()]
+  }
+
+  if (/\b(tank|battle cannon)\b/.test(n)) {
+    return [gun('Battle cannon', 48, 2, 4, 10, -2, 3), ...hullWeapons()]
   }
   if (/\b(terminator)\b/.test(n)) {
     return [
@@ -281,9 +503,9 @@ function inferKeywords(name, category) {
   if (category === 'hq' || /\b(captain|lord|character|warboss|autarch|farseer|inquisitor|canoness|overlord|archon|patriarch|sorcerer|daemon prince|ancient|chaplain|librarian)\b/.test(n)) kw.push('Character')
   if (category === 'troops' || /\b(squad|boyz|warriors|mob|team|intercessor|legionaries|gaunts)\b/.test(n)) { kw.push('Infantry'); if (category === 'troops') kw.push('Battleline') }
   if (/\bterminator\b/.test(n)) kw.push('Terminator')
-  if (/\b(vehicle|tank|rhino|chimera|predator|repulsor|land raider|hammerhead|devilfish|raider|venom|dunerider|battlewagon|trukk|falcon|wave serpent|ghost ark|onager|dunecrawler|defiler|heldrake|baneblade)\b/.test(n)) kw.push('Vehicle')
+  if (/\b(vehicle|tank|rhino|chimera|predator|repulsor|land raider|hammerhead|devilfish|raider|venom|dunerider|battlewagon|trukk|falcon|wave serpent|ghost ark|onager|dunecrawler|defiler|heldrake|baneblade|basilisk|manticore|wyvern|hydra|deathstrike|sentinel|rockgrinder|goliath)\b/.test(n)) kw.push('Vehicle')
   if (/\b(dreadnought|helbrute|deff dread|walker|warsuit|invictor|kastelan|armiger|war dog|sentinel|war walker|wraithlord)\b/.test(n)) kw.push('Walker')
-  if (/\b(tank|predator|leman russ|hammerhead|baneblade|rogal dorn)\b/.test(n)) kw.push('Tank')
+  if (/\b(tank|predator|leman russ|hammerhead|baneblade|rogal dorn|basilisk|manticore|wyvern|hydra|deathstrike)\b/.test(n)) kw.push('Tank')
   if (/\b(flyer|gunship|bomber|interceptor|crone|harpy|doom scythe|stormraven|dakkajet)\b/.test(n)) kw.push('Fly')
   if (/\b(monster|carnifex|trygon|mawloc|haruspex|exocrine|tyrannofex|daemon prince|bloodthirster|greater|ctan|avatar|wraithknight|mutalith)\b/.test(n)) kw.push('Monster')
   if (/\b(psyker|librarian|farseer|warlock|sorcerer|grey knight|brotherhood)\b/.test(n)) kw.push('Psyker')

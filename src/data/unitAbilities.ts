@@ -1,4 +1,5 @@
 import type { UnitAbility, UnitProfile, WeaponProfile } from '../types/game'
+import { inferWeaponKeywords } from './abilityRules'
 import type { UnitPlaystyle } from './unitPlaystyles'
 
 function mergeAbilities(...groups: UnitAbility[][]): UnitAbility[] {
@@ -55,6 +56,9 @@ function weaponAbility(weapon: WeaponProfile): UnitAbility {
   const label = isMainGun ? `${weapon.name} (Main Gun)` : weapon.name
   return {
     name: label,
+    kind: 'weapon',
+    weapon,
+    keywords: inferWeaponKeywords(weapon),
     description: weapon.type === 'ranged' ? describeGun(weapon) : describeMelee(weapon),
   }
 }

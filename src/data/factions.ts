@@ -46,3 +46,64 @@ export function getFaction(id: FactionId): Faction {
 }
 
 export const FACTION_IDS = FACTIONS.map((f) => f.id)
+
+const UI_BACKGROUND = '#0a0a12'
+const MIN_UI_CONTRAST = 4.5
+const UI_TEXT_FALLBACK = '#e8e8f0'
+const UI_ACCENT_FALLBACK = '#c9a227'
+
+function hexToRgb(hex: string): [number, number, number] | null {
+  const normalized = hex.replace('#', '')
+  if (normalized.length === 3) {
+    return [
+      Number.parseInt(normalized[0] + normalized[0], 16),
+      Number.parseInt(normalized[1] + normalized[1], 16),
+      Number.parseInt(normalized[2] + normalized[2], 16),
+    ]
+  }
+  if (normalized.length !== 6) return null
+  return [
+    Number.parseInt(normalized.slice(0, 2), 16),
+    Number.parseInt(normalized.slice(2, 4), 16),
+    Number.parseInt(normalized.slice(4, 6), 16),
+  ]
+}
+
+function relativeLuminance(hex: string): number {
+  const rgb = hexToRgb(hex)
+  if (!rgb) return 0
+  const [r, g, b] = rgb.map((channel) => {
+    const srgb = channel / 255
+    return srgb <= 0.03928 ? srgb / 12.92 : ((srgb + 0.055) / 1.055) ** 2.4
+  })
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b
+}
+
+function contrastRatio(foreground: string, background: string): number {
+  const fg = relativeLuminance(foreground)
+  const bg = relativeLuminance(background)
+  const lighter = Math.max(fg, bg)
+  const darker = Math.min(fg, bg)
+  return (lighter + 0.05) / (darker + 0.05)
+}
+
+/** Pick a faction color that stays readable on the dark UI background. */
+export function getFactionUiColor(
+  faction: Faction,
+  background: string = UI_BACKGROUND,
+): string {
+  const candidates = [
+    faction.primaryColor,
+    faction.secondaryColor,
+    UI_ACCENT_FALLBACK,
+    UI_TEXT_FALLBACK,
+  ]
+
+  for (const color of candidates) {
+    if (contrastRatio(color, background) >= MIN_UI_CONTRAST) {
+      return color
+    }
+  }
+
+  return UI_TEXT_FALLBACK
+}

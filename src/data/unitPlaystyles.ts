@@ -16,51 +16,64 @@ type PlaystyleMatcher = {
 
 const DEEP_STRIKE: UnitAbility = {
   name: 'Deep Strike',
+  kind: 'rule',
   description: 'Arrives from reserves after deployment. Set up more than 9" from enemy models, then close the gap next turn. Use to hit weak flanks, backfield objectives, or isolated shooters.',
 }
 
 const INFILTRATORS: UnitAbility = {
   name: 'Infiltrators',
+  kind: 'rule',
   description: 'Deploy anywhere on the board more than 9" from the enemy deployment zone. Perfect for early objective pressure, marking targets, or setting up alpha strikes.',
 }
 
 const STEALTH: UnitAbility = {
   name: 'Stealth',
+  kind: 'rule',
   description: 'Gains the Benefit of Cover against ranged attacks. Hug terrain and advance into firing positions other units cannot reach on turn one.',
 }
 
 const SCOUTS: UnitAbility = {
   name: 'Scouts',
+  kind: 'rule',
   description: 'Moves up before the first turn. Use to seize forward ground, block enemy deployment lanes, or set up charges turn two.',
 }
 
 const DEADLY_DEMISE: UnitAbility = {
   name: 'Deadly Demise D3',
+  kind: 'rule',
   description: 'When destroyed, rolls mortal wounds on nearby units. Enemy infantry hugging your tank take damage when it blows — plan your final position accordingly.',
 }
 
 const FEEL_NO_PAIN: UnitAbility = {
   name: 'Feel No Pain 5+',
+  kind: 'rule',
   description: 'Ignores wounds on a 5+. Stacks with a good save to make the unit deceptively hard to remove. Bring volume of fire or high-damage weapons to punch through.',
 }
 
 const BLAST: UnitAbility = {
   name: 'Blast',
+  kind: 'rule',
+  keywords: ['Blast'],
   description: 'Extra attacks against large units (6+ models). Artillery and demolisher cannons excel at wiping infantry blobs — aim at crowded objectives.',
 }
 
 const INDIRECT_FIRE: UnitAbility = {
   name: 'Indirect Fire',
+  kind: 'rule',
+  keywords: ['Indirect Fire'],
   description: 'Can shoot at targets not visible to the firing model (with penalties in full rules). Hide behind terrain and still contribute — classic Guard artillery play.',
 }
 
 const TWIN_LINKED: UnitAbility = {
   name: 'Twin-linked',
+  kind: 'rule',
+  keywords: ['Twin-linked'],
   description: 'Re-roll failed wound rolls (or to-hit in some cases). Makes anti-tank weapons far more reliable — point twin-linked guns at the enemy\'s biggest threat.',
 }
 
 const FIGHTS_FIRST: UnitAbility = {
   name: 'Fights First',
+  kind: 'rule',
   description: 'Strikes before normal melee in the Fight phase. Critical for assassins, interceptors, and units that must kill before they die.',
 }
 

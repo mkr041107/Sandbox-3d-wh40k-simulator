@@ -9,7 +9,7 @@ export default function App() {
   const screen = useGameStore((s) => s.screen)
 
   return (
-    <div className="app">
+    <div className="app app-bg">
       <main className="app-main">
         {screen === 'home' && <Home />}
         {screen === 'army-builder' && <ArmyBuilder />}

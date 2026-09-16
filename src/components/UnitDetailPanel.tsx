@@ -1,7 +1,8 @@
 import type { UnitProfile } from '../types/game'
-import { CATEGORY_GLOSSARY, KEYWORD_GLOSSARY, STAT_GLOSSARY } from '../data/glossary'
+import { CATEGORY_GLOSSARY } from '../data/glossary'
 import { applyUpgradesToProfile, calculateUpgradePoints, getUpgradeById } from '../data/squadUpgrades'
 import { getEnrichedUnitProfile } from '../data/units'
+import { UnitDatasheet } from './UnitDatasheet'
 
 interface UnitDetailPanelProps {
   unit: UnitProfile
@@ -26,99 +27,33 @@ export function UnitDetailPanel({ unit, selectedUpgrades = [], onClose, compact 
         </button>
       )}
 
-      <div className="detail-header">
-        <span className="detail-category" title={categoryInfo.explanation}>
-          {categoryInfo.label}
-        </span>
-        {enriched.role && <span className="detail-role">{enriched.role}</span>}
-        <span className="detail-points" title={STAT_GLOSSARY.points.explanation}>
-          {enriched.points + upgradePts} pts
-        </span>
-      </div>
-
-      <h3 className="detail-name">{enriched.name}</h3>
-
-      {enriched.description && (
-        <p className="detail-description">{enriched.description}</p>
-      )}
-
-      <section className="detail-section">
-        <h4>Unit Stats</h4>
-        <div className="stat-grid">
-          <StatCell stat="movement" value={`${enriched.movement}"`} />
-          <StatCell stat="toughness" value={enriched.toughness} />
-          <StatCell stat="save" value={`${enriched.save}+`} />
-          <StatCell stat="wounds" value={enriched.wounds} />
-          <StatCell stat="leadership" value={enriched.leadership} />
-          <StatCell stat="objectiveControl" value={enriched.objectiveControl} />
-        </div>
-        <p className="stat-note">
-          <strong>{enriched.models} models</strong> in this unit — multiply attacks by models remaining in battle.
-        </p>
-      </section>
-
-      {enriched.abilities && enriched.abilities.length > 0 && (
-        <section className="detail-section">
-          <h4>Abilities &amp; Rules</h4>
-          <p className="stat-note">Named like official datasheets (New Recruit / Wahapedia style) with plain-language tips.</p>
-          <div className="ability-list">
-            {enriched.abilities.map((ability, i) => (
-              <div key={i} className="ability-card">
-                <strong className="ability-name">{ability.name}</strong>
-                <p className="ability-desc">{ability.description}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-
-      <section className="detail-section">
-        <h4>Weapons</h4>
-        {enriched.weapons.length === 0 ? (
-          <p className="stat-note">No weapons listed.</p>
-        ) : (
-          <div className="weapon-list">
-            {enriched.weapons.map((weapon, i) => (
-              <div key={i} className="weapon-card">
-                <div className="weapon-header">
-                  <span className="weapon-name">{weapon.name}</span>
-                  <span className={`weapon-type ${weapon.type}`}>
-                    {weapon.type === 'ranged' ? 'Ranged' : 'Melee'}
-                  </span>
-                </div>
-                {weapon.description && (
-                  <p className="weapon-desc">{weapon.description}</p>
-                )}
-                <div className="weapon-stats">
-                  {weapon.type === 'ranged' && (
-                    <span title={STAT_GLOSSARY.range.explanation}>R: {weapon.range}"</span>
-                  )}
-                  <span title={STAT_GLOSSARY.attacks.explanation}>A: {weapon.attacks}</span>
-                  <span title={STAT_GLOSSARY.skill.explanation}>
-                    {weapon.type === 'ranged' ? 'BS' : 'WS'}: {weapon.skill}+
-                  </span>
-                  <span title={STAT_GLOSSARY.strength.explanation}>S: {weapon.strength}</span>
-                  <span title={STAT_GLOSSARY.ap.explanation}>AP: {weapon.ap}</span>
-                  <span title={STAT_GLOSSARY.damage.explanation}>D: {weapon.damage}</span>
-                </div>
-              </div>
-            ))}
+      <UnitDatasheet
+        unit={enriched}
+        pointsLabel={`${enriched.points + upgradePts} pts`}
+        description={enriched.description}
+        showModelsNote={!compact}
+        metaLine={(
+          <div className="datasheet-meta">
+            <span className="detail-category" title={categoryInfo.explanation}>
+              {categoryInfo.label}
+            </span>
+            {enriched.role && <span className="detail-role">{enriched.role}</span>}
           </div>
         )}
-      </section>
+      />
 
       {selectedUpgrades.length > 0 && (
         <section className="detail-section">
-          <h4>Selected Upgrades</h4>
+          <p className="datasheet-section-title">Wargear Options</p>
           <div className="selected-upgrades-list">
             {selectedUpgrades.map((id) => {
-              const u = getUpgradeById(id)
-              if (!u) return null
+              const upgrade = getUpgradeById(id)
+              if (!upgrade) return null
               return (
-                <div key={id} className="selected-upgrade-item">
-                  <strong>{u.name}</strong> (+{u.points} pts)
-                  <p>{u.description}</p>
-                  {u.ability && <p className="upgrade-ability">{u.ability}</p>}
+                <div key={id} className="datasheet-rule-card">
+                  <p className="ability-name">{upgrade.name} (+{upgrade.points} pts)</p>
+                  <p className="ability-rule-entry">{upgrade.description}</p>
+                  {upgrade.ability && <p className="upgrade-ability">{upgrade.ability}</p>}
                 </div>
               )
             })}
@@ -126,22 +61,9 @@ export function UnitDetailPanel({ unit, selectedUpgrades = [], onClose, compact 
         </section>
       )}
 
-      {enriched.keywords.length > 0 && (
-        <section className="detail-section">
-          <h4>Keywords</h4>
-          <div className="keyword-list">
-            {enriched.keywords.map((kw) => (
-              <span key={kw} className="keyword-tag" title={KEYWORD_GLOSSARY[kw] ?? kw}>
-                {kw}
-              </span>
-            ))}
-          </div>
-        </section>
-      )}
-
       {!compact && (
         <section className="detail-section detail-tips">
-          <h4>New Player Tips</h4>
+          <p className="datasheet-section-title">New Player Tips</p>
           <ul>
             {getTipsForUnit(enriched).map((tip, i) => (
               <li key={i}>{tip}</li>
@@ -149,16 +71,6 @@ export function UnitDetailPanel({ unit, selectedUpgrades = [], onClose, compact 
           </ul>
         </section>
       )}
-    </div>
-  )
-}
-
-function StatCell({ stat, value }: { stat: string; value: string | number }) {
-  const info = STAT_GLOSSARY[stat]
-  return (
-    <div className="stat-cell" title={info?.explanation}>
-      <span className="stat-label">{info?.label ?? stat}</span>
-      <span className="stat-value">{value}</span>
     </div>
   )
 }

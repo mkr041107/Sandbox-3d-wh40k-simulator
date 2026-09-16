@@ -74,6 +74,18 @@ export function Battle() {
     }
   }, [battleState?.activePlayer, battleState?.phase, battleState?.turn, battleState?.isOver, runAITurn])
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return
+      if (!battleState?.selectedUnitId) return
+      if (battleState.activePlayer !== 'player' || battleState.isOver) return
+      setBattleState(selectUnit(battleState, null))
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [battleState, setBattleState])
+
   if (!battleState) {
     return (
       <div className="battle-error">

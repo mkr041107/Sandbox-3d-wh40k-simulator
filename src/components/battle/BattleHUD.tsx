@@ -52,11 +52,16 @@ export function BattleHUD({
           </span>
           {llmActive && <span className="llm-badge">LLM</span>}
         </div>
-        <div className="vp-display">
-          <span className="vp-player">You: {battleState.playerVp} VP</span>
-          <span className="vp-ai">AI: {battleState.aiVp} VP</span>
-        </div>
         <button className="btn btn-ghost btn-sm" onClick={onQuit}>Quit</button>
+      </div>
+
+      <div className="game-score-totals">
+        <p className="game-score-totals-vp game-score-totals-vp--p1">{battleState.playerVp}</p>
+        <div className="game-score-totals-center">
+          <p className="game-score-vs">VS</p>
+          <p className="game-score-label">Victory Points</p>
+        </div>
+        <p className="game-score-totals-vp game-score-totals-vp--p2">{battleState.aiVp}</p>
       </div>
 
       {battleState.isOver && (
@@ -67,7 +72,7 @@ export function BattleHUD({
       )}
 
       {selectedUnit && isPlayerTurn && !battleState.isOver && (
-        <div className="unit-panel">
+        <div className="unit-panel app-panel-elevated">
           <UnitDetailPanel unit={getBattleUnitProfile(selectedUnit)} selectedUpgrades={selectedUnit.upgrades} compact />
 
           <div className="battle-status">
