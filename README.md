@@ -6,6 +6,7 @@ The GitHub contributors listed are bugged and a problem with git; it should be f
 # WH40K Battle Sandbox
 
 [![⚔️ Deploy to the Front — Play Live](https://img.shields.io/badge/⚔️_DEPLOY_TO_THE_FRONT-PLAY_LIVE-8b0000?style=for-the-badge&labelColor=1a1a2e)](https://mkr041107.github.io/Sandbox-3d-wh40k-simulator/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 A browser-based **Warhammer 40,000** army builder and tactical battle simulator with a 3D top-down battlefield, detachment rules, terrain-aware shooting, combat VFX, and AI opponent — including an optional **LLM-powered** opponent that uses a real language model via your own API key.
 
@@ -470,7 +471,9 @@ This project was built with AI coding tools, which aren't free to run. If you en
 
 ## License
 
-This repository is provided as-is for personal and educational use. Games Workshop intellectual property remains with Games Workshop. Do not use this project commercially or imply official affiliation with GW.
+The **source code** in this repository is licensed under the [MIT License](LICENSE).
+
+Warhammer 40,000, faction names, unit names, and related imagery are © **Games Workshop Limited** and are not covered by this license. This is an unofficial fan project — do not use it to imply official affiliation with Games Workshop or to commercialize GW intellectual property.
 
 ---
 
