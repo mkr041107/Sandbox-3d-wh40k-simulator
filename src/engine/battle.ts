@@ -9,6 +9,7 @@ import type {
   UnitProfile,
 } from '../types/game'
 import { getBattleUnitProfile } from '../data/battleProfile'
+import { DEPLOY_ZONE_DEPTH } from '../data/battlefield'
 import { getUnitProfile, getUnitsForFaction } from '../data/units'
 import { getUpgradesForUnit } from '../data/squadUpgrades'
 import { v4 as uuidv4 } from 'uuid'
@@ -44,26 +45,68 @@ export function createBattleUnit(
   }
 }
 
+const DEPLOY_EDGE_MARGIN = 2
+const DEPLOY_ROW_SPACING = 3
+
+function deploySpacing(profileId: string): number {
+  const profile = getUnitProfile(profileId)
+  const footprintInches = profile.baseSize / 25.4
+  return Math.max(2.5, Math.ceil(footprintInches * 10) / 10 + 0.5)
+}
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, value))
+}
+
 export function deployArmy(
   army: ArmyList,
   owner: PlayerId,
-  startY: number,
   battlefieldWidth: number,
+  battlefieldHeight: number,
 ): BattleUnit[] {
   const units: BattleUnit[] = []
-  let x = 4
-  let y = startY
+  const minX = DEPLOY_EDGE_MARGIN + 1
+  const maxX = battlefieldWidth - DEPLOY_EDGE_MARGIN - 1
+
+  const playerBack = DEPLOY_EDGE_MARGIN + 1.5
+  const playerFront = playerBack + DEPLOY_ZONE_DEPTH - 1
+  const aiBack = battlefieldHeight - DEPLOY_EDGE_MARGIN - 1.5
+  const aiFront = aiBack - DEPLOY_ZONE_DEPTH + 1
+
+  const backY = owner === 'player' ? playerBack : aiBack
+  const frontY = owner === 'player' ? playerFront : aiFront
+  const rowStep = owner === 'player' ? DEPLOY_ROW_SPACING : -DEPLOY_ROW_SPACING
+  const maxRows = Math.max(1, Math.floor(DEPLOY_ZONE_DEPTH / DEPLOY_ROW_SPACING))
+
+  let row = 0
+  let pass = 0
+  let x = minX
 
   for (const entry of army.entries) {
     for (let i = 0; i < entry.count; i++) {
-      units.push(createBattleUnit(entry.profileId, owner, { x, y }, entry.upgrades ?? []))
-      x += 6
-      if (x > battlefieldWidth - 4) {
-        x = 4
-        y += 6
+      const spacing = deploySpacing(entry.profileId)
+      const stagger = pass % 2 === 1 ? spacing * 0.35 : 0
+      const y = clamp(backY + row * rowStep, Math.min(backY, frontY), Math.max(backY, frontY))
+
+      units.push(createBattleUnit(
+        entry.profileId,
+        owner,
+        { x: clamp(x + stagger, minX, maxX), y },
+        entry.upgrades ?? [],
+      ))
+
+      x += spacing
+      if (x > maxX) {
+        x = minX
+        row += 1
+        if (row >= maxRows) {
+          row = 0
+          pass += 1
+        }
       }
     }
   }
+
   return units
 }
 
@@ -73,8 +116,8 @@ export function initBattle(
   battlefieldWidth = 60,
   battlefieldHeight = 44,
 ): BattleState {
-  const playerUnits = deployArmy(playerArmy, 'player', 6, battlefieldWidth)
-  const aiUnits = deployArmy(aiArmy, 'ai', battlefieldHeight - 10, battlefieldWidth)
+  const playerUnits = deployArmy(playerArmy, 'player', battlefieldWidth, battlefieldHeight)
+  const aiUnits = deployArmy(aiArmy, 'ai', battlefieldWidth, battlefieldHeight)
 
   return {
     id: uuidv4(),

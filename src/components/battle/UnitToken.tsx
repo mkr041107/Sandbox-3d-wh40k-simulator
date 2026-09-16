@@ -8,6 +8,7 @@ import { getFaction } from '../../data/factions'
 import { getGreaterDaemonVariant, isGreaterDaemon } from './miniatures/greaterDaemon'
 import { getMiniatureArchetype } from './miniatures/miniatureArchetype'
 import { getMiniatureSilhouette, isMechanicalArchetype } from './miniatures/miniatureSilhouette'
+import { getMiniatureScale } from '../../data/battlefield'
 import { getMiniatureTypeLabel, ProceduralMiniature } from './miniatures/ProceduralMiniature'
 
 interface UnitTokenProps {
@@ -40,7 +41,7 @@ export function UnitToken({ unit, selected, isShootTarget = false, onClick }: Un
   const greaterDaemon = isGreaterDaemon(profile)
   const greaterDaemonVariant = greaterDaemon ? getGreaterDaemonVariant(profile) : undefined
   const mechanical = isMechanicalArchetype(archetype)
-  const scale = profile.baseSize / 32
+  const scale = getMiniatureScale(profile.baseSize)
   const healthPercent = unit.currentWounds / (profile.wounds * profile.models)
   const typeLabel = getMiniatureTypeLabel(archetype, silhouette, greaterDaemonVariant)
 
