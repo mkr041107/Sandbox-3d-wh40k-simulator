@@ -1,5 +1,5 @@
 # NOTICE
-The github contributors listed are bugged and a problem with git, it should be fixed when github updates the cache!
+The github contributors listed are bugged and a problem with git, it should be fixed when github updates the cache! For the record i have no idea who the contributors are and are just there becuase git is bugged and added them somehow, thye DO NOT have anything to do with this project!
 
 ---
 
