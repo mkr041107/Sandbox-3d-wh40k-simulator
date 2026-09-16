@@ -30,3 +30,4 @@ dist-ssr
 # My local-only file
 .mailmap
 sandbox-backup.git/*.*
+sandbox-backup.git/*

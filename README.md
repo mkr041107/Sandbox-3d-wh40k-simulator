@@ -54,7 +54,7 @@ Interactive deployment phase before turn 1:
 - **Scouts** — deploy up to 12" beyond your normal zone (still on your half)
 - **Deep Strike reserves** — hold units off-board; arrive turn 2+ during Movement (>9" from enemies)
 - **Coherency & spacing** — multi-model squads must stay coherent and avoid overlapping bases
-- **Reposition** — adjust placed units before finishing deployment
+- **Reposition** — adjust placed units before finishing deployment (must stay in your deployment zone until you click **Finish Deployment**)
 
 ### 3D Battlefield
 
@@ -64,7 +64,8 @@ Interactive deployment phase before turn 1:
 - **Line of sight** — ruins and terrain block shooting unless indirect fire / spotters apply
 - **Cover** — units in or near terrain (or with Stealth) gain +1 save vs ranged; Ignores Cover and stratagems can negate it
 - **Movement range ring** when moving units in the movement phase
-- **Per-model movement** — multi-model squads can move individual models while staying in coherency
+- **Per-model movement** — multi-model squads move one model at a time (must stay within 2" coherency); clicks snap to the farthest legal point toward your cursor
+- **Move squad together** — HUD button to advance the whole squad in formation (easiest way to leave the deployment zone)
 - **Shoot target highlights** — valid enemies show a red ring during shooting
 - **Click-to-shoot** — select your shooter, then click a highlighted enemy on the board (or use HUD buttons)
 - **Combat VFX** — tracers, beams, missiles, artillery arcs, flamer cones, impact bursts, and floating wound/kill labels
@@ -107,9 +108,25 @@ Simplified Warhammer 40k-style turn structure:
 2. **Command** — gain CP; set doctrines / Oath targets where supported
 3. **Movement** — move units or individual models within Movement; Deep Strike arrivals turn 2+
 4. **Shooting** — ranged attacks with BS, saves, terrain, and weapon rules
-5. **Charge**
-6. **Fight** — melee with WS and saves
-7. **Morale**
+5. **Charge** — 2D6 charge roll logged with individual dice
+6. **Fight** — melee with WS, saves, and **fight back** (defenders strike once after being attacked)
+7. **Morale** — 2D6 vs Leadership for units below half strength (rolled automatically when the Morale phase begins)
+
+**Dice resolution & battle log:**
+
+Every shoot, fight, charge, morale test, and Deadly Demise explosion rolls **real d6s** and logs the results in the **Battle Log** (last 12 entries):
+
+| Step | What gets rolled |
+| --- | --- |
+| **Hit** | One d6 per attack @ BS/WS (Torrent auto-hits; Twin-linked re-rolls wounds) |
+| **Wound** | One d6 per hit @ S/T table (+ Melta bonus at half range) |
+| **Save** | One d6 per wound @ armor/cover/invuln target |
+| **Feel No Pain** | One d6 per failed save @ FNP value (target only — not the shooter) |
+| **Charge** | 2D6 + modifiers vs distance needed |
+| **Morale** | 2D6 vs Ld for battered squads |
+| **Deadly Demise** | D6 for mortal damage; FNP rolls on nearby victims |
+
+Example log line: `Hit (5A @ 3+): [4,2,6,3,5] → 4 passed | Wound (4 hits @ 4+): [3,5,2,6] → 3 passed | Save (4+ armor): [2,1,4,5] → 2 failed | Feel No Pain (2 @ 5+): [3,6] → 1 failed | Result: …`
 
 **Shooting & battlefield rules (implemented):**
 
@@ -128,8 +145,7 @@ Simplified Warhammer 40k-style turn structure:
 
 - **Feel No Pain** (e.g. Plague Marines)
 - **Ion Shield** — 4+ invulnerable vs ranged (Knights)
-- **Deadly Demise** — mortals to nearby units when a vehicle is destroyed
-- **Fights First** — AI resolves these units earlier in the Fight phase
+- **Deadly Demise** — D6 mortals to nearby units when a vehicle is destroyed (FNP rolls apply)
 
 **Detachment modifiers:**
 
@@ -140,11 +156,24 @@ Simplified Warhammer 40k-style turn structure:
 
 **Core systems:**
 
-- Dice-based hit / wound / save resolution with re-rolls where rules allow
+- Full hit / wound / save / FNP pipeline in `src/engine/combatRolls.ts` with step-by-step battle log output
+- **Fights First** — AI resolves these units earlier in the Fight phase
 - Victory points tracking
-- Battle log of actions
+- Battle log of actions (including every dice roll)
 - Unit health bars and model counts on tokens
 - Squad coherency and base spacing for movement, charges, and deployment
+
+### How to move
+
+1. Advance to the **Movement** phase.
+2. **Click your squad** on the board or in the HUD.
+3. For **multi-model squads**:
+   - Pick **Model 1 / Model 2 / …** in the sidebar to move one miniature at a time (stay within 2" coherency), **or**
+   - Click **Move squad together**, then click the board to shift the whole formation (up to M").
+4. For **single-model units**, click the board to move.
+5. Use the **Ruler** on the camera bar to measure distances before committing.
+
+> During **deployment**, units must stay in your blue zone (or use Infiltrators / Scouts / Deep Strike rules). After **Finish Deployment**, you can advance anywhere on the board.
 
 ### How to shoot
 
@@ -152,8 +181,15 @@ Simplified Warhammer 40k-style turn structure:
 2. **Click your unit** on the 3D board.
 3. Valid targets are highlighted with a **red ring** (crosshair cursor on hover).
 4. **Click the enemy** on the board or use the **Shoot at** buttons in the sidebar.
-5. Watch the **combat VFX** and check the battle log for wound results.
+5. Watch the **combat VFX** and check the **Battle Log** for the full dice breakdown (hits, wounds, saves, FNP).
 6. Repeat for other units, then **End Shooting**.
+
+### How to fight
+
+1. In the **Fight** phase, select an engaged unit and pick a target (HUD or board).
+2. The log shows hit, wound, save, and FNP rolls for your attacks.
+3. If the defender survives, they **fight back** automatically — a second log entry with their rolls.
+4. End the phase when done.
 
 ### AI Opponent (two modes)
 
@@ -416,8 +452,9 @@ Then build and deploy the `dist/` folder (GitHub Actions or manual `gh-pages` br
 │   │   ├── weaponDescriptions.ts
 │   │   └── glossary.ts
 │   ├── engine/
-│   │   ├── battle.ts           # Turn flow, shoot/charge/fight
+│   │   ├── battle.ts           # Turn flow, shoot/charge/fight/morale
 │   │   ├── battlefieldRules.ts # LoS, cover, indirect fire, weapon rules
+│   │   ├── combatRolls.ts      # Hit/wound/save/FNP dice + log formatting
 │   │   ├── combatVfx.ts        # VFX kind inference from weapons
 │   │   ├── deploymentRules.ts  # Infiltrate, Scouts, Deep Strike
 │   │   ├── detachmentBattle.ts # CP, stratagems, army rules
@@ -449,7 +486,11 @@ Space Marine **chapters** share the generic Space Marines unit pool plus chapter
 This is a **sandbox**, not a full competitive rules engine:
 
 - Single Army Faction per list (limited ally pooling — see Faction allies above)
-- Simplified phases and morale; not every 10th Edition rule is implemented
+- Not every 10th Edition rule is implemented (see dice/combat gaps below)
+- **Morale** — simplified test (below half strength only); not full Battle-shock / Below Half Strength tracking
+- **Combat dice** — one ranged and one melee weapon per action; no Devastating Wounds, Lethal Hits, or Precision yet
+- **Invulnerable saves** — Ion Shield, stratagems, and inferred abilities work; datasheet invuln from upgrades is not fully parsed
+- **Mortal wounds** — Deadly Demise only; general weapon/stratagem mortals not implemented
 - **Squad formation spacing** — default grid spacing can fail coherency checks for some multi-model squads on small bases (known engine/data tension)
 - Terrain is simplified 2D footprints aligned to 3D visuals; LoS/cover are approximations
 - Weapon keywords are inferred from weapon names/stats when not explicitly tagged
