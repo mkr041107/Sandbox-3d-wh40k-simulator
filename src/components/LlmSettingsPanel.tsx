@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import {
   DEFAULT_LLM_SETTINGS,
   getProviderDefaults,
+  hasEnvLlmDefaults,
+  isApiKeyFromEnv,
   isLlmConfigured,
   loadLlmSettings,
   saveLlmSettings,
@@ -63,14 +65,24 @@ export function LlmSettingsPanel() {
   }
 
   const configured = isLlmConfigured(settings)
+  const envDefaults = hasEnvLlmDefaults()
+  const apiKeyFromEnv = isApiKeyFromEnv(settings)
 
   return (
     <section className="setup-card llm-settings-card">
       <h3>LLM Opponent (optional)</h3>
       <p className="llm-settings-intro">
-        Replace the built-in heuristic AI with a real language model. Your API key is stored only in
-        <strong> localStorage</strong> in this browser — it is never sent anywhere except your chosen API provider.
+        Replace the built-in heuristic AI with a real language model. Keys entered here are saved in
+        <strong> localStorage</strong>. Self-hosters can also set <code>.env</code> (see <code>.env.example</code>)
+        so settings persist without re-entering them each session.
       </p>
+
+      {envDefaults && (
+        <p className="llm-env-banner">
+          Server environment detected — some LLM settings are pre-filled from your <code>.env</code> file.
+          UI changes still save to this browser.
+        </p>
+      )}
 
       <label className="llm-toggle">
         <input
@@ -102,9 +114,12 @@ export function LlmSettingsPanel() {
               type="password"
               value={settings.apiKey}
               onChange={(e) => update({ apiKey: e.target.value })}
-              placeholder="sk-..."
+              placeholder={apiKeyFromEnv ? 'Loaded from .env' : 'sk-...'}
               autoComplete="off"
             />
+            {apiKeyFromEnv && (
+              <span className="field-hint">Using key from environment — type here to override for this browser.</span>
+            )}
           </div>
 
           <div className="form-group">

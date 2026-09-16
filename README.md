@@ -104,6 +104,27 @@ Enable in **Battle Setup** to replace the classic AI with a **real language mode
 
 Settings persist in the browser under the `wh40k-llm-settings` localStorage key.
 
+#### Self-hosted `.env` (optional)
+
+For private self-hosting, copy `.env.example` to `.env` and fill in your values. The real `.env` is **gitignored** and never uploaded to GitHub.
+
+```bash
+cp .env.example .env
+# edit .env, then:
+npm run dev          # local
+npm run build        # bake into dist for your server
+```
+
+| Variable | Description |
+| --- | --- |
+| `VITE_LLM_ENABLED` | `true` to enable LLM opponent by default |
+| `VITE_LLM_PROVIDER` | `openai`, `openrouter`, `groq`, or `custom` |
+| `VITE_LLM_API_KEY` | Your API key |
+| `VITE_LLM_BASE_URL` | Optional API base URL override |
+| `VITE_LLM_MODEL` | Optional model name override |
+
+**Note:** `VITE_` variables are embedded in the client bundle at build time. Use this only on servers you control — do not add secrets to the public GitHub Pages workflow.
+
 ### App Flow
 
 1. **Home** — Build Army or Quick Battle
@@ -139,6 +160,7 @@ Settings persist in the browser under the `wh40k-llm-settings` localStorage key.
 
 ```bash
 npm install
+cp .env.example .env   # optional — for self-hosted LLM API keys
 npm run dev
 ```
 
